@@ -1,7 +1,7 @@
 {
-    "name" : "项目开发",
+    "name" : "拾闲小栈",
     "appid" : "__UNI__7079DA9",
-    "description" : "",
+    "description" : "校园闲置物品智能交换小程序",
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
@@ -15,11 +15,8 @@
             "autoclose" : true,
             "delay" : 0
         },
-        
         "modules" : {},
-        
         "distribute" : {
-            
             "android" : {
                 "permissions" : [
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
@@ -39,21 +36,22 @@
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ]
             },
-            
             "ios" : {},
-            
             "sdkConfigs" : {}
         }
     },
-    
     "quickapp" : {},
-    
     "mp-weixin" : {
         "appid" : "wxb144a5bab0501de0",
         "setting" : {
             "urlCheck" : false
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "permission": {
+            "scope.userLocation": {
+                "desc": "用于获取您的位置信息，优先展示同校区闲置物品"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true

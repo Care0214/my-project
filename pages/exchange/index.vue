@@ -1,387 +1,257 @@
 <template>
 	<view class="page-container">
 		<view class="page-body">
-			<text class="page-title">互助</text>
+			<!-- 搜索+消息入口 -->
+			<view class="exchange-header">
+				<view class="search-bar flex-1" @click="goSearch">
+					<AppIcon name="search" :size="36" color="#999" />
+					<text class="search-placeholder">搜索心愿、求助、置换信息…</text>
+				</view>
+				<view class="message-btn" @click="goMessages">
+					<AppIcon name="message" :size="40" color="#666" />
+					<view class="badge" v-if="unreadCount > 0">{{ unreadCount > 99 ? '99+' : unreadCount }}</view>
+				</view>
+			</view>
 
-			<!-- 分类切换 -->
-			<view class="tab-row">
-				<text
-					v-for="(tab, i) in tabs"
-					:key="i"
-					:class="['tab-item', { active: currentTab === i }]"
-					@click="onTabChange(i)"
-				>
-					{{ tab.label }}
-				</text>
+			<!-- 分类切换 Tab -->
+			<view class="tab-section">
+				<view class="scroll-x">
+					<text
+						v-for="(tab, i) in tabList"
+						:key="i"
+						:class="['tab-chip', { active: currentTab === i }]"
+						@click="switchTab(i)"
+					>{{ tab }}</text>
+				</view>
+			</view>
+
+			<!-- 发帖入口 -->
+			<view class="post-entry" @click="goPublish">
+				<view class="post-entry-content">
+					<AppIcon name="edit" :size="36" color="#4F6EF7" />
+					<text class="post-entry-text">发布你的心愿或求助…</text>
+				</view>
+				<view class="btn-outline">发布</view>
 			</view>
 
 			<!-- 帖子列表 -->
-			<view v-if="postList.length > 0">
+			<view class="post-list">
 				<view
-					v-for="post in postList"
+					class="card post-card"
+					v-for="post in filteredPosts"
 					:key="post.id"
-					class="exchange-card"
-					@click="goDetail(post)"
+					@click="goPostDetail(post)"
 				>
-					<!-- 卡片头部 -->
-					<view class="card-header">
-						<view
-							class="avatar"
-							:style="{ background: post.user.avatarBg || '#E0E0E0' }"
-						></view>
-						<view class="card-meta">
-							<text class="card-username">{{ post.user.nickname }}</text>
-							<text class="card-time">{{ post.createdAtText }}</text>
+					<view class="post-header">
+						<view class="post-user">
+							<view class="avatar-placeholder user-avatar-post">
+								<text>{{ post.user.nickname.charAt(0) }}</text>
+							</view>
+							<view class="post-user-info">
+								<text class="post-nickname">{{ post.user.nickname }}</text>
+								<text class="post-time">{{ post.createdAtText }} · {{ post.campus }}</text>
+							</view>
 						</view>
-						<text :class="['tag', post.type === 'wish' ? 'tag-wish' : 'tag-exchange']">
-							{{ post.type === 'wish' ? (post.isBorrow ? '求借' : '求购') : '以物换物' }}
-						</text>
+						<view :class="['tag', getTagClass(post)]">{{ getTagLabel(post) }}</view>
 					</view>
 
-					<!-- 标题 -->
-					<text class="card-title">{{ post.title }}</text>
-					<text class="card-desc text-ellipsis-2">{{ post.description }}</text>
+					<text class="post-title">{{ post.title }}</text>
+					<text class="post-desc text-ellipsis-2">{{ post.description }}</text>
 
-					<!-- 交换/求购信息 -->
-					<view class="exchange-info">
-						<view v-if="post.type === 'exchange'" class="exchange-flow">
+					<!-- 悬赏金额 -->
+					<view class="post-reward" v-if="post.reward">
+						<text class="reward-text">¥{{ post.reward }}</text>
+						<text class="reward-label">感谢费</text>
+					</view>
+
+					<!-- 交换信息区 -->
+					<view v-if="post.type === 'exchange'" class="exchange-info">
+						<view class="exchange-flow">
 							<view class="flow-item">
 								<text class="flow-label">我有</text>
-								<text class="flow-value">{{ post.myItem.name }}</text>
+								<text class="flow-value">{{ post.myItem ? post.myItem.name : '?' }}</text>
 							</view>
 							<view class="flow-arrow">
 								<AppIcon name="exchange" :size="32" color="#4F6EF7" />
 							</view>
 							<view class="flow-item">
 								<text class="flow-label">想换</text>
-								<text class="flow-value">{{ post.wantItem.name }}</text>
+								<text class="flow-value">{{ post.wantItem ? post.wantItem.name : '?' }}</text>
 							</view>
 						</view>
-						<view v-else class="wish-info">
-							<text class="wish-target">目标：{{ post.wantedItem.name }}</text>
-							<text v-if="post.wantedItem.budget > 0" class="wish-budget">
-								预算 ¥{{ post.wantedItem.budget }}
-							</text>
-						</view>
 					</view>
 
-					<!-- 物品预览图 -->
-					<view v-if="post.images && post.images.length > 0" class="card-images">
-						<image
-							v-for="(img, idx) in post.images.slice(0, 3)"
-							:key="idx"
-							:src="img"
-							class="card-image-item"
-							mode="aspectFill"
-						/>
-						<view v-if="post.images.length > 3" class="card-image-more">
-							<text>+{{ post.images.length - 3 }}</text>
+					<!-- 底部 -->
+					<view class="post-footer">
+						<view class="post-action" @click.stop="likePost(post)">
+							<AppIcon :name="post.liked ? 'heart-fill' : 'heart'" :size="32" :color="post.liked ? '#FF4D4F' : '#CCC'" />
+							<text class="action-text">{{ post.replyCount || 0 }}</text>
 						</view>
-					</view>
-
-					<!-- 底部操作 -->
-					<view class="card-footer">
-						<text class="footer-views">{{ post.views }} 次浏览</text>
-						<view class="footer-action" @click.stop="goChat(post)">
-							<AppIcon name="chat" :size="28" color="#4F6EF7" />
-							<text class="action-text">聊聊</text>
+						<view class="post-action" @click.stop="goChat(post)">
+							<AppIcon name="chat-bubble" :size="30" color="#CCC" />
+							<text class="action-text">私信</text>
 						</view>
 					</view>
 				</view>
-			</view>
 
-			<!-- 空状态 -->
-			<view v-else class="empty-state">
-				<text class="empty-icon">🤝</text>
-				<text class="empty-text">暂无互助帖子</text>
-				<text class="empty-sub">发布第一个心愿或求出帖吧~</text>
+				<view v-if="loadError && filteredPosts.length === 0" class="error-state">
+					<text class="error-icon">⚠️</text>
+					<text class="error-text">加载失败，请检查网络后重试</text>
+					<view class="retry-btn" @click="loadPosts"><text>重新加载</text></view>
+				</view>
+				<view class="empty-state" v-else-if="filteredPosts.length === 0">
+					<view class="empty-icon"><AppIcon name="exchange" :size="80" color="#CCC" /></view>
+					<text>暂无相关内容</text>
+					<text class="mt-8" style="font-size:24rpx;color:#CCC;">快去发布第一条互助帖吧~</text>
+				</view>
 			</view>
 		</view>
 
-		<AppTabBar :current="1" />
+		<CustomTabBar :current="1" />
 	</view>
 </template>
 
 <script>
-import AppTabBar from '@/components/CustomTabBar.vue';
+import CustomTabBar from '@/components/CustomTabBar.vue';
 import AppIcon from '@/components/AppIcon.vue';
 import { get } from '@/utils/request.js';
 import store from '@/utils/store.js';
 
+const TAG_CLASS_MAP = { wish: 'tag-hot', exchange: 'tag-barter', help: 'tag', group: 'tag-new' };
+const TAG_LABEL_MAP = { wish: '求购', exchange: '以物换物', help: '求助', group: '拼单' };
+
 export default {
-	components: { AppTabBar, AppIcon },
+	components: { CustomTabBar, AppIcon },
 	data() {
 		return {
+			tabList: ['全部', '求购心愿', '以物换物', '求助帮忙', '拼单', '其他'],
 			currentTab: 0,
-			tabs: [
-				{ label: '全部', value: '' },
-				{ label: '以物换物', value: 'exchange' },
-				{ label: '求购', value: 'wish' },
-				{ label: '求借', value: 'borrow' },
-			],
-			postList: [],
+			posts: [],
+			unreadCount: 0,
+			loadError: false,
 		};
 	},
-	onShow() {
+	computed: {
+		filteredPosts() {
+			if (this.currentTab === 0) return this.posts;
+			const activeTab = this.tabList[this.currentTab];
+			return this.posts.filter((p) => p.tab === activeTab);
+		},
+	},
+	mounted() {
 		this.loadPosts();
+		this.loadUnreadCount();
+	},
+	onShow() {
+		this.loadUnreadCount();
 	},
 	methods: {
+		getTagClass(post) {
+			return (TAG_CLASS_MAP[post.type] || 'tag') + ' tag';
+		},
+		getTagLabel(post) {
+			return post.tab || TAG_LABEL_MAP[post.type] || '其他';
+		},
 		async loadPosts() {
 			try {
-				const params = { page: 1, pageSize: 20 };
-				const tab = this.tabs[this.currentTab];
-				if (tab.value === 'exchange') {
-					params.type = 'exchange';
-				} else if (tab.value === 'wish') {
-					params.type = 'wish';
-				}
-				const data = await get('/api/exchange-posts', params);
-				let list = data.list;
-				// 前端过滤求借
-				if (tab.value === 'borrow') {
-					list = list.filter((p) => p.type === 'wish' && p.isBorrow);
-				}
-				this.postList = list;
+				const data = await get('/api/exchange-posts', { page: 1, pageSize: 20 });
+				this.posts = (data.list || []).map((p) => ({
+					...p,
+					liked: false,
+				}));
+				this.loadError = false;
 			} catch (e) {
-				this.postList = [];
+				this.posts = [];
+				this.loadError = true;
 			}
 		},
-		onTabChange(i) {
-			this.currentTab = i;
-			this.loadPosts();
+		async loadUnreadCount() {
+			try {
+				const data = await get('/api/conversations/unread-count');
+				this.unreadCount = data.count || 0;
+				if (store.setUnreadCount) store.setUnreadCount(this.unreadCount);
+			} catch (e) { /* ignore */ }
 		},
-		goDetail(post) {
-			uni.navigateTo({ url: '/pages/exchange/detail?id=' + post.id });
+		switchTab(i) {
+			this.currentTab = i;
+		},
+		likePost(post) {
+			post.liked = !post.liked;
+			if (post.liked) post.replyCount = (post.replyCount || 0) + 1;
+			else post.replyCount = Math.max(0, (post.replyCount || 1) - 1);
+		},
+		goSearch() {
+			uni.navigateTo({ url: '/pages/search/index' });
+		},
+		goMessages() {
+			uni.navigateTo({ url: '/pages/mine/messages/index' });
+		},
+		goPublish() {
+			if (!store.isLoggedIn) {
+				uni.reLaunch({ url: '/pages/login/index' });
+				return;
+			}
+			uni.navigateTo({ url: '/pages/publish/index' });
+		},
+		goPostDetail(post) {
+			uni.navigateTo({ url: '/pages/exchange-detail/index?id=' + post.id });
 		},
 		goChat(post) {
 			if (!store.isLoggedIn) {
 				uni.reLaunch({ url: '/pages/login/index' });
 				return;
 			}
-			// 跳转到聊天页
-			uni.navigateTo({
-				url: '/pages/chat/index?id=conv1&exchangeId=' + post.id,
-			});
+			uni.navigateTo({ url: '/pages/chat/index?id=conv1&exchangeId=' + post.id });
 		},
 	},
 };
 </script>
 
 <style scoped>
-.tab-row {
-	display: flex;
-	margin-bottom: 24rpx;
-	gap: 12rpx;
-}
+@import '@/styles/common.scss';
 
-.tab-item {
-	padding: 12rpx 28rpx;
-	border-radius: 28rpx;
-	font-size: 26rpx;
-	color: #6B6F80;
-	background: #FFFFFF;
-	transition: all 0.2s;
+.exchange-header { display: flex; align-items: center; gap: 16rpx; margin-bottom: 16rpx; }
+.exchange-header .search-bar { margin-bottom: 0; }
+.message-btn {
+	position: relative; width: 80rpx; height: 80rpx; background: #FFF; border-radius: 50%;
+	display: flex; align-items: center; justify-content: center;
+	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04); flex-shrink: 0;
 }
-
-.tab-item.active {
-	color: #FFFFFF;
-	background: #4F6EF7;
-	font-weight: 500;
+.tab-section { margin-bottom: 20rpx; }
+.tab-chip {
+	flex-shrink: 0; padding: 12rpx 28rpx; border-radius: 30rpx; font-size: 26rpx;
+	color: #666; background: #FFF; white-space: nowrap; transition: all 0.2s;
 }
-
-/* 帖子卡片 */
-.exchange-card {
-	background: #FFFFFF;
-	border-radius: 20rpx;
-	padding: 24rpx;
-	margin-bottom: 16rpx;
+.tab-chip.active { color: #FFF; background: #4F6EF7; font-weight: 500; }
+.post-entry {
+	display: flex; align-items: center; justify-content: space-between;
+	background: #FFF; border-radius: 16rpx; padding: 18rpx 24rpx; margin-bottom: 20rpx;
 	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
 }
-
-.card-header {
-	display: flex;
-	align-items: center;
-	margin-bottom: 16rpx;
+.post-entry-content { display: flex; align-items: center; gap: 14rpx; }
+.post-entry-text { font-size: 28rpx; color: #999; }
+.post-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16rpx; }
+.post-user { display: flex; align-items: center; gap: 14rpx; }
+.user-avatar-post { width: 64rpx; height: 64rpx; font-size: 24rpx; flex-shrink: 0; }
+.post-nickname { font-size: 28rpx; color: #333; font-weight: 500; }
+.post-time { font-size: 22rpx; color: #999; margin-top: 2rpx; }
+.post-title { font-size: 32rpx; color: #333; font-weight: 600; display: block; margin-bottom: 10rpx; }
+.post-desc { font-size: 26rpx; color: #999; line-height: 1.5; display: block; margin-bottom: 14rpx; }
+.post-reward {
+	display: inline-flex; align-items: center; gap: 8rpx;
+	background: #FFF3E0; padding: 6rpx 16rpx; border-radius: 8rpx; margin-bottom: 14rpx;
 }
-
-.avatar {
-	width: 64rpx;
-	height: 64rpx;
-	border-radius: 50%;
-	margin-right: 16rpx;
-	flex-shrink: 0;
+.reward-text { font-size: 30rpx; color: #FF6B3D; font-weight: bold; }
+.reward-label { font-size: 22rpx; color: #FF9800; }
+.exchange-info { background: #F8F9FC; border-radius: 12rpx; padding: 20rpx; margin-bottom: 16rpx; }
+.exchange-flow { display: flex; align-items: center; justify-content: space-between; }
+.flow-item { display: flex; flex-direction: column; flex: 1; }
+.flow-label { font-size: 20rpx; color: #B0B4C0; margin-bottom: 4rpx; }
+.flow-value { font-size: 26rpx; color: #1A1D28; font-weight: 500; }
+.flow-arrow { padding: 0 16rpx; }
+.post-footer {
+	display: flex; align-items: center; gap: 30rpx; padding-top: 16rpx; border-top: 1px solid #F5F5F5;
 }
-
-.card-meta {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-}
-
-.card-username {
-	font-size: 26rpx;
-	color: #1A1D28;
-	font-weight: 500;
-}
-
-.card-time {
-	font-size: 22rpx;
-	color: #B0B4C0;
-	margin-top: 2rpx;
-}
-
-.tag {
-	padding: 6rpx 16rpx;
-	border-radius: 12rpx;
-	font-size: 22rpx;
-	font-weight: 500;
-}
-
-.tag-wish {
-	background: #FFF0EB;
-	color: #FF6B3D;
-}
-
-.tag-exchange {
-	background: #EDF0FE;
-	color: #4F6EF7;
-}
-
-.card-title {
-	font-size: 30rpx;
-	font-weight: 600;
-	color: #1A1D28;
-	display: block;
-	margin-bottom: 8rpx;
-}
-
-.card-desc {
-	font-size: 24rpx;
-	color: #8B8FA3;
-	line-height: 1.5;
-	display: block;
-	margin-bottom: 16rpx;
-}
-
-/* 物品预览图 */
-.card-images {
-	display: flex;
-	gap: 8rpx;
-	margin-bottom: 16rpx;
-}
-
-.card-image-item {
-	width: 140rpx;
-	height: 140rpx;
-	border-radius: 10rpx;
-	background: #F3F4F8;
-}
-
-.card-image-more {
-	width: 140rpx;
-	height: 140rpx;
-	border-radius: 10rpx;
-	background: rgba(0, 0, 0, 0.35);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.card-image-more text {
-	font-size: 30rpx;
-	color: #FFFFFF;
-	font-weight: 600;
-}
-
-/* 交换信息区 */
-.exchange-info {
-	background: #F8F9FC;
-	border-radius: 12rpx;
-	padding: 20rpx;
-	margin-bottom: 16rpx;
-}
-
-.exchange-flow {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
-.flow-item {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-}
-
-.flow-label {
-	font-size: 20rpx;
-	color: #B0B4C0;
-	margin-bottom: 4rpx;
-}
-
-.flow-value {
-	font-size: 26rpx;
-	color: #1A1D28;
-	font-weight: 500;
-}
-
-.flow-arrow {
-	padding: 0 16rpx;
-}
-
-.wish-info {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
-.wish-target {
-	font-size: 26rpx;
-	color: #1A1D28;
-	font-weight: 500;
-}
-
-.wish-budget {
-	font-size: 28rpx;
-	color: #FF6B3D;
-	font-weight: 700;
-}
-
-/* 底部 */
-.card-footer {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.footer-views {
-	font-size: 22rpx;
-	color: #B0B4C0;
-}
-
-.footer-action {
-	display: flex;
-	align-items: center;
-	gap: 6rpx;
-	padding: 10rpx 20rpx;
-	border-radius: 20rpx;
-	background: #EDF0FE;
-	transition: all 0.15s;
-}
-
-.footer-action:active {
-	background: #DEE3FD;
-}
-
-.action-text {
-	font-size: 24rpx;
-	color: #4F6EF7;
-	font-weight: 500;
-}
-
-.empty-sub {
-	font-size: 24rpx;
-	color: #B0B4C0;
-	margin-top: 8rpx;
-}
+.post-action { display: flex; align-items: center; gap: 6rpx; padding: 4rpx 0; }
+.action-text { font-size: 24rpx; color: #CCC; }
 </style>

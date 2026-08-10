@@ -3,37 +3,62 @@
 		{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "校园市集"
+				"navigationBarTitleText": "拾闲小栈",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/exchange/index",
 			"style": {
-				"navigationBarTitleText": "互助"
-			}
-		},
-		{
-			"path": "pages/publish/index",
-			"style": {
-				"navigationBarTitleText": "发布"
-			}
-		},
-		{
-			"path": "pages/message/index",
-			"style": {
-				"navigationBarTitleText": "消息"
-			}
-		},
-		{
-			"path": "pages/mine/index",
-			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "互助广场",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/lease/index",
 			"style": {
-				"navigationBarTitleText": "租借"
+				"navigationBarTitleText": "校园租借",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationBarBackgroundColor": "#4F6EF7",
+				"navigationBarTextStyle": "white",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/publish/index",
+			"style": {
+				"navigationBarTitleText": "发布",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/search/index",
+			"style": {
+				"navigationBarTitleText": "搜索",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#4F6EF7"
 			}
 		},
 		{
@@ -43,75 +68,128 @@
 			}
 		},
 		{
-			"path": "pages/item-detail/index",
+			"path": "pages/goods-detail/index",
 			"style": {
-				"navigationBarTitleText": "物品详情"
+				"navigationBarTitleText": "商品详情",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
 			}
 		},
 		{
-			"path": "pages/exchange/detail",
+			"path": "pages/lease-detail/index",
 			"style": {
-				"navigationBarTitleText": "互助详情"
+				"navigationBarTitleText": "租借详情",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
 			}
 		},
 		{
-			"path": "pages/search/index",
+			"path": "pages/exchange-detail/index",
 			"style": {
-				"navigationBarTitleText": "搜索",
-				"navigationStyle": "custom"
+				"navigationBarTitleText": "互助详情",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
 			}
 		},
 		{
-			"path": "pages/mine/my-posts",
-			"style": { "navigationBarTitleText": "我的发布" }
-		},
-		{
-			"path": "pages/mine/my-favorites",
-			"style": { "navigationBarTitleText": "我的收藏" }
-		},
-		{
-			"path": "pages/mine/my-orders",
-			"style": { "navigationBarTitleText": "我的交易" }
-		},
-		{
-			"path": "pages/mine/my-rentals",
-			"style": { "navigationBarTitleText": "我的租借" }
-		},
-		{
-			"path": "pages/mine/my-exchanges",
-			"style": { "navigationBarTitleText": "我的互助" }
-		},
-		{
-			"path": "pages/mine/history",
-			"style": { "navigationBarTitleText": "浏览记录" }
-		},
-		{
-			"path": "pages/mine/blacklist",
-			"style": { "navigationBarTitleText": "黑名单" }
-		},
-		{
-			"path": "pages/mine/edit-profile",
-			"style": { "navigationBarTitleText": "编辑资料" }
-		},
-		{
-			"path": "pages/login/index",
+			"path": "pages/mine/messages/index",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"navigationBarBackgroundColor": "#4F6EF7"
+				"navigationBarTitleText": "消息中心",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/mine/my-publish/index",
+			"style": {
+				"navigationBarTitleText": "我的发布",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/mine/my-collect/index",
+			"style": {
+				"navigationBarTitleText": "我的收藏",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/mine/my-exchange/index",
+			"style": {
+				"navigationBarTitleText": "我的互助",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/mine/my-lease/index",
+			"style": {
+				"navigationBarTitleText": "我的租借",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/mine/blacklist/index",
+			"style": {
+				"navigationBarTitleText": "黑名单",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/mine/browse-history/index",
+			"style": {
+				"navigationBarTitleText": "浏览记录",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/mine/edit-profile/index",
+			"style": {
+				"navigationBarTitleText": "编辑资料",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/mine/credit/index",
+			"style": {
+				"navigationBarTitleText": "信用分",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/user/index",
+			"style": {
+				"navigationBarTitleText": "用户主页",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/price/index",
+			"style": {
+				"navigationBarTitleText": "二手估价",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
 			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "",
+		"navigationBarTitleText": "拾闲小栈",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#F5F5F5"
 	},
 	"tabBar": {
 		"custom": true,
 		"color": "#999999",
-		"selectedColor": "#3C7DFF",
+		"selectedColor": "#4F6EF7",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "white",
 		"list": [
@@ -124,12 +202,8 @@
 				"text": "互助"
 			},
 			{
-				"pagePath": "pages/publish/index",
-				"text": "发布"
-			},
-			{
-				"pagePath": "pages/message/index",
-				"text": "消息"
+				"pagePath": "pages/lease/index",
+				"text": "租借"
 			},
 			{
 				"pagePath": "pages/mine/index",
