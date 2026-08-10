@@ -1,0 +1,40 @@
+/**
+ * iconfont 图标字体样式
+ *
+ * 使用说明：
+ * 1. 从 https://www.iconfont.cn 选择图标加入项目
+ * 2. 下载字体文件，将 iconfont.ttf 放入本目录
+ * 3. 字体文件会自动被本文件引用
+ *
+ * 当前使用 AppIcon 组件的 SVG 方案作为主方案，
+ * 本文件作为 iconfont 字体方案的备用入口。
+ */
+
+@font-face {
+	font-family: "app-iconfont";
+	src: url("iconfont.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+.app-icon {
+	font-family: "app-iconfont" !important;
+	font-style: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 图标 unicode 映射（需根据实际 iconfont 项目更新） */
+.icon-home:before      { content: "\e601"; }
+.icon-exchange:before  { content: "\e602"; }
+.icon-lease:before     { content: "\e603"; }
+.icon-mine:before      { content: "\e604"; }
+.icon-plus:before      { content: "\e605"; }
+.icon-search:before    { content: "\e606"; }
+.icon-arrow-right:before { content: "\e607"; }
+.icon-location:before  { content: "\e608"; }
+.icon-back:before      { content: "\e609"; }
+.icon-close:before     { content: "\e60a"; }
+.icon-check:before     { content: "\e60b"; }
+.icon-message:before   { content: "\e60c"; }
+.icon-share:before     { content: "\e60d"; }

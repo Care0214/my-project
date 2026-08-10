@@ -1,0 +1,200 @@
+/**
+ * 拾闲小栈 - 公共样式库（整合版）
+ *
+ * 合并 项目开发 的 SCSS 变量体系和 8月项目 的实用类。
+ * 所有页面共享的样式类，避免重复代码。
+ *
+ * 引用方式：在各页面 style 中: @import '@/styles/common.scss';
+ */
+
+/* ========== 页面容器 ========== */
+.page-container {
+	min-height: 100vh;
+	background: #F5F5F5;
+	padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+}
+
+/* 无底部 tab 的页面 */
+.page-container--clean {
+	min-height: 100vh;
+	background: #F5F5F5;
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ========== 页面主体 ========== */
+.page-body {
+	padding: 24rpx;
+}
+
+/* ========== 页面标题 ========== */
+.page-title {
+	font-size: 44rpx;
+	font-weight: bold;
+	color: #333;
+	display: block;
+	margin-bottom: 24rpx;
+}
+
+/* ========== 通用卡片 ========== */
+.card {
+	background: #FFFFFF;
+	border-radius: 16rpx;
+	padding: 24rpx;
+	margin-bottom: 20rpx;
+	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+/* ========== 搜索栏 ========== */
+.search-bar {
+	display: flex;
+	align-items: center;
+	background: #FFFFFF;
+	border-radius: 40rpx;
+	padding: 18rpx 28rpx;
+	margin-bottom: 24rpx;
+	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.search-placeholder {
+	color: #999999;
+	font-size: 28rpx;
+	margin-left: 14rpx;
+	flex: 1;
+}
+
+/* ========== 空状态 ========== */
+.empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 80rpx 40rpx;
+	color: #999;
+	font-size: 28rpx;
+}
+
+.empty-state .empty-icon { margin-bottom: 20rpx; opacity: 0.4; }
+
+/* ========== 标签 ========== */
+.tag {
+	display: inline-block;
+	padding: 4rpx 14rpx;
+	border-radius: 8rpx;
+	font-size: 22rpx;
+	background: #EEF4FF;
+	color: #4F6EF7;
+}
+
+.tag-hot    { background: #FFF0EB; color: #FF6B3D; }
+.tag-new    { background: #E8F8EE; color: #22C55E; }
+.tag-lease  { background: #FFF3E0; color: #FF9800; }
+.tag-barter { background: #F3E5F5; color: #9C27B0; }
+
+/* ========== 徽章 ========== */
+.badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 32rpx;
+	height: 32rpx;
+	padding: 0 8rpx;
+	border-radius: 16rpx;
+	font-size: 20rpx;
+	color: #FFF;
+	background: #FF4D4F;
+	line-height: 1;
+}
+
+/* ========== 按钮 ========== */
+.btn-primary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16rpx 40rpx;
+	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	color: #FFF;
+	border-radius: 40rpx;
+	font-size: 28rpx;
+	font-weight: 500;
+	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
+	transition: transform 0.15s;
+}
+
+.btn-primary:active { transform: scale(0.96); }
+
+.btn-outline {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 14rpx 36rpx;
+	border: 2rpx solid #4F6EF7;
+	color: #4F6EF7;
+	border-radius: 40rpx;
+	font-size: 26rpx;
+	background: #FFF;
+}
+
+.btn-ghost {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 12rpx 28rpx;
+	color: #666;
+	border-radius: 30rpx;
+	font-size: 24rpx;
+	background: #F5F5F5;
+}
+
+/* ========== 头像占位 ========== */
+.avatar-placeholder {
+	background: linear-gradient(135deg, #E0E0E0, #D0D0D0);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #FFF;
+	font-size: 28rpx;
+	font-weight: bold;
+}
+
+/* ========== 横向滚动 ========== */
+.scroll-x {
+	display: flex;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
+	gap: 16rpx;
+}
+
+.scroll-x::-webkit-scrollbar { display: none; }
+
+/* ========== Flex 布局快捷类 ========== */
+.flex-row    { display: flex; flex-direction: row; align-items: center; }
+.flex-col    { display: flex; flex-direction: column; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-center  { display: flex; align-items: center; justify-content: center; }
+.flex-1       { flex: 1; }
+
+/* ========== 间距 ========== */
+.mt-8  { margin-top: 8rpx; }
+.mt-16 { margin-top: 16rpx; }
+.mt-24 { margin-top: 24rpx; }
+.mb-8  { margin-bottom: 8rpx; }
+.mb-16 { margin-bottom: 16rpx; }
+.mb-24 { margin-bottom: 24rpx; }
+.ml-8  { margin-left: 8rpx; }
+.ml-16 { margin-left: 16rpx; }
+.mr-8  { margin-right: 8rpx; }
+.mr-16 { margin-right: 16rpx; }
+
+/* ========== 安全区域 ========== */
+.safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+/* ========== 分割线 ========== */
+.divider {
+	width: 100%;
+	height: 1px;
+	background: #F0F0F0;
+	margin: 16rpx 0;
+}

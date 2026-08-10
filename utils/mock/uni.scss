@@ -1,0 +1,114 @@
+/**
+ * uni-app 全局样式变量
+ *
+ * 拾闲小栈 — 配色系统
+ * 温暖靛蓝 + 珊瑚橙 双色方案
+ */
+
+/* ========================================
+   品牌色（主色）
+   ======================================== */
+$uni-color-primary: #4F6EF7;
+$uni-color-primary-dark: #3D56D4;
+$uni-color-primary-light: #EDF0FE;
+
+/* ========================================
+   功能色
+   ======================================== */
+$uni-color-accent: #FF6B3D;          /* 强调色：价格、标签、CTA */
+$uni-color-success: #22C55E;
+$uni-color-warning: #F59E0B;
+$uni-color-error: #EF4444;
+
+/* ========================================
+   文字颜色
+   ======================================== */
+$uni-text-color: #1A1D28;            /* 主文字 */
+$uni-text-color-secondary: #6B6F80;  /* 辅助文字 */
+$uni-text-color-grey: #B0B4C0;       /* 弱化文字/占位符 */
+$uni-text-color-inverse: #FFFFFF;    /* 反色文字 */
+
+/* ========================================
+   背景颜色
+   ======================================== */
+$uni-bg-color: #FFFFFF;              /* 卡片/组件背景 */
+$uni-bg-color-grey: #F2F3F8;         /* 页面背景 */
+$uni-bg-color-hover: #F8F9FC;        /* 点击态 */
+$uni-bg-color-mask: rgba(0, 0, 0, 0.45);
+
+/* ========================================
+   边框
+   ======================================== */
+$uni-border-color: #E8EAF0;
+
+/* ========================================
+   圆角
+   ======================================== */
+$uni-border-radius-sm: 8rpx;
+$uni-border-radius-base: 12rpx;
+$uni-border-radius-lg: 16rpx;
+$uni-border-radius-xl: 20rpx;
+$uni-border-radius-round: 9999rpx;
+
+/* ========================================
+   间距
+   ======================================== */
+$uni-spacing-xs: 8rpx;
+$uni-spacing-sm: 12rpx;
+$uni-spacing-base: 16rpx;
+$uni-spacing-md: 20rpx;
+$uni-spacing-lg: 24rpx;
+$uni-spacing-xl: 32rpx;
+$uni-spacing-2xl: 40rpx;
+
+/* ========================================
+   阴影
+   ======================================== */
+$uni-shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+$uni-shadow-base: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+$uni-shadow-lg: 0 4rpx 24rpx rgba(0, 0, 0, 0.08);
+
+/* ========================================
+   文字尺寸
+   ======================================== */
+$uni-font-size-xs: 20rpx;
+$uni-font-size-sm: 22rpx;
+$uni-font-size-base: 26rpx;
+$uni-font-size-md: 28rpx;
+$uni-font-size-lg: 30rpx;
+$uni-font-size-xl: 32rpx;
+$uni-font-size-title: 36rpx;
+$uni-font-size-display: 48rpx;
+
+/* ========================================
+   字体粗细
+   ======================================== */
+$uni-font-weight-normal: 400;
+$uni-font-weight-medium: 500;
+$uni-font-weight-semibold: 600;
+$uni-font-weight-bold: 700;
+
+/* ========================================
+   图片尺寸
+   ======================================== */
+$uni-img-size-sm: 40rpx;
+$uni-img-size-base: 52rpx;
+$uni-img-size-lg: 80rpx;
+
+/* ========================================
+   透明度
+   ======================================== */
+$uni-opacity-disabled: 0.35;
+
+/* ========================================
+   文章场景
+   ======================================== */
+$uni-color-title: #1A1D28;
+$uni-font-size-title: 36rpx;
+$uni-color-subtitle: #6B6F80;
+$uni-font-size-subtitle: 28rpx;
+$uni-color-paragraph: #1A1D28;
+$uni-font-size-paragraph: 28rpx;
+
+/* 引入公共样式 */
+@import './styles/common.scss';
