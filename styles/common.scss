@@ -1,41 +1,70 @@
 /**
  * 公共样式
- * 所有页面共享的样式类，避免重复代码
+ * 校园交易平台 — 所有页面共享的样式类
  *
  * 引用方式：
  *   在各页面 style 中: @import '@/styles/common.scss';
- *   或者在 uni.scss 中全局引入
+ *   当前已在 uni.scss 中全局引入，无需单独引用
  */
 
 /* ========== 页面容器 ========== */
 .page-container {
 	min-height: 100vh;
 	background: $uni-bg-color-grey;
-	/* 适配底部安全区域（iPhone X 等机型） */
 	padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+}
+
+/* 无底部 tab 的页面（登录页等） */
+.page-container--clean {
+	min-height: 100vh;
+	background: $uni-bg-color-grey;
+	padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* ========== 页面主体 ========== */
 .page-body {
-	padding: 30rpx;
+	padding: $uni-spacing-lg;
 }
 
 /* ========== 页面标题 ========== */
 .page-title {
-	font-size: 48rpx;
-	font-weight: bold;
+	font-size: $uni-font-size-display;
+	font-weight: $uni-font-weight-bold;
 	color: $uni-text-color;
 	display: block;
-	margin-bottom: 30rpx;
+	margin-bottom: $uni-spacing-xl;
 }
 
 /* ========== 通用卡片 ========== */
 .card {
 	background: $uni-bg-color;
-	border-radius: 16rpx;
-	padding: 30rpx;
-	margin-bottom: 20rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	border-radius: $uni-border-radius-lg;
+	padding: $uni-spacing-lg;
+	margin-bottom: $uni-spacing-base;
+	box-shadow: $uni-shadow-sm;
+}
+
+.card--hover:active {
+	background: $uni-bg-color-hover;
+}
+
+/* ========== 头像占位 ========== */
+.avatar {
+	width: 72rpx;
+	height: 72rpx;
+	border-radius: $uni-border-radius-round;
+	background: linear-gradient(135deg, $uni-color-primary-light, #E0E4FE);
+	flex-shrink: 0;
+}
+
+.avatar--sm {
+	width: 56rpx;
+	height: 56rpx;
+}
+
+.avatar--lg {
+	width: 140rpx;
+	height: 140rpx;
 }
 
 /* ========== 空状态 ========== */
@@ -44,39 +73,229 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 80rpx 40rpx;
+	padding: 120rpx 40rpx;
 	color: $uni-text-color-grey;
 	font-size: $uni-font-size-base;
 }
 
 .empty-state .empty-icon {
-	margin-bottom: 20rpx;
-	opacity: 0.4;
+	font-size: 80rpx;
+	margin-bottom: $uni-spacing-md;
+}
+
+.empty-state .empty-text {
+	font-size: $uni-font-size-md;
+	color: $uni-text-color-grey;
+	margin-top: $uni-spacing-sm;
 }
 
 /* ========== 列表项 ========== */
 .list-item {
 	display: flex;
 	align-items: center;
-	padding: 24rpx 0;
-	border-bottom: 1px solid #f0f0f0;
+	justify-content: space-between;
+	padding: $uni-spacing-lg 30rpx;
+	background: $uni-bg-color;
 }
 
-.list-item:last-child {
-	border-bottom: none;
+.list-item:active {
+	background: $uni-bg-color-hover;
+}
+
+.list-item + .list-item {
+	border-top: 1px solid $uni-border-color;
+}
+
+.list-item__left {
+	display: flex;
+	align-items: center;
+	flex: 1;
+	min-width: 0;
+}
+
+.list-item__icon {
+	margin-right: $uni-spacing-md;
+	flex-shrink: 0;
+}
+
+.list-item__content {
+	flex: 1;
+	min-width: 0;
+}
+
+.list-item__title {
+	font-size: $uni-font-size-md;
+	color: $uni-text-color;
+}
+
+.list-item__desc {
+	font-size: $uni-font-size-sm;
+	color: $uni-text-color-grey;
+	margin-top: 4rpx;
+}
+
+.list-item__right {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+	margin-left: $uni-spacing-base;
 }
 
 /* ========== 标签 ========== */
 .tag {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
 	padding: 4rpx 16rpx;
-	border-radius: 8rpx;
-	font-size: 22rpx;
-	background: #e8f0ff;
+	border-radius: $uni-border-radius-sm;
+	font-size: $uni-font-size-xs;
+	font-weight: $uni-font-weight-medium;
+}
+
+.tag--primary {
+	background: $uni-color-primary-light;
 	color: $uni-color-primary;
+}
+
+.tag--accent {
+	background: #FFF0EB;
+	color: $uni-color-accent;
+}
+
+.tag--success {
+	background: #E8F9EF;
+	color: $uni-color-success;
+}
+
+.tag--warning {
+	background: #FFF8E6;
+	color: $uni-color-warning;
+}
+
+/* ========== 按钮 ========== */
+.btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 88rpx;
+	border-radius: $uni-border-radius-lg;
+	font-size: $uni-font-size-lg;
+	font-weight: $uni-font-weight-medium;
+	transition: all 0.15s;
+}
+
+.btn--primary {
+	background: $uni-color-primary;
+	color: #FFFFFF;
+}
+
+.btn--primary:active {
+	background: $uni-color-primary-dark;
+}
+
+.btn--outline {
+	background: transparent;
+	color: $uni-color-primary;
+	border: 2rpx solid $uni-color-primary;
+}
+
+.btn--outline:active {
+	background: $uni-color-primary-light;
+}
+
+.btn--ghost {
+	background: transparent;
+	color: $uni-color-primary;
+}
+
+.btn--ghost:active {
+	background: $uni-color-primary-light;
+}
+
+.btn--sm {
+	height: 64rpx;
+	padding: 0 $uni-spacing-lg;
+	font-size: $uni-font-size-base;
+	border-radius: $uni-border-radius-base;
+}
+
+.btn--disabled {
+	opacity: $uni-opacity-disabled;
+	pointer-events: none;
+}
+
+/* ========== 分割线 ========== */
+.divider {
+	height: 1px;
+	background: $uni-border-color;
+	margin: $uni-spacing-base 0;
+}
+
+.divider--spaced {
+	margin: $uni-spacing-lg 0;
+}
+
+/* ========== 文本省略 ========== */
+.text-ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.text-ellipsis-2 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 }
 
 /* ========== 安全区域 ========== */
 .safe-area-bottom {
 	padding-bottom: env(safe-area-inset-bottom);
 }
+
+.safe-area-pt {
+	padding-top: env(safe-area-inset-top);
+}
+
+/* ========== 间距工具类 ========== */
+.mt-sm { margin-top: $uni-spacing-sm; }
+.mt-base { margin-top: $uni-spacing-base; }
+.mt-lg { margin-top: $uni-spacing-lg; }
+.mt-xl { margin-top: $uni-spacing-xl; }
+.mb-sm { margin-bottom: $uni-spacing-sm; }
+.mb-base { margin-bottom: $uni-spacing-base; }
+.mb-lg { margin-bottom: $uni-spacing-lg; }
+.mb-xl { margin-bottom: $uni-spacing-xl; }
+
+/* ========== Flex 工具类 ========== */
+.flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+/* ========== 输入框通用样式 ========== */
+.input-field {
+	width: 100%;
+	height: 88rpx;
+	padding: 0 $uni-spacing-lg;
+	border-radius: $uni-border-radius-base;
+	background: $uni-bg-color-grey;
+	font-size: $uni-font-size-md;
+	color: $uni-text-color;
+}
+
+.input-field::placeholder {
+	color: $uni-text-color-grey;
+}
+
+/* ========== 文案对齐 ========== */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
