@@ -1,0 +1,82 @@
+/**
+ * 公共样式
+ * 所有页面共享的样式类，避免重复代码
+ *
+ * 引用方式：
+ *   在各页面 style 中: @import '@/styles/common.scss';
+ *   或者在 uni.scss 中全局引入
+ */
+
+/* ========== 页面容器 ========== */
+.page-container {
+	min-height: 100vh;
+	background: $uni-bg-color-grey;
+	/* 适配底部安全区域（iPhone X 等机型） */
+	padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+}
+
+/* ========== 页面主体 ========== */
+.page-body {
+	padding: 30rpx;
+}
+
+/* ========== 页面标题 ========== */
+.page-title {
+	font-size: 48rpx;
+	font-weight: bold;
+	color: $uni-text-color;
+	display: block;
+	margin-bottom: 30rpx;
+}
+
+/* ========== 通用卡片 ========== */
+.card {
+	background: $uni-bg-color;
+	border-radius: 16rpx;
+	padding: 30rpx;
+	margin-bottom: 20rpx;
+	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+/* ========== 空状态 ========== */
+.empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 80rpx 40rpx;
+	color: $uni-text-color-grey;
+	font-size: $uni-font-size-base;
+}
+
+.empty-state .empty-icon {
+	margin-bottom: 20rpx;
+	opacity: 0.4;
+}
+
+/* ========== 列表项 ========== */
+.list-item {
+	display: flex;
+	align-items: center;
+	padding: 24rpx 0;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.list-item:last-child {
+	border-bottom: none;
+}
+
+/* ========== 标签 ========== */
+.tag {
+	display: inline-block;
+	padding: 4rpx 16rpx;
+	border-radius: 8rpx;
+	font-size: 22rpx;
+	background: #e8f0ff;
+	color: $uni-color-primary;
+}
+
+/* ========== 安全区域 ========== */
+.safe-area-bottom {
+	padding-bottom: env(safe-area-inset-bottom);
+}
