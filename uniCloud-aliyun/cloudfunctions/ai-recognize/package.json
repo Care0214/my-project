@@ -1,0 +1,6 @@
+{
+  "name": "ai-recognize",
+  "version": "1.0.0",
+  "description": "AI 识图云函数：调用千问多模态接口，返回物品分类",
+  "main": "index.js"
+}

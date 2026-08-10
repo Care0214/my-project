@@ -291,7 +291,7 @@ export default {
 
 		goItemDetail() {
 			if (this.relatedItem && this.relatedItem.id) {
-				uni.navigateTo({ url: '/pages/item-detail/index?id=' + this.relatedItem.id });
+				uni.navigateTo({ url: '/pages/goods-detail/index?id=' + this.relatedItem.id });
 			}
 		},
 	},

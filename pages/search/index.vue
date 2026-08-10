@@ -75,7 +75,14 @@
 					@click="goDetail(item)"
 				>
 					<view class="result-image" :style="{ background: item.imageBg || '#F3F4F8' }">
-						<AppIcon name="image" :size="36" color="#D0D3E0" />
+						<image
+							v-if="item.images && item.images.length > 0"
+							:src="item.images[0]"
+							class="result-image__img"
+							mode="aspectFill"
+							lazy-load
+						/>
+						<AppIcon v-else name="image" :size="36" color="#D0D3E0" />
 						<view class="result-price-tag">
 							<text v-if="item.price === 0" class="r-free">免费</text>
 							<text v-else class="r-price">¥{{ item.price }}</text>
@@ -90,6 +97,13 @@
 						</view>
 					</view>
 				</view>
+			</view>
+
+			<!-- 加载失败 -->
+			<view v-else-if="searchError && !loading" class="error-state">
+				<text class="error-icon">⚠️</text>
+				<text class="error-text">搜索失败，请稍后重试</text>
+				<view class="retry-btn" @click="doSearch"><text>重新搜索</text></view>
 			</view>
 
 			<!-- 空结果 -->
@@ -123,6 +137,8 @@ export default {
 			hasSearched: false,
 			results: [],
 			loading: false,
+			searchError: false,
+			categoryId: '',
 			history: [],
 			hotSearches: [
 				'iPad',
@@ -136,8 +152,12 @@ export default {
 			],
 		};
 	},
-	onLoad() {
+	onLoad(options) {
 		this.loadHistory();
+		if (options && options.category) {
+			this.categoryId = options.category;
+			this.doSearch();
+		}
 	},
 	methods: {
 		// ========== 历史记录 ==========
@@ -177,6 +197,7 @@ export default {
 		// ========== 搜索 ==========
 		onInput(e) {
 			this.keyword = e.detail.value;
+			this.categoryId = '';
 		},
 
 		searchHistory(keyword) {
@@ -186,21 +207,27 @@ export default {
 
 		async doSearch() {
 			const kw = this.keyword.trim();
-			if (!kw) return;
+			if (!kw && !this.categoryId) return;
 
 			this.lastKeyword = kw;
 			this.hasSearched = true;
 			this.loading = true;
 			this.results = [];
+			this.searchError = false;
 
 			// 保存到历史
 			this.saveHistory(kw);
 
 			try {
-				const data = await get('/api/items', { keyword: kw, pageSize: 20 });
+				const data = await get('/api/items', {
+					keyword: kw || undefined,
+					categoryId: this.categoryId || undefined,
+					pageSize: 20,
+				});
 				this.results = data.list || [];
 			} catch (e) {
 				this.results = [];
+				this.searchError = true;
 			} finally {
 				this.loading = false;
 			}
@@ -208,6 +235,7 @@ export default {
 
 		clearInput() {
 			this.keyword = '';
+			this.categoryId = '';
 			this.hasSearched = false;
 			this.results = [];
 		},
@@ -239,7 +267,7 @@ export default {
 
 		// ========== 导航 ==========
 		goDetail(item) {
-			uni.navigateTo({ url: '/pages/item-detail/index?id=' + item.id });
+			uni.navigateTo({ url: '/pages/goods-detail/index?id=' + item.id });
 		},
 
 		goBack() {
@@ -406,6 +434,7 @@ export default {
 	width: 140rpx;
 	height: 140rpx;
 	border-radius: 12rpx;
+	overflow: hidden;
 	flex-shrink: 0;
 	margin-right: 20rpx;
 	display: flex;
@@ -413,6 +442,7 @@ export default {
 	justify-content: center;
 	position: relative;
 }
+.result-image__img { width: 100%; height: 100%; }
 
 .result-price-tag {
 	position: absolute;

@@ -8,8 +8,8 @@
 					<view class="logo-icon">
 						<AppIcon name="school" :size="56" color="#FFFFFF" />
 					</view>
-					<text class="logo-text">校园市集</text>
-					<text class="logo-sub">让你的闲置，成为别人的宝藏</text>
+					<text class="logo-text">拾闲小栈</text>
+					<text class="logo-sub">校园闲置物品智能交换</text>
 				</view>
 
 				<!-- 步骤指示器 -->
@@ -31,7 +31,7 @@
 
 				<!-- Step 1: 微信授权 -->
 				<view v-if="currentStep === 1" class="step-content">
-					<text class="step-title">欢迎来到校园市集</text>
+					<text class="step-title">欢迎来到拾闲小栈</text>
 					<text class="step-desc">
 						仅限本校学生使用，保障交易安全可靠
 					</text>
