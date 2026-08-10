@@ -1,0 +1,11 @@
+/* 零尺寸占位，避免影响页面布局 */
+.custom-tab-bar-placeholder {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}

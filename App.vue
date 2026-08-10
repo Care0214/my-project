@@ -1,13 +1,16 @@
-<template>
-	<view>
-		<slot />
-	</view>
-</template>
-
 <script>
 export default {
 	onLaunch() {
 		console.log('App Launch');
+
+		// 检查登录态：无 token 则跳转登录页
+		const token = uni.getStorageSync('token');
+		if (!token) {
+			// 延迟跳转，确保页面栈初始化完成
+			setTimeout(() => {
+				uni.reLaunch({ url: '/pages/login/index' });
+			}, 100);
+		}
 	},
 	onShow() {
 		console.log('App Show');
@@ -30,12 +33,12 @@ export default {
 
 /* 全局基础样式 */
 page {
-	background: #F5F5F5;
+	background: #F2F3F8;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 		'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB',
 		'Microsoft YaHei', sans-serif;
 	font-size: 28rpx;
-	color: #333333;
+	color: #1A1D28;
 	-webkit-font-smoothing: antialiased;
 }
 

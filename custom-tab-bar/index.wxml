@@ -1,0 +1,7 @@
+<!--
+  自定义 tabBar 占位组件
+  实际 tabBar 由各页面内的 AppTabBar 组件渲染。
+  此组件仅满足微信自定义 tabBar 的编译要求，渲染一个零尺寸容器。
+  微信框架会自动在每个 tab 页注入此组件，必须存在但无需可见内容。
+-->
+<view class="custom-tab-bar-placeholder"></view>

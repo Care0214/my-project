@@ -1,43 +1,115 @@
 <template>
 	<view class="page-container">
 		<view class="page-body">
-			<text class="page-title">首页</text>
-
 			<!-- 搜索栏 -->
-			<view class="search-bar">
-				<AppIcon name="search" :size="36" color="#999" />
+			<view class="search-bar" @click="goSearch">
+				<AppIcon name="search" :size="36" color="#B0B4C0" />
 				<text class="search-placeholder">搜索你需要的物品或服务</text>
 			</view>
 
 			<!-- 分类快捷入口 -->
-			<view class="category-row">
+			<view class="category-scroll">
 				<view
 					v-for="cat in categories"
-					:key="cat.name"
-					class="category-item"
+					:key="cat.id"
+					:class="['category-item', { active: activeCategory === cat.id }]"
+					@click="onCategoryChange(cat.id)"
 				>
-					<view class="category-icon">
-						<AppIcon :name="cat.icon" :size="44" color="#3C7DFF" />
+					<view
+						class="category-icon"
+						:style="{ background: cat.color + '18' }"
+					>
+						<AppIcon :name="cat.icon" :size="40" :color="cat.color" />
 					</view>
 					<text class="category-name">{{ cat.name }}</text>
 				</view>
 			</view>
 
-			<!-- 最新发布 -->
-			<text class="section-title">最新发布</text>
-			<view class="card" v-for="i in 3" :key="i">
-				<view class="card-header">
-					<view class="avatar"></view>
-					<view class="card-meta">
-						<text class="card-username">用户昵称</text>
-						<text class="card-time">刚刚发布</text>
-					</view>
-					<text class="tag">闲置</text>
+			<!-- 热门推荐 / 最新发布 切换 -->
+			<view class="section-header">
+				<text class="section-title">{{ activeCategory ? '分类浏览' : '为你推荐' }}</text>
+				<view class="sort-tabs">
+					<text
+						:class="['sort-tab', { active: sortBy === 'latest' }]"
+						@click="sortBy = 'latest'; refreshList()"
+					>最新</text>
+					<text
+						:class="['sort-tab', { active: sortBy === 'hot' }]"
+						@click="sortBy = 'hot'; refreshList()"
+					>热门</text>
 				</view>
-				<text class="card-title">物品标题示例</text>
-				<text class="card-desc text-ellipsis-2">
-					物品描述内容，简要说明物品的状态、新旧程度以及联系方式等信息
-				</text>
+			</view>
+
+			<!-- 物品列表 -->
+			<view v-if="itemList.length > 0" class="item-list">
+				<view
+					v-for="item in itemList"
+					:key="item.id"
+					class="item-card"
+					@click="goDetail(item)"
+				>
+					<!-- 物品图 -->
+					<view class="item-image" :style="{ background: item.imageBg || '#F3F4F8' }">
+						<image
+							v-if="item.images && item.images.length > 0"
+							:src="item.images[0]"
+							class="item-image__img"
+							mode="aspectFill"
+						/>
+						<view v-else class="item-image__placeholder">
+							<AppIcon name="image" :size="56" color="#D0D3E0" />
+						</view>
+						<!-- 价格标签 -->
+						<view class="item-price-tag">
+							<text v-if="item.price === 0" class="price-free">免费</text>
+							<text v-else class="price-num">¥{{ item.price }}</text>
+						</view>
+						<!-- 类型标签 -->
+						<view v-if="item.type === 'lease'" class="item-type-tag">
+							<text>可租</text>
+						</view>
+					</view>
+
+					<view class="item-info">
+						<text class="item-title text-ellipsis">{{ item.title }}</text>
+						<text class="item-desc text-ellipsis-2">{{ item.description }}</text>
+
+						<view class="item-footer">
+							<view class="item-seller">
+								<view
+									class="item-avatar-sm"
+									:style="{ background: item.seller && item.seller.avatarBg ? item.seller.avatarBg : '#E0E0E0' }"
+								></view>
+								<text class="item-seller-name">{{ item.seller ? item.seller.nickname : '匿名' }}</text>
+							</view>
+							<view class="item-meta">
+								<view class="item-meta-item" v-if="item.viewCount">
+									<AppIcon name="eye" :size="22" color="#B0B4C0" />
+									<text>{{ item.viewCount }}</text>
+								</view>
+								<text class="item-location" v-if="item.location">{{ item.location }}</text>
+								<text class="item-time">{{ item.publishTimeText }}</text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+
+			<!-- 空状态 -->
+			<view v-else-if="!loading" class="empty-state">
+				<text class="empty-icon">📦</text>
+				<text class="empty-text">暂无物品</text>
+				<text class="empty-sub">下拉刷新试试，或者去发布闲置吧~</text>
+			</view>
+
+			<!-- 加载状态 -->
+			<view v-if="loading" class="loading-row">
+				<text class="loading-text">加载中...</text>
+			</view>
+
+			<!-- 没有更多 -->
+			<view v-if="!hasMore && itemList.length > 0" class="loading-row">
+				<text class="loading-text">— 已经到底了 —</text>
 			</view>
 		</view>
 
@@ -48,46 +120,129 @@
 <script>
 import AppTabBar from '@/components/CustomTabBar.vue';
 import AppIcon from '@/components/AppIcon.vue';
+import { get } from '@/utils/request.js';
 
 export default {
-	components: {
-		AppTabBar,
-		AppIcon,
-	},
+	components: { AppTabBar, AppIcon },
 	data() {
 		return {
-			categories: [
-				{ name: '学习用品', icon: 'lease' },
-				{ name: '生活杂物', icon: 'lease' },
-				{ name: '数码电子', icon: 'lease' },
-				{ name: '其他', icon: 'lease' },
-			],
+			categories: [],
+			activeCategory: '',
+			sortBy: 'latest',
+			itemList: [],
+			page: 1,
+			pageSize: 10,
+			hasMore: true,
+			loading: false,
 		};
+	},
+	onLoad() {
+		this.loadCategories();
+		this.loadItems();
+	},
+	// 下拉刷新
+	onPullDownRefresh() {
+		this.refreshList();
+	},
+	// 上拉加载更多
+	onReachBottom() {
+		if (this.hasMore && !this.loading) {
+			this.page++;
+			this.loadItems(true);
+		}
+	},
+	methods: {
+		async loadCategories() {
+			try {
+				const cats = await get('/api/categories');
+				this.categories = cats;
+			} catch (e) {
+				this.categories = [
+					{ id: 'c1', name: '教材教辅', icon: 'book', color: '#4F6EF7' },
+					{ id: 'c2', name: '数码电子', icon: 'device', color: '#6366F1' },
+					{ id: 'c3', name: '生活用品', icon: 'shirt', color: '#FF6B3D' },
+					{ id: 'c4', name: '运动户外', icon: 'sport', color: '#22C55E' },
+					{ id: 'c5', name: '免费赠送', icon: 'gift', color: '#F59E0B' },
+					{ id: 'c6', name: '其他', icon: 'category', color: '#8B5CF6' },
+				];
+			}
+		},
+
+		async loadItems(append = false) {
+			if (this.loading) return;
+			this.loading = true;
+
+			try {
+				const data = await get('/api/items', {
+					page: this.page,
+					pageSize: this.pageSize,
+					categoryId: this.activeCategory || undefined,
+					sort: this.sortBy,
+				});
+
+				if (append) {
+					this.itemList = [...this.itemList, ...data.list];
+				} else {
+					this.itemList = data.list;
+				}
+				this.hasMore = data.hasMore;
+			} catch (e) {
+				// mock 数据已内置
+			} finally {
+				this.loading = false;
+				uni.stopPullDownRefresh();
+			}
+		},
+
+		refreshList() {
+			this.page = 1;
+			this.hasMore = true;
+			this.loadItems(false);
+		},
+
+		onCategoryChange(catId) {
+			if (this.activeCategory === catId) {
+				this.activeCategory = '';
+			} else {
+				this.activeCategory = catId;
+			}
+			this.refreshList();
+		},
+
+		goSearch() {
+			uni.navigateTo({ url: '/pages/search/index' });
+		},
+
+		goDetail(item) {
+			uni.navigateTo({ url: '/pages/item-detail/index?id=' + item.id });
+		},
 	},
 };
 </script>
 
 <style scoped>
+/* 搜索栏 */
 .search-bar {
 	display: flex;
 	align-items: center;
 	background: #FFFFFF;
 	border-radius: 40rpx;
-	padding: 20rpx 30rpx;
-	margin-bottom: 30rpx;
+	padding: 20rpx 28rpx;
+	margin-bottom: 24rpx;
 	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
 }
 
 .search-placeholder {
-	color: #999999;
-	font-size: 28rpx;
+	color: #B0B4C0;
+	font-size: 26rpx;
 	margin-left: 16rpx;
 }
 
-.category-row {
+/* 分类 */
+.category-scroll {
 	display: flex;
-	justify-content: space-around;
-	margin-bottom: 30rpx;
+	justify-content: space-between;
+	margin-bottom: 28rpx;
 }
 
 .category-item {
@@ -97,74 +252,215 @@ export default {
 }
 
 .category-icon {
-	width: 100rpx;
-	height: 100rpx;
-	background: #EEF4FF;
-	border-radius: 50%;
+	width: 96rpx;
+	height: 96rpx;
+	border-radius: 24rpx;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin-bottom: 10rpx;
+	margin-bottom: 8rpx;
+	transition: all 0.2s;
+}
+
+.category-item.active .category-icon {
+	transform: scale(1.08);
+	box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
 }
 
 .category-name {
-	font-size: 24rpx;
-	color: #666;
+	font-size: 22rpx;
+	color: #6B6F80;
+}
+
+/* 排序 */
+.section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20rpx;
 }
 
 .section-title {
 	font-size: 34rpx;
-	font-weight: bold;
-	color: #333;
-	margin-bottom: 20rpx;
-	display: block;
+	font-weight: 700;
+	color: #1A1D28;
 }
 
-.card-header {
+.sort-tabs {
+	display: flex;
+	gap: 8rpx;
+}
+
+.sort-tab {
+	padding: 8rpx 20rpx;
+	border-radius: 20rpx;
+	font-size: 24rpx;
+	color: #6B6F80;
+	background: #FFFFFF;
+	transition: all 0.15s;
+}
+
+.sort-tab.active {
+	color: #4F6EF7;
+	background: #EDF0FE;
+	font-weight: 500;
+}
+
+/* 物品卡片 */
+.item-card {
+	background: #FFFFFF;
+	border-radius: 20rpx;
+	margin-bottom: 20rpx;
+	overflow: hidden;
+	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	transition: all 0.15s;
+}
+
+.item-card:active {
+	transform: scale(0.99);
+	box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.item-image {
+	width: 100%;
+	height: 340rpx;
+	position: relative;
+	overflow: hidden;
+}
+
+.item-image__img {
+	width: 100%;
+	height: 100%;
+}
+
+.item-image__placeholder {
+	width: 100%;
+	height: 100%;
 	display: flex;
 	align-items: center;
+	justify-content: center;
+}
+
+.item-price-tag {
+	position: absolute;
+	right: 20rpx;
+	bottom: 20rpx;
+	padding: 6rpx 20rpx;
+	border-radius: 20rpx;
+	background: rgba(0, 0, 0, 0.6);
+	/* backdrop-filter 在小程序中不支持，使用更高不透明度替代 */
+	z-index: 2;
+}
+
+.price-num {
+	font-size: 30rpx;
+	font-weight: 700;
+	color: #FF6B3D;
+}
+
+.price-free {
+	font-size: 26rpx;
+	font-weight: 600;
+	color: #22C55E;
+}
+
+.item-type-tag {
+	position: absolute;
+	left: 20rpx;
+	top: 20rpx;
+	padding: 4rpx 16rpx;
+	border-radius: 12rpx;
+	background: rgba(34, 197, 94, 0.85);
+	z-index: 2;
+}
+
+.item-type-tag text {
+	font-size: 22rpx;
+	color: #FFFFFF;
+	font-weight: 500;
+}
+
+.item-info {
+	padding: 20rpx 24rpx 24rpx;
+}
+
+.item-title {
+	font-size: 30rpx;
+	font-weight: 600;
+	color: #1A1D28;
+	display: block;
+	margin-bottom: 8rpx;
+}
+
+.item-desc {
+	font-size: 24rpx;
+	color: #8B8FA3;
+	line-height: 1.5;
+	display: block;
 	margin-bottom: 16rpx;
 }
 
-.avatar {
-	width: 72rpx;
-	height: 72rpx;
-	background: #E0E0E0;
-	border-radius: 50%;
-	margin-right: 16rpx;
-	flex-shrink: 0;
-}
-
-.card-meta {
-	flex: 1;
+.item-footer {
 	display: flex;
-	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
 }
 
-.card-username {
-	font-size: 28rpx;
-	color: #333;
-	font-weight: 500;
+.item-seller {
+	display: flex;
+	align-items: center;
 }
 
-.card-time {
+.item-avatar-sm {
+	width: 40rpx;
+	height: 40rpx;
+	border-radius: 50%;
+	margin-right: 10rpx;
+}
+
+.item-seller-name {
+	font-size: 24rpx;
+	color: #6B6F80;
+}
+
+.item-meta {
+	display: flex;
+	align-items: center;
+	gap: 16rpx;
+}
+
+.item-meta-item {
+	display: flex;
+	align-items: center;
+	gap: 4rpx;
+}
+
+.item-meta-item text {
 	font-size: 22rpx;
-	color: #999;
-	margin-top: 4rpx;
+	color: #B0B4C0;
 }
 
-.card-title {
-	font-size: 30rpx;
-	color: #333;
-	font-weight: 500;
-	display: block;
-	margin-bottom: 10rpx;
+.item-location,
+.item-time {
+	font-size: 22rpx;
+	color: #B0B4C0;
 }
 
-.card-desc {
-	font-size: 26rpx;
-	color: #999;
-	line-height: 1.5;
-	display: block;
+/* 加载 */
+.loading-row {
+	display: flex;
+	justify-content: center;
+	padding: 30rpx 0;
+}
+
+.loading-text {
+	font-size: 24rpx;
+	color: #B0B4C0;
+}
+
+.empty-sub {
+	font-size: 24rpx;
+	color: #B0B4C0;
+	margin-top: 8rpx;
 }
 </style>
