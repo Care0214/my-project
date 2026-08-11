@@ -283,14 +283,7 @@ export default {
 				{ label: '价格最低', value: 'price_asc' },
 				{ label: '价格最高', value: 'price_desc' },
 			],
-			campuses: [
-				{ id: 1, name: '全部校区' },
-				{ id: 2, name: '主校区' },
-				{ id: 3, name: '东校区' },
-				{ id: 4, name: '西校区' },
-				{ id: 5, name: '南校区' },
-				{ id: 6, name: '北校区' },
-			],
+			campuses: [{ id: 0, name: '全部校区' }],
 			itemList: [],
 			recommendList: [],
 			matchList: [],
@@ -312,6 +305,7 @@ export default {
 	},
 	onLoad() {
 		this.loadCategories();
+		this.loadCampuses();
 		this.loadItems();
 		this.loadRecommendations();
 		this.loadMatches();
@@ -349,6 +343,19 @@ export default {
 					{ id: 'c4', name: '运动户外', icon: 'sports', color: '#22C55E' },
 					{ id: 'c5', name: '服饰箱包', icon: 'fashion', color: '#F59E0B' },
 					{ id: 'c6', name: '免费赠送', icon: 'gift', color: '#EF4444' },
+				];
+			}
+		},
+		async loadCampuses() {
+			const school = (this.$store && this.$store.userInfo && this.$store.userInfo.school) || '';
+			try {
+				const list = await get('/api/campuses', { school });
+				this.campuses = [{ id: 0, name: '全部校区' }, ...(list || [])];
+			} catch (e) {
+				this.campuses = [
+					{ id: 0, name: '全部校区' },
+					{ id: 1, name: '长清湖校区' },
+					{ id: 2, name: '千佛山校区' },
 				];
 			}
 		},

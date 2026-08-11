@@ -74,6 +74,23 @@
 							</picker>
 						</view>
 
+						<!-- 校区选择 -->
+						<view class="form-group">
+							<text class="form-label">校区</text>
+							<picker
+								:range="campusNames"
+								@change="onCampusChange"
+								:disabled="!selectedSchool"
+							>
+								<view class="form-picker">
+									<text :class="{ placeholder: !selectedCampus }">
+										{{ selectedCampus || '请选择你的校区' }}
+									</text>
+									<AppIcon name="arrow-right" :size="28" color="#B0B4C0" />
+								</view>
+							</picker>
+						</view>
+
 						<!-- 学号输入 -->
 						<view class="form-group">
 							<text class="form-label">学号</text>
@@ -177,6 +194,8 @@ export default {
 			schools: [],
 			schoolNames: [],
 			selectedSchool: '',
+			campusNames: [],
+			selectedCampus: '',
 			studentId: '',
 			verifyStatus: '', // '' | 'loading' | 'success' | 'fail'
 
@@ -188,7 +207,7 @@ export default {
 	},
 	computed: {
 		canVerify() {
-			return this.selectedSchool && this.studentId.length >= 6;
+			return this.selectedSchool && this.selectedCampus && this.studentId.length >= 6;
 		},
 		canComplete() {
 			return this.nickname.trim().length > 0;
@@ -214,8 +233,7 @@ export default {
 				this.schools = schools;
 				this.schoolNames = schools.map((s) => s.name);
 			} catch (e) {
-				// mock 数据已有，忽略错误
-				this.schoolNames = ['XX大学', 'YY师范大学', 'ZZ理工大学', 'AA工业大学', 'BB科技大学', 'CC财经大学'];
+				this.schoolNames = ['山东师范大学', '山东大学', '山东理工大学', '山东财经大学'];
 			}
 		},
 
@@ -235,6 +253,14 @@ export default {
 		onSchoolChange(e) {
 			const idx = e.detail.value;
 			this.selectedSchool = this.schoolNames[idx];
+			const school = this.schools.find((s) => s.name === this.selectedSchool);
+			this.campusNames = (school && school.campuses) || [];
+			this.selectedCampus = '';
+		},
+
+		// Step 2: 校区选择
+		onCampusChange(e) {
+			this.selectedCampus = this.campusNames[e.detail.value];
 		},
 
 		// Step 2: 学号验证
@@ -246,6 +272,7 @@ export default {
 			try {
 				await post('/api/user/verify-student', {
 					school: this.selectedSchool,
+					campus: this.selectedCampus,
 					studentId: this.studentId,
 				});
 
@@ -287,6 +314,9 @@ export default {
 				const data = await post('/api/user/complete-profile', {
 					nickname: this.nickname.trim(),
 					avatar: this.avatarPath,
+					school: this.selectedSchool,
+					campus: this.selectedCampus,
+					studentId: this.studentId,
 				});
 
 				// 写入全局 store
@@ -303,6 +333,7 @@ export default {
 					id: 'u_self',
 					nickname: this.nickname.trim(),
 					school: this.selectedSchool,
+					campus: this.selectedCampus,
 					studentId: this.studentId,
 					stats: { posts: 0, exchanges: 0, rentals: 0 },
 				});

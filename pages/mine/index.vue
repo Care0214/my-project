@@ -172,8 +172,8 @@ export default {
 				avatar: '',
 				avatarColor: 'linear-gradient(135deg, #4F6EF7, #6366F1)',
 				bio: '热爱环保的校园闲置交换达人~',
-				school: 'XX大学',
-				campus: '主校区',
+				school: '山东师范大学',
+				campus: '长清湖校区',
 				stats: { posts: 12, exchanges: 5, rentals: 3 },
 			},
 			unreadCount: 0,
@@ -189,6 +189,7 @@ export default {
 				{ name: '黑名单', icon: 'block', page: '/pages/mine/blacklist/index' },
 				{ name: '信用分', icon: 'shield', page: '/pages/mine/credit/index' },
 				{ name: '二手估价', icon: 'price', page: '/pages/price/index' },
+				{ name: '后台管理', icon: 'category', page: '/pages/admin/index' },
 			],
 			creditScore: 0,
 		};
