@@ -253,5 +253,5 @@ export default {
 	display: flex; align-items: center; gap: 30rpx; padding-top: 16rpx; border-top: 1px solid #F5F5F5;
 }
 .post-action { display: flex; align-items: center; gap: 6rpx; padding: 4rpx 0; }
-.action-text { font-size: 24rpx; color: #CCC; }
+.action-text { font-size: 24rpx; color: #999; }
 </style>
