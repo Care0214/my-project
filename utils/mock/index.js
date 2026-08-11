@@ -18,6 +18,7 @@ import {
 	priceReference, aiRecognition, priceConfig,
 	myPublish, myCollections, myExchange, myLease,
 	creditHistory,
+	adminStats, adminReviews, adminUsers, adminReports,
 } from './data.js';
 
 let currentUser = null;
@@ -51,24 +52,24 @@ function resetMockData() {
 
 /* 注入更多演示数据（仅一次） */
 const SEED_ITEMS = [
-	{ title: '考研英语词汇书《恋练有词》', description: '去年备考用的，词汇标注很全，附赠网课笔记', type: 'sell', price: 18, categoryId: 'c1', category: 'book', campus: '主校区', location: '主校区', images: ['/static/goods/book.jpg'], imageBg: '#EEF4FF', viewCount: 156, favoriteCount: 12, isHot: false, isNew: true, seller: users[0] },
-	{ title: '华为 FreeBuds 4E 无线耳机', description: '用过两三次，几乎全新，充电盒无划痕', type: 'sell', price: 129, categoryId: 'c2', category: 'digital', campus: '东校区', location: '东校区', images: ['/static/goods/earbuds.jpg'], imageBg: '#F5F0FF', viewCount: 233, favoriteCount: 21, isHot: false, isNew: true, seller: users[1] },
-	{ title: '宜家工作台灯 白色', description: '宿舍换灯闲置，三档色温可调，很护眼', type: 'sell', price: 35, categoryId: 'c3', category: 'daily', campus: '主校区', location: '主校区', images: ['/static/goods/lamp.jpg'], imageBg: '#FFF5EE', viewCount: 89, favoriteCount: 6, isHot: false, isNew: false, seller: users[2] },
-	{ title: '尤克里里 23寸 桃花芯', description: '入门琴，音色不错，送调音器和琴包', type: 'sell', price: 99, categoryId: 'c4', category: 'sports', campus: '西校区', location: '西校区', images: ['/static/goods/guitar.jpg'], imageBg: '#F0FFF0', viewCount: 178, favoriteCount: 14, isHot: false, isNew: true, seller: users[4] },
-	{ title: '户外冲锋衣 男款 L码', description: '防风防水，就穿过一次，尺码不合适出掉', type: 'sell', price: 260, categoryId: 'c5', category: 'fashion', campus: '北校区', location: '北校区', images: ['/static/goods/jacket.jpg'], imageBg: '#FFF8F0', viewCount: 145, favoriteCount: 11, isHot: false, isNew: false, seller: users[3] },
-	{ title: '考研数学真题大全解', description: '数一数二通用，答案解析很详细，九成新', type: 'sell', price: 25, categoryId: 'c1', category: 'book', campus: '主校区', location: '主校区', images: ['/static/goods/textbook.jpg'], imageBg: '#EEF4FF', viewCount: 342, favoriteCount: 29, isHot: true, isNew: true, seller: users[0] },
-	{ title: '卡西欧 fx-82ES 科学计算器', description: '大二买的，考试用了一年，功能全部正常', type: 'sell', price: 30, categoryId: 'c2', category: 'digital', campus: '南校区', location: '南校区', images: ['/static/goods/calculator.jpg'], imageBg: '#F5F0FF', viewCount: 76, favoriteCount: 5, isHot: false, isNew: false, seller: users[4] },
-	{ title: 'Kindle 青春版 8GB', description: '背光可调，电池很耐用，送保护套', type: 'sell', price: 260, categoryId: 'c2', category: 'digital', campus: '主校区', location: '主校区', images: ['/static/goods/kindle.jpg'], imageBg: '#FAFAFA', viewCount: 415, favoriteCount: 36, isHot: true, isNew: false, seller: users[1] },
-	{ title: '桌面理线收纳盒', description: '整理数据线的神器，全新未用', type: 'sell', price: 12, categoryId: 'c3', category: 'daily', campus: '东校区', location: '东校区', images: ['/static/goods/organizer.jpg'], imageBg: '#FFF5EE', viewCount: 54, favoriteCount: 3, isHot: false, isNew: true, seller: users[2] },
-	{ title: 'JBL T500BT 头戴蓝牙耳机', description: '低频不错，续航20小时，轻微使用痕迹', type: 'sell', price: 180, categoryId: 'c2', category: 'digital', campus: '西校区', location: '西校区', images: ['/static/goods/headphones.jpg'], imageBg: '#F5F0FF', viewCount: 267, favoriteCount: 24, isHot: false, isNew: false, seller: users[3] },
-	{ title: '佳能 M50 微单 + 套机镜头', description: '毕业季出摄影器材，快门数不高，成色新', type: 'sell', price: 2200, categoryId: 'c2', category: 'digital', campus: '主校区', location: '主校区', images: ['/static/goods/camera.jpg'], imageBg: '#F5F0FF', viewCount: 521, favoriteCount: 48, isHot: true, isNew: false, seller: users[2] },
-	{ title: '捷安特山地车 26寸', description: '大二买的，车况好，刹车灵敏，配锁', type: 'sell', price: 380, categoryId: 'c4', category: 'sports', campus: '东校区', location: '东校区', images: ['/static/goods/bicycle.jpg'], imageBg: '#F0FFF0', viewCount: 298, favoriteCount: 31, isHot: false, isNew: false, seller: users[4] },
-	{ title: '宿舍小冰吧 6L', description: '夏天放饮料水果，功率小宿舍可用，静音', type: 'sell', price: 65, categoryId: 'c3', category: 'daily', campus: '主校区', location: '主校区', images: ['/static/goods/fridge.jpg'], imageBg: '#FFF5EE', viewCount: 132, favoriteCount: 9, isHot: false, isNew: true, seller: users[0] },
-	{ title: 'Switch Lite 港版 黄色', description: '掌机成色极好，屏幕无划痕，带收纳包', type: 'sell', price: 950, categoryId: 'c2', category: 'digital', campus: '南校区', location: '南校区', images: ['/static/goods/switch.jpg'], imageBg: '#F5F0FF', viewCount: 603, favoriteCount: 55, isHot: true, isNew: false, seller: users[1] },
-	{ title: '双人露营帐篷 三季帐', description: '户外社闲置，防雨防风，含地钉收纳袋', type: 'sell', price: 120, categoryId: 'c4', category: 'sports', campus: '西校区', location: '西校区', images: ['/static/goods/tent.jpg'], imageBg: '#F0FFF0', viewCount: 87, favoriteCount: 7, isHot: false, isNew: false, seller: users[2] },
-	{ title: '拍立得相纸 10张装', description: '白边经典款，还剩两盒，毕业季拍照用', type: 'sell', price: 45, categoryId: 'c2', category: 'digital', campus: '主校区', location: '主校区', images: ['/static/goods/polaroid.jpg'], imageBg: '#FAFAFA', viewCount: 112, favoriteCount: 8, isHot: false, isNew: true, seller: users[3] },
-	{ title: '折叠午休床 加厚海绵', description: '办公室午休神器，可折叠不占地方', type: 'sell', price: 88, categoryId: 'c3', category: 'daily', campus: '南校区', location: '南校区', images: ['/static/goods/bed.jpg'], imageBg: '#FFF5EE', viewCount: 143, favoriteCount: 13, isHot: false, isNew: false, seller: users[4] },
-	{ title: '枫木长板滑板', description: '新手练习板，轴承很顺滑，含护具一套', type: 'sell', price: 150, categoryId: 'c4', category: 'sports', campus: '北校区', location: '北校区', images: ['/static/goods/skateboard.jpg'], imageBg: '#F0FFF0', viewCount: 98, favoriteCount: 6, isHot: false, isNew: false, seller: users[0] },
+	{ title: '考研英语词汇书《恋练有词》', description: '去年备考用的，词汇标注很全，附赠网课笔记', type: 'sell', price: 18, categoryId: 'c1', category: 'book', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/book.jpg'], imageBg: '#EEF4FF', viewCount: 156, favoriteCount: 12, isHot: false, isNew: true, seller: users[0] },
+	{ title: '华为 FreeBuds 4E 无线耳机', description: '用过两三次，几乎全新，充电盒无划痕', type: 'sell', price: 129, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/earbuds.jpg'], imageBg: '#F5F0FF', viewCount: 233, favoriteCount: 21, isHot: false, isNew: true, seller: users[1] },
+	{ title: '宜家工作台灯 白色', description: '宿舍换灯闲置，三档色温可调，很护眼', type: 'sell', price: 35, categoryId: 'c3', category: 'daily', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/lamp.jpg'], imageBg: '#FFF5EE', viewCount: 89, favoriteCount: 6, isHot: false, isNew: false, seller: users[2] },
+	{ title: '尤克里里 23寸 桃花芯', description: '入门琴，音色不错，送调音器和琴包', type: 'sell', price: 99, categoryId: 'c4', category: 'sports', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/guitar.jpg'], imageBg: '#F0FFF0', viewCount: 178, favoriteCount: 14, isHot: false, isNew: true, seller: users[4] },
+	{ title: '户外冲锋衣 男款 L码', description: '防风防水，就穿过一次，尺码不合适出掉', type: 'sell', price: 260, categoryId: 'c5', category: 'fashion', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/jacket.jpg'], imageBg: '#FFF8F0', viewCount: 145, favoriteCount: 11, isHot: false, isNew: false, seller: users[3] },
+	{ title: '考研数学真题大全解', description: '数一数二通用，答案解析很详细，九成新', type: 'sell', price: 25, categoryId: 'c1', category: 'book', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/textbook.jpg'], imageBg: '#EEF4FF', viewCount: 342, favoriteCount: 29, isHot: true, isNew: true, seller: users[0] },
+	{ title: '卡西欧 fx-82ES 科学计算器', description: '大二买的，考试用了一年，功能全部正常', type: 'sell', price: 30, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/calculator.jpg'], imageBg: '#F5F0FF', viewCount: 76, favoriteCount: 5, isHot: false, isNew: false, seller: users[4] },
+	{ title: 'Kindle 青春版 8GB', description: '背光可调，电池很耐用，送保护套', type: 'sell', price: 260, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/kindle.jpg'], imageBg: '#FAFAFA', viewCount: 415, favoriteCount: 36, isHot: true, isNew: false, seller: users[1] },
+	{ title: '桌面理线收纳盒', description: '整理数据线的神器，全新未用', type: 'sell', price: 12, categoryId: 'c3', category: 'daily', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/organizer.jpg'], imageBg: '#FFF5EE', viewCount: 54, favoriteCount: 3, isHot: false, isNew: true, seller: users[2] },
+	{ title: 'JBL T500BT 头戴蓝牙耳机', description: '低频不错，续航20小时，轻微使用痕迹', type: 'sell', price: 180, categoryId: 'c2', category: 'digital', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/headphones.jpg'], imageBg: '#F5F0FF', viewCount: 267, favoriteCount: 24, isHot: false, isNew: false, seller: users[3] },
+	{ title: '佳能 M50 微单 + 套机镜头', description: '毕业季出摄影器材，快门数不高，成色新', type: 'sell', price: 2200, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/camera.jpg'], imageBg: '#F5F0FF', viewCount: 521, favoriteCount: 48, isHot: true, isNew: false, seller: users[2] },
+	{ title: '捷安特山地车 26寸', description: '大二买的，车况好，刹车灵敏，配锁', type: 'sell', price: 380, categoryId: 'c4', category: 'sports', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/bicycle.jpg'], imageBg: '#F0FFF0', viewCount: 298, favoriteCount: 31, isHot: false, isNew: false, seller: users[4] },
+	{ title: '宿舍小冰吧 6L', description: '夏天放饮料水果，功率小宿舍可用，静音', type: 'sell', price: 65, categoryId: 'c3', category: 'daily', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/fridge.jpg'], imageBg: '#FFF5EE', viewCount: 132, favoriteCount: 9, isHot: false, isNew: true, seller: users[0] },
+	{ title: 'Switch Lite 港版 黄色', description: '掌机成色极好，屏幕无划痕，带收纳包', type: 'sell', price: 950, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/switch.jpg'], imageBg: '#F5F0FF', viewCount: 603, favoriteCount: 55, isHot: true, isNew: false, seller: users[1] },
+	{ title: '双人露营帐篷 三季帐', description: '户外社闲置，防雨防风，含地钉收纳袋', type: 'sell', price: 120, categoryId: 'c4', category: 'sports', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/tent.jpg'], imageBg: '#F0FFF0', viewCount: 87, favoriteCount: 7, isHot: false, isNew: false, seller: users[2] },
+	{ title: '拍立得相纸 10张装', description: '白边经典款，还剩两盒，毕业季拍照用', type: 'sell', price: 45, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/polaroid.jpg'], imageBg: '#FAFAFA', viewCount: 112, favoriteCount: 8, isHot: false, isNew: true, seller: users[3] },
+	{ title: '折叠午休床 加厚海绵', description: '办公室午休神器，可折叠不占地方', type: 'sell', price: 88, categoryId: 'c3', category: 'daily', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/bed.jpg'], imageBg: '#FFF5EE', viewCount: 143, favoriteCount: 13, isHot: false, isNew: false, seller: users[4] },
+	{ title: '枫木长板滑板', description: '新手练习板，轴承很顺滑，含护具一套', type: 'sell', price: 150, categoryId: 'c4', category: 'sports', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/skateboard.jpg'], imageBg: '#F0FFF0', viewCount: 98, favoriteCount: 6, isHot: false, isNew: false, seller: users[0] },
 ];
 
 function seedDemoData() {
@@ -112,20 +113,31 @@ async function handle(url, method, data) {
 	}
 
 	if (url === '/api/campuses' && method === 'GET') {
+		const { school } = data || {};
+		if (school) {
+			const s = schools.find((x) => x.name === school);
+			if (s) return ok(s.campuses.map((name, i) => ({ id: i + 1, name })));
+		}
 		return ok(campuses);
 	}
 
 	if (url === '/api/user/verify-student' && method === 'POST') {
-		const { studentId } = data;
+		const { studentId, school, campus } = data;
 		if (studentId && studentId.length >= 6 && /\d/.test(studentId)) {
-			return ok({ verified: true, school: schools[0].name });
+			return ok({ verified: true, school, campus });
 		}
 		return fail('学号验证失败，请检查后重试');
 	}
 
 	if (url === '/api/user/complete-profile' && method === 'POST') {
-		const { nickname } = data;
-		const user = { ...users[0], nickname: nickname || users[0].nickname };
+		const { nickname, school, campus, studentId } = data;
+		const user = {
+			...users[0],
+			nickname: nickname || users[0].nickname,
+			school: school || users[0].school,
+			campus: campus || users[0].campus,
+			studentId: studentId || users[0].studentId,
+		};
 		currentUser = user;
 		return ok({ userInfo: user });
 	}
@@ -186,11 +198,22 @@ async function handle(url, method, data) {
 
 	if (url === '/api/items' && method === 'POST') {
 		const cat = categories.find((c) => c.id === data.category);
+		const baseUser = currentUser || users[0];
+		const seller = data.anonymous
+			? {
+				id: 'anon_' + Date.now(),
+				nickname: data.anonymousTitle || '拾闲用户',
+				avatarBg: '#8B5CF6',
+				anonymous: true,
+				school: baseUser.school,
+				campus: baseUser.campus,
+			}
+			: baseUser;
 		const newItem = {
 			id: 'i' + Date.now(), ...data,
 			publishTime: new Date().toISOString(), publishTimeText: '刚刚',
 			viewCount: 0, favoriteCount: 0,
-			seller: currentUser || users[0],
+			seller,
 			images: data.images || [], imageBg: '#F3F4F8',
 			categoryId: data.categoryId || data.category || 'c6',
 			category: data.categoryKey || (cat ? cat.key : 'other'),
@@ -289,11 +312,15 @@ async function handle(url, method, data) {
 	}
 
 	if (url === '/api/price/estimate' && method === 'POST') {
-		const { category = 'other', condition = '9成新' } = data || {};
+		const { category = 'other', condition = '9成新', keyword = '' } = data || {};
 		const cfg = priceConfig[category] || priceConfig.other;
 		const mult = CONDITION_MULTIPLIER[condition] || 1;
-		const min = Math.round(cfg.min * mult);
-		const max = Math.round(cfg.max * mult);
+		// 关键词微调：数码/品牌类上调，教材文具类下调
+		let kwMult = 1;
+		if (/(手机|耳机|平板|电脑|笔记本|相机|switch|ps5|kindle|iPad|Mac|索尼|华为|苹果|大疆)/.test(keyword)) kwMult = 1.15;
+		else if (/(书|教材|资料|考研|笔记|文具|计算器)/.test(keyword)) kwMult = 0.85;
+		const min = Math.round(cfg.min * mult * kwMult);
+		const max = Math.round(cfg.max * mult * kwMult);
 		return ok({
 			category, condition,
 			min, max,
@@ -346,11 +373,22 @@ async function handle(url, method, data) {
 	}
 
 	if (url === '/api/exchange-posts' && method === 'POST') {
+		const baseUser = currentUser || users[0];
+		const postUser = data.anonymous
+			? {
+				id: 'anon_' + Date.now(),
+				nickname: data.anonymousTitle || '拾闲用户',
+				avatarBg: '#8B5CF6',
+				anonymous: true,
+				school: baseUser.school,
+				campus: baseUser.campus,
+			}
+			: baseUser;
 		const newPost = {
 			id: 'e' + Date.now(), ...data,
 			createdAt: new Date().toISOString(), createdAtText: '刚刚',
 			status: 'active', views: 0,
-			user: currentUser || users[0], images: data.images || [], imageBg: '#F3F4F8',
+			user: postUser, images: data.images || [], imageBg: '#F3F4F8',
 		};
 		exchangePosts.unshift(newPost);
 		return ok(newPost);
@@ -460,6 +498,45 @@ async function handle(url, method, data) {
 
 	if (url === '/api/credit/history' && method === 'GET') {
 		return ok(creditHistory);
+	}
+
+	// ==================== 后台管理 ====================
+
+	if (url === '/api/admin/statistics' && method === 'GET') {
+		return ok({ ...adminStats, pendingReview: adminReviews.length });
+	}
+
+	if (url === '/api/admin/review-list' && method === 'GET') {
+		return ok(adminReviews);
+	}
+
+	if (url === '/api/admin/review' && method === 'POST') {
+		const { id } = data || {};
+		const idx = adminReviews.findIndex((r) => r.id === id);
+		if (idx > -1) adminReviews.splice(idx, 1);
+		return ok({ handled: true });
+	}
+
+	if (url === '/api/admin/user-list' && method === 'GET') {
+		return ok(adminUsers);
+	}
+
+	if (url === '/api/admin/handle-user' && method === 'POST') {
+		const { id, action } = data || {};
+		const u = adminUsers.find((x) => x.id === id);
+		if (u) u.status = action === 'block' ? 'blocked' : 'normal';
+		return ok({ handled: true });
+	}
+
+	if (url === '/api/admin/reports' && method === 'GET') {
+		return ok(adminReports);
+	}
+
+	if (url === '/api/admin/report' && method === 'POST') {
+		const { id } = data || {};
+		const idx = adminReports.findIndex((r) => r.id === id);
+		if (idx > -1) adminReports.splice(idx, 1);
+		return ok({ handled: true });
 	}
 
 	// ==================== 演示数据重置 ====================

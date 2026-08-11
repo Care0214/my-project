@@ -11,6 +11,7 @@
  *   - Mock 模式开关
  */
 import Vue from 'vue';
+import { getRandomTitle } from '@/utils/title.js';
 
 // 从本地存储恢复登录态
 let savedToken = '';
@@ -43,6 +44,7 @@ const store = {
 
 	get token() { return state.token; },
 	get userInfo() { return state.userInfo; },
+	get title() { return (state.userInfo && state.userInfo.title) || '拾闲用户'; },
 	get unreadCount() { return state.unreadCount; },
 	get isLoggedIn() { return !!state.token; },
 	get useMock() { return state.useMock; },
@@ -55,9 +57,9 @@ const store = {
 	 */
 	login(token, userInfo) {
 		state.token = token;
-		state.userInfo = userInfo;
+		state.userInfo = { ...userInfo, title: userInfo.title || getRandomTitle() };
 		uni.setStorageSync('token', token);
-		uni.setStorageSync('userInfo', JSON.stringify(userInfo));
+		uni.setStorageSync('userInfo', JSON.stringify(state.userInfo));
 	},
 
 	/**

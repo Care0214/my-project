@@ -7,7 +7,7 @@
 					<AppIcon name="close" :size="44" color="#333" />
 				</view>
 				<text class="header-title">发布</text>
-				<view class="submit-btn" @click="submitPublish"><text>发布</text></view>
+				<view class="submit-btn" @click="submitPublish"><text>{{ priceBlocked ? '价格异常，请修改' : '发布' }}</text></view>
 			</view>
 
 			<!-- 发布类型选择 -->
@@ -69,7 +69,7 @@
 								v-for="cat in categories"
 								:key="cat.id"
 								:class="['fix-chip', { active: formData.category === cat.id }]"
-								@click="formData.category = cat.id"
+								@click="selectCategory(cat.id)"
 							>
 								<AppIcon :name="cat.icon" :size="24" :color="formData.category === cat.id ? '#FFF' : '#666'" />
 								<text class="fix-chip-text">{{ cat.name }}</text>
@@ -91,6 +91,19 @@
 					<textarea class="form-textarea" v-model="formData.desc" :placeholder="formData.type === 'wish' ? '详细描述你想要什么…' : '详细描述物品状态、新旧程度等…'" maxlength="500" />
 				</view>
 
+				<!-- 心愿类型 -->
+				<view class="form-item" v-if="formData.type === 'wish'">
+					<text class="form-label">心愿类型</text>
+					<view class="wish-type-row">
+						<view :class="['wish-type', { active: formData.wishType === 'buy' }]" @click="formData.wishType = 'buy'">
+							<text>求购</text>
+						</view>
+						<view :class="['wish-type', { active: formData.wishType === 'borrow' }]" @click="formData.wishType = 'borrow'">
+							<text>求借</text>
+						</view>
+					</view>
+				</view>
+
 				<!-- 出售：价格 -->
 				<view class="form-item" v-if="formData.type === 'sell'">
 					<text class="form-label">出售价格 <text class="required">*</text></text>
@@ -98,10 +111,34 @@
 						<text class="input-prefix">¥</text>
 						<input class="form-input flex-1" v-model="formData.price" placeholder="输入期望售价" type="digit" />
 					</view>
-					<view class="price-ref" v-if="formData.price && Number(formData.price) > 0">
-						<view class="price-ref-header">
-							<AppIcon name="price" :size="28" color="#FF9800" />
-							<text class="price-ref-text">同类物品参考：¥{{ priceRef.min }} ~ ¥{{ priceRef.max }}（{{ priceRef.count }}件）</text>
+
+					<!-- 新旧程度 -->
+					<view class="cond-row" v-if="estimate">
+						<text class="cond-label">新旧程度</text>
+						<view class="cond-chips">
+							<view
+								v-for="c in conditions"
+								:key="c.value"
+								:class="['cond-chip', { active: condition === c.value }]"
+								@click="selectCondition(c.value)"
+							>
+								<text>{{ c.label }}</text>
+							</view>
+						</view>
+					</view>
+
+					<!-- AI 估价参考 -->
+					<view class="estimate-wrap" v-if="estimate">
+						<view class="estimate-head">
+							<AppIcon name="ai" :size="28" color="#4F6EF7" />
+							<text class="estimate-label">AI 估价参考</text>
+							<text class="estimate-range">¥{{ estimate.min }} ~ ¥{{ estimate.max }}</text>
+						</view>
+						<view class="estimate-foot">
+							<text class="estimate-avg">市场均价约 ¥{{ estimate.avg }} · {{ estimate.count }} 件同校区成交</text>
+							<text v-if="priceCheckStatus === 'ok'" class="estimate-status ok">价格合理 ✓</text>
+							<text v-else-if="priceCheckStatus === 'warn'" class="estimate-status warn">价格超出建议范围</text>
+							<text v-else-if="priceCheckStatus === 'block'" class="estimate-status block">价格异常，无法发布</text>
 						</view>
 					</view>
 				</view>
@@ -129,12 +166,56 @@
 							<input class="form-input flex-1" v-model="formData.deposit" placeholder="输入押金金额（选填）" type="digit" />
 						</view>
 					</view>
+					<view class="form-item">
+						<text class="form-label">最短租期</text>
+						<view class="form-input-row">
+							<input class="form-input flex-1" v-model="formData.minDays" placeholder="最少租借天数" type="number" />
+							<text class="input-suffix">天</text>
+						</view>
+					</view>
 				</template>
 
+				<!-- 校区选择 -->
+				<view class="form-item">
+					<text class="form-label">校区</text>
+					<picker :range="campusNames" @change="onCampusChange">
+						<view class="form-picker">
+							<text :class="{ placeholder: !formData.campus }">{{ formData.campus || '请选择校区' }}</text>
+							<AppIcon name="arrow-right" :size="28" color="#B0B4C0" />
+						</view>
+					</picker>
+				</view>
+
+				<!-- 标签 -->
+				<view class="form-item">
+					<text class="form-label">标签 <text class="hint-text">（选填，最多5个）</text></text>
+					<view class="tag-input-row">
+						<input class="form-input flex-1" v-model="tagInput" placeholder="输入标签，如：考研、九成新" maxlength="8" confirm-type="done" @confirm="addTag" />
+						<view class="tag-add-btn" @click="addTag"><text>添加</text></view>
+					</view>
+					<view class="tag-list" v-if="formData.tags.length > 0">
+						<view v-for="(tag, i) in formData.tags" :key="i" class="tag-chip" @click="removeTag(i)">
+							<text>#{{ tag }}</text>
+							<text class="tag-close">✕</text>
+						</view>
+					</view>
+				</view>
+
 				<!-- 联系方式 -->
-				<view class="form-item form-item-last">
+				<view class="form-item">
 					<text class="form-label">联系方式（选填）</text>
 					<input class="form-input" v-model="formData.contact" placeholder="微信号 / 手机号，方便他人联系" />
+				</view>
+
+				<!-- 匿名发布 -->
+				<view class="form-item form-item-last">
+					<view class="anon-row">
+						<view class="anon-info">
+							<text class="anon-title">匿名发布</text>
+							<text class="anon-desc">使用随机称号「{{ anonymousTitle }}」代替昵称，保护隐私</text>
+						</view>
+						<switch :checked="anonymous" color="#4F6EF7" @change="onAnonymousChange" />
+					</view>
 				</view>
 			</view>
 
@@ -168,11 +249,39 @@ export default {
 			categories: [],
 			formData: {
 				type: 'sell', title: '', desc: '', images: [], category: 'c6',
-				price: '', barterWant: '', leasePrice: '', deposit: '', contact: '',
+				price: '', barterWant: '', leasePrice: '', deposit: '', minDays: 1,
+				wishType: 'buy', campus: '', tags: [], contact: '',
 			},
-			priceRef: { min: 25, max: 45, count: 12 },
+			campuses: [],
+			campusNames: [],
+			tagInput: '',
+			estimate: null,
+			estimating: false,
+			condition: '9成新',
+			conditions: [
+				{ label: '全新未拆', value: '全新' },
+				{ label: '9成新', value: '9成新' },
+				{ label: '7成新', value: '7成新' },
+				{ label: '有磨损', value: '有磨损' },
+			],
+			anonymous: false,
 			aiResult: null,
 		};
+	},
+	computed: {
+		anonymousTitle() {
+			return (this.$store && this.$store.title) || '拾闲用户';
+		},
+		priceCheckStatus() {
+			if (!this.estimate || !this.formData.price || Number(this.formData.price) <= 0) return '';
+			const p = Number(this.formData.price);
+			if (p >= this.estimate.min && p <= this.estimate.max) return 'ok';
+			if (p < this.estimate.min * 0.5 || p > this.estimate.max * 2) return 'block';
+			return 'warn';
+		},
+		priceBlocked() {
+			return this.priceCheckStatus === 'block';
+		},
 	},
 	onLoad(options) {
 		if (!store.isLoggedIn) {
@@ -184,6 +293,12 @@ export default {
 			this.formData.type = 'lease';
 		}
 		this.loadCategories();
+		this.loadEstimate();
+		this.loadCampuses();
+		const userInfo = (this.$store && this.$store.userInfo) || {};
+		if (userInfo.campus) {
+			this.formData.campus = userInfo.campus;
+		}
 	},
 	methods: {
 		async loadCategories() {
@@ -200,9 +315,47 @@ export default {
 				];
 			}
 		},
+		async loadCampuses() {
+			const school = (this.$store && this.$store.userInfo && this.$store.userInfo.school) || '';
+			try {
+				this.campuses = await get('/api/campuses', { school });
+				this.campusNames = (this.campuses || []).map((c) => c.name);
+			} catch (e) {
+				this.campuses = [];
+				this.campusNames = ['长清湖校区', '千佛山校区'];
+			}
+		},
+		onCampusChange(e) {
+			this.formData.campus = this.campusNames[e.detail.value];
+		},
+		addTag() {
+			const val = (this.tagInput || '').trim();
+			if (!val) return;
+			if (this.formData.tags.includes(val)) {
+				uni.showToast({ title: '标签已存在', icon: 'none' });
+				return;
+			}
+			if (this.formData.tags.length >= 5) {
+				uni.showToast({ title: '最多添加5个标签', icon: 'none' });
+				return;
+			}
+			this.formData.tags.push(val);
+			this.tagInput = '';
+		},
+		removeTag(index) {
+			this.formData.tags.splice(index, 1);
+		},
 		switchType(type) {
 			this.formData.type = type;
 			if (type === 'wish') this.aiResult = null;
+			if (type !== 'sell') {
+				this.estimate = null;
+			} else {
+				this.loadEstimate();
+			}
+		},
+		onAnonymousChange(e) {
+			this.anonymous = !!e.detail.value;
 		},
 		goBack() {
 			uni.navigateBack();
@@ -245,6 +398,7 @@ export default {
 						tags: real.tags,
 					};
 					this.formData.category = this.aiResult.category;
+					this.loadEstimate();
 					uni.hideLoading();
 					return;
 				}
@@ -263,6 +417,32 @@ export default {
 			];
 			this.aiResult = results[Math.floor(Math.random() * results.length)];
 			this.formData.category = this.aiResult.category;
+			this.loadEstimate();
+		},
+		selectCategory(catId) {
+			this.formData.category = catId;
+			this.loadEstimate();
+		},
+		async loadEstimate() {
+			const keyMap = { c1: 'book', c2: 'digital', c3: 'daily', c4: 'sports', c5: 'fashion', c6: 'other' };
+			const categoryKey = keyMap[this.formData.category];
+			if (!categoryKey || this.estimating) return;
+			this.estimating = true;
+			try {
+				this.estimate = await post('/api/price/estimate', {
+					category: categoryKey,
+					condition: this.condition,
+					keyword: this.formData.title || '',
+				});
+			} catch (e) {
+				this.estimate = null;
+			} finally {
+				this.estimating = false;
+			}
+		},
+		selectCondition(value) {
+			this.condition = value;
+			this.loadEstimate();
 		},
 		submitPublish() {
 			if (!this.formData.title.trim()) {
@@ -277,8 +457,14 @@ export default {
 			if (this.formData.type === 'sell' && (!this.formData.price || Number(this.formData.price) <= 0)) {
 				uni.showToast({ title: '请输入有效的价格', icon: 'none' }); return;
 			}
+			if (this.formData.type === 'sell' && this.priceBlocked) {
+				uni.showToast({ title: '价格超出AI估价合理范围，请调整', icon: 'none' }); return;
+			}
 			if (this.formData.type === 'lease' && (!this.formData.leasePrice || Number(this.formData.leasePrice) <= 0)) {
 				uni.showToast({ title: '请输入有效的日租金', icon: 'none' }); return;
+			}
+			if (!this.formData.campus) {
+				uni.showToast({ title: '请选择校区', icon: 'none' }); return;
 			}
 
 			this.doSubmit();
@@ -295,6 +481,12 @@ export default {
 					price: parseFloat(this.formData.price) || parseFloat(this.formData.leasePrice) || 0,
 					type: this.formData.type,
 					images: this.formData.images,
+					anonymous: this.anonymous,
+					anonymousTitle: this.anonymous ? this.anonymousTitle : '',
+					campus: this.formData.campus,
+					minDays: Number(this.formData.minDays) || 1,
+					tags: this.formData.tags,
+					wishType: this.formData.wishType,
 				});
 				uni.hideLoading();
 				uni.showToast({ title: '发布成功！', icon: 'success' });
@@ -396,10 +588,62 @@ export default {
 .input-prefix { font-size: 32rpx; color: #333; font-weight: bold; }
 .input-suffix { font-size: 24rpx; color: #999; }
 .form-textarea { font-size: 28rpx; color: #333; width: 100%; min-height: 140rpx; }
+.form-picker {
+	display: flex; align-items: center; justify-content: space-between;
+	height: 80rpx; padding: 0 24rpx; background: #F5F5F5;
+	border-radius: 12rpx; font-size: 28rpx; color: #333;
+}
+.form-picker .placeholder { color: #B0B4C0; }
 
-.price-ref { margin-top: 12rpx; padding: 14rpx 18rpx; background: #FFF8E1; border-radius: 10rpx; }
-.price-ref-header { display: flex; align-items: center; gap: 8rpx; }
-.price-ref-text { font-size: 22rpx; color: #FF9800; }
+.wish-type-row { display: flex; gap: 16rpx; }
+.wish-type {
+	flex: 1; text-align: center; padding: 16rpx 0;
+	background: #F5F5F5; border-radius: 12rpx; font-size: 26rpx; color: #666;
+}
+.wish-type.active { background: #EDF0FE; color: #4F6EF7; font-weight: 600; }
+
+.tag-input-row { display: flex; align-items: center; gap: 12rpx; }
+.tag-add-btn {
+	padding: 12rpx 28rpx; border-radius: 30rpx;
+	background: #EDF0FE; color: #4F6EF7; font-size: 24rpx; font-weight: 500;
+	flex-shrink: 0;
+}
+.tag-list { display: flex; flex-wrap: wrap; gap: 12rpx; margin-top: 14rpx; }
+.tag-chip {
+	display: flex; align-items: center; gap: 8rpx;
+	padding: 8rpx 18rpx; background: #F5F5F5; border-radius: 30rpx;
+	font-size: 22rpx; color: #666;
+}
+.tag-close { color: #BBB; font-size: 20rpx; }
+
+.anon-row { display: flex; align-items: center; justify-content: space-between; }
+.anon-info { display: flex; flex-direction: column; gap: 6rpx; }
+.anon-title { font-size: 28rpx; color: #333; font-weight: 500; }
+.anon-desc { font-size: 22rpx; color: #999; }
+
+.cond-row { margin-top: 16rpx; }
+.cond-label { font-size: 24rpx; color: #999; display: block; margin-bottom: 12rpx; }
+.cond-chips { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.cond-chip {
+	padding: 8rpx 24rpx; border-radius: 30rpx; background: #F5F5F5;
+	font-size: 24rpx; color: #666;
+}
+.cond-chip.active { background: #4F6EF7; color: #FFF; font-weight: 500; }
+
+.estimate-wrap {
+	margin-top: 16rpx; padding: 18rpx;
+	background: linear-gradient(135deg, #EDF0FE, #F5F8FF);
+	border-radius: 14rpx; border: 1px solid #D6E4FF;
+}
+.estimate-head { display: flex; align-items: center; gap: 10rpx; }
+.estimate-label { font-size: 24rpx; color: #4F6EF7; font-weight: 600; }
+.estimate-range { margin-left: auto; font-size: 30rpx; font-weight: bold; color: #FF6B3D; }
+.estimate-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12rpx; }
+.estimate-avg { font-size: 20rpx; color: #999; }
+.estimate-status { font-size: 22rpx; font-weight: 500; }
+.estimate-status.ok { color: #22C55E; }
+.estimate-status.warn { color: #F59E0B; }
+.estimate-status.block { color: #FF4D4F; }
 
 .publish-notice {
 	display: flex; align-items: flex-start; gap: 12rpx; padding: 20rpx;

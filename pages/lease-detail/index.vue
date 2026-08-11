@@ -82,7 +82,7 @@ export default {
 			uni.navigateTo({ url: '/pages/chat/index?id=conv1' });
 		},
 		goUser(user) {
-			if (!user || !user.id) return;
+			if (!user || !user.id || user.anonymous) return;
 			uni.navigateTo({ url: '/pages/user/index?id=' + user.id });
 		},
 	},

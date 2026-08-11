@@ -80,7 +80,7 @@ const DEFAULT_AVATAR_COLORS = [
 	'linear-gradient(135deg, #06B6D4, #22D3EE)',
 ];
 
-const DEFAULT_CAMPUSES = ['主校区', '东校区', '西校区', '南校区', '北校区'];
+const DEFAULT_CAMPUSES = ['长清湖校区', '千佛山校区'];
 
 export default {
 	components: { AppIcon },
@@ -115,9 +115,11 @@ export default {
 	methods: {
 		async loadCampuses() {
 			try {
-				const list = await get('/api/campuses');
+				const list = await get('/api/campuses', { school: this.form.school });
 				if (list && list.length) {
 					this.campuses = list.map((c) => c.name);
+				} else {
+					this.campuses = [...DEFAULT_CAMPUSES];
 				}
 			} catch (e) {
 				this.campuses = [...DEFAULT_CAMPUSES];

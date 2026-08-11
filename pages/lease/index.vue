@@ -137,14 +137,7 @@ export default {
 				{ label: '价格最低', value: 'price_asc' },
 				{ label: '价格最高', value: 'price_desc' },
 			],
-			campuses: [
-				{ id: 1, name: '全部校区' },
-				{ id: 2, name: '主校区' },
-				{ id: 3, name: '东校区' },
-				{ id: 4, name: '西校区' },
-				{ id: 5, name: '南校区' },
-				{ id: 6, name: '北校区' },
-			],
+			campuses: [{ id: 0, name: '全部校区' }],
 			currentSort: 'newest',
 			currentCampus: '全部校区',
 			showCampusPicker: false,
@@ -153,9 +146,23 @@ export default {
 		};
 	},
 	onLoad() {
+		this.loadCampuses();
 		this.loadLeaseItems();
 	},
 	methods: {
+		async loadCampuses() {
+			const school = (this.$store && this.$store.userInfo && this.$store.userInfo.school) || '';
+			try {
+				const list = await get('/api/campuses', { school });
+				this.campuses = [{ id: 0, name: '全部校区' }, ...(list || [])];
+			} catch (e) {
+				this.campuses = [
+					{ id: 0, name: '全部校区' },
+					{ id: 1, name: '长清湖校区' },
+					{ id: 2, name: '千佛山校区' },
+				];
+			}
+		},
 		timeAgo(timestamp) {
 			const now = Date.now();
 			const diff = now - timestamp;

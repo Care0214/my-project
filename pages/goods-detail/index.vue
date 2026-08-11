@@ -44,7 +44,10 @@
 						<text class="seller-avatar-text">{{ item.seller ? item.seller.nickname.charAt(0) : '?' }}</text>
 					</view>
 					<view class="seller-info">
-						<text class="seller-name">{{ item.seller ? item.seller.nickname : '匿名' }}</text>
+						<view class="seller-name-row">
+							<text class="seller-name">{{ item.seller ? item.seller.nickname : '匿名' }}</text>
+							<text v-if="item.seller && item.seller.anonymous" class="seller-anon-tag">匿名</text>
+						</view>
 						<text class="seller-campus">{{ item.campus || item.location || '' }}</text>
 					</view>
 					<view class="seller-chat-btn" @click.stop="goChat">
@@ -160,7 +163,7 @@ export default {
 			uni.navigateTo({ url: '/pages/chat/index?id=conv1' });
 		},
 		goUser(user) {
-			if (!user || !user.id) return;
+			if (!user || !user.id || user.anonymous) return;
 			uni.navigateTo({ url: '/pages/user/index?id=' + user.id });
 		},
 	},
@@ -197,6 +200,8 @@ export default {
 .seller-avatar-text { font-size: 32rpx; font-weight: bold; color: #FFF; }
 .seller-info { flex: 1; }
 .seller-name { font-size: 30rpx; font-weight: 600; color: #333; display: block; }
+.seller-name-row { display: flex; align-items: center; gap: 8rpx; }
+.seller-anon-tag { padding: 2rpx 10rpx; background: #F3E8FF; color: #8B5CF6; font-size: 18rpx; border-radius: 6rpx; }
 .seller-campus { font-size: 24rpx; color: #999; margin-top: 4rpx; }
 .seller-chat-btn {
 	padding: 14rpx 28rpx; background: #EDF0FE; border-radius: 30rpx;
