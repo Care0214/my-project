@@ -1,14 +1,17 @@
 <template>
 	<view class="page-container">
 		<view class="page-body">
-			<!-- 搜索栏 -->
-			<view class="search-bar" @click="goSearch">
-				<AppIcon name="search" :size="36" color="#999" />
-				<text class="search-placeholder">搜索闲置物品、教材、数码…</text>
-				<view class="search-filter">
-					<AppIcon name="camera" :size="32" color="#999" />
+			<!-- 搜索栏（固定顶部，下滑不跟随） -->
+			<view class="search-bar-fixed">
+				<view class="search-bar" @click="goSearch">
+					<AppIcon name="search" :size="36" color="#999" />
+					<text class="search-placeholder">搜索闲置物品、教材、数码…</text>
+					<view class="search-filter">
+						<AppIcon name="camera" :size="32" color="#999" />
+					</view>
 				</view>
 			</view>
+			<view class="search-bar-spacer"></view>
 
 			<!-- 分类快捷入口 -->
 			<view class="category-section card">
@@ -473,14 +476,14 @@ export default {
 .filter-sorts { flex: 1; }
 .sort-item {
 	flex-shrink: 0; padding: 10rpx 24rpx; border-radius: 30rpx;
-	font-size: 24rpx; color: #666; background: #FFF; white-space: nowrap;
+	font-size: 25rpx; color: #666; background: #FFF; white-space: nowrap;
 }
 .sort-item.active { color: #FFF; background: #4F6EF7; font-weight: 500; }
 
 /* ======== 区域标题 ======== */
 .section-header { display: flex; align-items: baseline; gap: 12rpx; margin-bottom: 16rpx; }
 .section-title { font-size: 30rpx; font-weight: 600; color: #333; }
-.section-sub { font-size: 22rpx; color: #BBB; }
+.section-sub { font-size: 24rpx; color: #999; }
 
 /* ======== 猜你喜欢 ======== */
 .recommend-section { margin-bottom: 30rpx; }
@@ -508,7 +511,7 @@ export default {
 	display: flex; align-items: center; gap: 6rpx; padding: 6rpx 10rpx;
 	background: #EDF0FE; border-radius: 6rpx;
 }
-.rec-reason-text { font-size: 20rpx; color: #4F6EF7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rec-reason-text { font-size: 22rpx; color: #4F6EF7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ======== 智能匹配 ======== */
 .match-section { margin-bottom: 30rpx; }
@@ -538,7 +541,7 @@ export default {
 .match-item-desc { font-size: 20rpx; color: #999; }
 .match-price { font-size: 28rpx; font-weight: bold; color: #FF6B3D; }
 .match-meta { display: flex; align-items: center; gap: 4rpx; }
-.match-meta-text { font-size: 20rpx; color: #CCC; }
+.match-meta-text { font-size: 22rpx; color: #999; }
 
 /* ======== 物品Feed列表（双列网格） ======== */
 .item-grid { display: flex; gap: 16rpx; align-items: flex-start; }
@@ -574,9 +577,9 @@ export default {
 .item-title { font-size: 26rpx; font-weight: 600; color: #1A1D28; line-height: 1.4; }
 .item-meta-row { display: flex; align-items: center; gap: 10rpx; }
 .item-meta-item { display: flex; align-items: center; gap: 4rpx; }
-.item-meta-item text { font-size: 20rpx; color: #B0B4C0; }
+.item-meta-item text { font-size: 22rpx; color: #8B8FA3; }
 .item-location {
-	flex: 1; font-size: 20rpx; color: #B0B4C0;
+	flex: 1; font-size: 22rpx; color: #8B8FA3;
 	overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
@@ -609,6 +612,15 @@ export default {
 	width: 56rpx; height: 56rpx; border-radius: 50%;
 	background: #F5F5F5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
+
+/* ======== 固定搜索栏 ======== */
+.search-bar-fixed {
+	position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+	background: #F5F5F5;
+	padding: 16rpx 24rpx 10rpx;
+}
+.search-bar-fixed .search-bar { margin-bottom: 0; }
+.search-bar-spacer { height: 96rpx; }
 
 /* ======== 校区选择弹窗 ======== */
 .picker-mask {

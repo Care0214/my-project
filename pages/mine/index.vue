@@ -362,7 +362,7 @@ export default {
 .profile-bio { display: block; font-size: 24rpx; color: rgba(255, 255, 255, 0.8); margin-top: 6rpx; margin-bottom: 10rpx; }
 .profile-tags { display: flex; gap: 10rpx; }
 .profile-tag {
-	padding: 4rpx 14rpx; font-size: 20rpx; color: rgba(255, 255, 255, 0.9);
+	padding: 4rpx 14rpx; font-size: 22rpx; color: rgba(255, 255, 255, 0.9);
 	background: rgba(255, 255, 255, 0.2); border-radius: 6rpx;
 }
 .profile-edit-btn { padding: 10rpx; flex-shrink: 0; }
@@ -389,7 +389,7 @@ export default {
 }
 .credit-info { display: flex; flex-direction: column; gap: 4rpx; }
 .credit-title { font-size: 28rpx; font-weight: 600; color: #1A1D28; }
-.credit-sub { font-size: 20rpx; color: #999; }
+.credit-sub { font-size: 22rpx; color: #999; }
 .credit-right { display: flex; align-items: center; gap: 10rpx; }
 .credit-score { font-size: 40rpx; font-weight: bold; color: #4F6EF7; }
 .credit-level {
@@ -442,7 +442,7 @@ export default {
 	display: flex; flex-direction: column; align-items: center; gap: 8rpx;
 	margin-top: 30rpx; padding: 10rpx 0 20rpx;
 }
-.demo-version { font-size: 22rpx; color: #BBB; }
+.demo-version { font-size: 22rpx; color: #999; }
 .demo-actions { display: flex; gap: 16rpx; margin-top: 4rpx; }
 .demo-btn {
 	padding: 10rpx 32rpx; border-radius: 30rpx;
