@@ -4,89 +4,87 @@
 
 <script>
 /**
- * AppIcon - 图标组件（精修版，纯系统字符渲染）
+ * AppIcon - 纯文本图标组件
  *
- * 说明：
- *  - 全部使用系统自带字符/Emoji，不依赖任何自定义字体，杜绝方框问题；
- *  - 导航与操作类使用"可变色符号"（响应 color，如 ⌂ ⇄ ☰）；
- *  - 内容与分类类使用彩色 Emoji（各设备原生支持）。
+ * 使用 Unicode 字符 / Emoji 渲染图标，兼容微信小程序（不支持 SVG v-html）。
+ * 纯文本符号响应 CSS color，Emoji 保持原色。
  *
  * Props:
  *   name  - 图标名称
  *   size  - 图标尺寸（rpx），默认 40
- *   color - 图标颜色（仅可变色符号响应，Emoji 保持原色），默认 #333
+ *   color - 图标颜色（仅纯文本符号响应），默认 #333
  */
 
 const ICON_MAP = {
-	// ========== 导航 / TabBar（可变色符号，响应 color） ==========
-	home:        '⌂',   // 首页
-	exchange:    '⇄',   // 互助/交换
-	lease:       '☰',   // 租借
-	mine:        '☻',   // 我的
+	// ========== 导航 / TabBar（纯文本符号，响应 color） ==========
+	home:        '⌂',   // ⌂
+	exchange:    '⇄',   // ⇄
+	lease:       '☰',   // ☰
+	mine:        '⚇',   // ⚇
 	plus:        '+',
 	publish:     '+',
 
 	// ========== 搜索与操作 ==========
-	search:      '⌕',
-	'arrow-right': '›',
-	back:        '‹',
-	close:       '✕',
-	check:       '✓',
-	filter:      '⚙',
+	search:      '⌕',   // ⌕
+	'arrow-right': '›', // ›
+	back:        '‹',   // ‹
+	close:       '✕',   // ✕
+	check:       '✓',   // ✓
+	filter:      '⫸',   // ⫸
 
 	// ========== 位置 ==========
-	location:    '📍',
+	location:    '⌖',   // ⌖
 
 	// ========== 消息与社交 ==========
-	message:     '✉',
-	chat:        '✉',
-	'chat-bubble': '💬',
-	share:       '↗',
-	send:        '➤',
+	message:     '✉',   // ✉
+	chat:        '✉',   // ✉
+	'chat-bubble': '💬', // 💬
+	share:       '↗',   // ↗
+	send:        '➤',   // ➤
 
 	// ========== 用户 ==========
-	user:        '👤',
-	edit:        '✎',
+	user:        '👤', // 👤
+	edit:        '✎',   // ✎
 
 	// ========== 交易 ==========
-	cart:        '🛒',
-	heart:       '♡',
-	'heart-fill': '❤',
-	order:       '📋',
-	wallet:      '💰',
+	cart:        '🛒', // 🛒
+	heart:       '♡',   // ♡
+	'heart-fill': '❤',  // ❤
+	order:       '📋', // 📋
+	wallet:      '💰', // 💰
 
-	// ========== 分类（彩色 Emoji） ==========
-	book:        '📖',
-	device:      '💻',
-	digital:     '💻',
-	daily:       '📦',
-	sport:       '⚽',
-	sports:      '⚽',
-	fashion:     '👕',
-	shirt:       '👕',
-	gift:        '🎁',
-	category:    '⚙',
-	other:       '⋯',
+	// ========== 分类 ==========
+	book:        '📖', // 📖
+	device:      '💻', // 💻
+	digital:     '💻', // 💻
+	daily:       '📦', // 📦
+	sport:       '⚽',   // ⚽
+	sports:      '⚽',   // ⚽
+	fashion:     '👕', // 👕
+	shirt:       '👕', // 👕
+	gift:        '🎁', // 🎁
+	category:    '⊞',   // ⊞
+	other:       '⋯',   // ⋯
 
 	// ========== 状态 / 功能 ==========
-	clock:       '🕐',
-	shield:      '🛡',
-	image:       '🖼',
-	tag:         '🏷',
+	clock:       '🕐', // 🕐
+	shield:      '🛡', // 🛡
+	image:       '🖼', // 🖼
+	tag:         '🏷', // 🏷
 
 	// ========== 特殊功能 ==========
-	ai:          '✦',
-	price:       '￥',
-	camera:      '📷',
-	star:        '★',
-	delete:      '🗑',
-	block:       '🚫',
-	eye:         '👁',
-	phone:       '📞',
-	school:      '🏫',
-	verify:      '✔',
-	wechat:      '💚',
-	emoji:       '😊',
+	ai:          '✦',   // ✦
+	price:       '￥',   // ¥ (fullwidth)
+	camera:      '📷', // 📷
+	star:        '★',   // ★
+	delete:      '🗑', // 🗑
+	block:       '⊘',   // ⊘
+	eye:         '👁', // 👁
+	phone:       '📞', // 📞
+	school:      '🏫', // 🏫
+	verify:      '✔',   // ✔
+	wechat:      '💚', // 💚
+	emoji:       '😊', // 😊
 };
 
 export default {

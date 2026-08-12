@@ -210,7 +210,7 @@ export default {
 
 .info-row { display: flex; justify-content: space-between; padding: 20rpx 0; }
 .info-row + .info-row { border-top: 1px solid #F5F5F5; }
-.info-label { font-size: 26rpx; color: #888; }
+.info-label { font-size: 26rpx; color: #999; }
 .info-value { font-size: 26rpx; color: #333; }
 
 .detail-bottom {

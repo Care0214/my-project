@@ -514,7 +514,7 @@ export default {
 
 .type-section { margin-bottom: 24rpx; }
 .section-label { font-size: 28rpx; font-weight: 600; color: #333; display: block; margin-bottom: 16rpx; }
-.hint-text { font-size: 24rpx; color: #999; font-weight: 400; }
+.hint-text { font-size: 24rpx; color: #CCC; font-weight: 400; }
 .type-row { display: flex; gap: 14rpx; flex-wrap: wrap; }
 .type-card {
 	flex: 1; min-width: calc(50% - 14rpx); padding: 20rpx 16rpx;

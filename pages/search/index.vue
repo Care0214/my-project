@@ -413,7 +413,7 @@ export default {
 .result-count {
 	margin-bottom: 16rpx;
 	font-size: 24rpx;
-	color: #999;
+	color: #B0B4C0;
 }
 
 .result-card {
@@ -486,13 +486,13 @@ export default {
 }
 
 .result-seller {
-	font-size: 24rpx;
-	color: #8B8FA3;
+	font-size: 22rpx;
+	color: #B0B4C0;
 }
 
 .result-time {
-	font-size: 24rpx;
-	color: #8B8FA3;
+	font-size: 22rpx;
+	color: #B0B4C0;
 }
 
 /* ========== 空/加载 ========== */

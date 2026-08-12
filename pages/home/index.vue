@@ -12,7 +12,6 @@
 				</view>
 			</view>
 			<view class="search-bar-spacer"></view>
-
 			<!-- 分类快捷入口 -->
 			<view class="category-section card">
 				<view class="scroll-x">
@@ -31,20 +30,22 @@
 			</view>
 
 			<!-- 筛选栏：校区 / 排序 -->
-			<view class="filter-row">
-				<view class="flex-row">
-					<view class="filter-chip" @click="showCampusPicker = true">
-						<AppIcon name="location" :size="28" color="#4F6EF7" />
-						<text class="filter-chip-text">{{ currentCampus }}</text>
+			<view class="box-3">
+				<view class="filter-row">
+					<view class="flex-row">
+						<view class="filter-chip" @click="showCampusPicker = true">
+							<AppIcon name="location" :size="28" color="#4F6EF7" />
+							<text class="filter-chip-text">{{ currentCampus }}</text>
+						</view>
 					</view>
-				</view>
-				<view class="scroll-x filter-sorts">
-					<text
-						v-for="s in sortOptions"
-						:key="s.value"
-						:class="['sort-item', { active: currentSort === s.value }]"
-						@click="applySort(s.value)"
-					>{{ s.label }}</text>
+					<view class="scroll-x filter-sorts">
+						<text
+							v-for="s in sortOptions"
+							:key="s.value"
+							:class="['sort-item', { active: currentSort === s.value }]"
+							@click="applySort(s.value)"
+						>{{ s.label }}</text>
+					</view>
 				</view>
 			</view>
 
@@ -466,6 +467,14 @@ export default {
 .category-text { font-size: 24rpx; color: #666; }
 
 /* ======== 筛选栏 ======== */
+.box-3{
+	position: sticky;
+	top: 91rpx;
+	z-index: 1000;
+	background-color: #FFF;
+	margin-left: -2rpx;
+	margin-right: -2rpx;
+}
 .filter-row { display: flex; align-items: center; padding: 0 0 20rpx; gap: 16rpx; }
 .filter-left { flex-shrink: 0; }
 .filter-chip {
@@ -615,12 +624,15 @@ export default {
 
 /* ======== 固定搜索栏 ======== */
 .search-bar-fixed {
-	position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+	position: sticky;
+	top: -3rpx; 
+	z-index: 100;
 	background: #F5F5F5;
-	padding: 16rpx 24rpx 10rpx;
+	padding: 0rpx 10rpx 10rpx;
+	margin-left: -2rpx;
+	margin-right: -2rpx;
 }
 .search-bar-fixed .search-bar { margin-bottom: 0; }
-.search-bar-spacer { height: 96rpx; }
 
 /* ======== 校区选择弹窗 ======== */
 .picker-mask {

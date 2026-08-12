@@ -2,21 +2,13 @@
 	<view class="tabbar">
 		<!-- 首页 -->
 		<view class="tabbar-item" @click="switchTab('/pages/home/index')">
-			<AppIcon
-				name="home"
-				:size="44"
-				:color="current === 0 ? activeColor : inactiveColor"
-			/>
+			<image src="/static/tabbar/home_active.png" mode=""></image>
 			<text :class="['tabbar-text', { active: current === 0 }]">首页</text>
 		</view>
 
 		<!-- 互助 -->
 		<view class="tabbar-item" @click="switchTab('/pages/exchange/index')">
-			<AppIcon
-				name="exchange"
-				:size="44"
-				:color="current === 1 ? activeColor : inactiveColor"
-			/>
+			<image src="/static/tabbar/exchange_active.png" mode=""></image>
 			<text :class="['tabbar-text', { active: current === 1 }]">互助</text>
 		</view>
 
@@ -29,21 +21,13 @@
 
 		<!-- 租借 -->
 		<view class="tabbar-item" @click="switchTab('/pages/lease/index')">
-			<AppIcon
-				name="lease"
-				:size="44"
-				:color="current === 2 ? activeColor : inactiveColor"
-			/>
+			<image src="/static/tabbar/lease.png" mode=""></image>
 			<text :class="['tabbar-text', { active: current === 2 }]">租借</text>
 		</view>
 
 		<!-- 我的 -->
 		<view class="tabbar-item" @click="switchTab('/pages/mine/index')">
-			<AppIcon
-				name="mine"
-				:size="44"
-				:color="current === 3 ? activeColor : inactiveColor"
-			/>
+			<image src="/static/tabbar/mine_active.png" mode=""></image>
 			<text :class="['tabbar-text', { active: current === 3 }]">我的</text>
 		</view>
 	</view>
@@ -84,6 +68,10 @@ export default {
 </script>
 
 <style scoped>
+image{
+	width: 50rpx;
+	height: 50rpx;
+}
 .tabbar {
 	position: fixed;
 	left: 0;

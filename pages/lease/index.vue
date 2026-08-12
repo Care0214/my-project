@@ -2,28 +2,33 @@
 	<view class="page-container">
 		<view class="page-body">
 			<!-- 搜索栏 -->
-			<view class="search-bar" @click="goSearch">
-				<AppIcon name="search" :size="36" color="#999" />
-				<text class="search-placeholder">搜索可租借物品（相机、自行车…）</text>
+			<view class="search-barbox">
+				<view class="search-bar" @click="goSearch">
+					<AppIcon name="search" :size="36" color="#999" />
+					<text class="search-placeholder">搜索可租借物品（相机、自行车…）</text>
+				</view>
+				<!-- 筛选栏 -->
+				<div class="box-3">
+					<view class="filter-row">
+						<view class="flex-row">
+							<view class="filter-chip" @click="showCampusPicker = true">
+								<AppIcon name="location" :size="28" color="#4F6EF7" />
+								<text class="filter-chip-text">{{ currentCampus }}</text>
+							</view>
+						</view>
+						<view class="scroll-x filter-sorts">
+							<text
+								v-for="s in sortOptions"
+								:key="s.value"
+								:class="['sort-item', { active: currentSort === s.value }]"
+								@click="applySort(s.value)"
+							>{{ s.label }}</text>
+						</view>
+					</view>
+				</div>
 			</view>
 
-			<!-- 筛选栏 -->
-			<view class="filter-row">
-				<view class="flex-row">
-					<view class="filter-chip" @click="showCampusPicker = true">
-						<AppIcon name="location" :size="28" color="#4F6EF7" />
-						<text class="filter-chip-text">{{ currentCampus }}</text>
-					</view>
-				</view>
-				<view class="scroll-x filter-sorts">
-					<text
-						v-for="s in sortOptions"
-						:key="s.value"
-						:class="['sort-item', { active: currentSort === s.value }]"
-						@click="applySort(s.value)"
-					>{{ s.label }}</text>
-				</view>
-			</view>
+			
 
 			<!-- 租借物品列表 -->
 			<view class="lease-list">
@@ -216,6 +221,12 @@ export default {
 
 <style scoped>
 @import '@/styles/common.scss';
+.search-barbox{
+	position: sticky;
+	background-color: #FFF;
+	z-index: 10000;
+	top: 0%;
+}
 
 .filter-row { display: flex; align-items: center; padding: 0 0 20rpx; gap: 16rpx; }
 .filter-chip {

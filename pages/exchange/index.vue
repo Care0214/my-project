@@ -2,26 +2,27 @@
 	<view class="page-container">
 		<view class="page-body">
 			<!-- 搜索+消息入口 -->
-			<view class="exchange-header">
-				<view class="search-bar flex-1" @click="goSearch">
-					<AppIcon name="search" :size="36" color="#999" />
-					<text class="search-placeholder">搜索心愿、求助、置换信息…</text>
+			<view class="search-barbox">
+				<view class="exchange-header">
+					<view class="search-bar flex-1" @click="goSearch">
+						<AppIcon name="search" :size="36" color="#999" />
+						<text class="search-placeholder">搜索心愿、求助、置换信息…</text>
+					</view>
+					<view class="message-btn" @click="goMessages">
+						<AppIcon name="message" :size="40" color="#666" />
+						<view class="badge" v-if="unreadCount > 0">{{ unreadCount > 99 ? '99+' : unreadCount }}</view>
+					</view>
 				</view>
-				<view class="message-btn" @click="goMessages">
-					<AppIcon name="message" :size="40" color="#666" />
-					<view class="badge" v-if="unreadCount > 0">{{ unreadCount > 99 ? '99+' : unreadCount }}</view>
-				</view>
-			</view>
-
-			<!-- 分类切换 Tab -->
-			<view class="tab-section">
-				<view class="scroll-x">
-					<text
-						v-for="(tab, i) in tabList"
-						:key="i"
-						:class="['tab-chip', { active: currentTab === i }]"
-						@click="switchTab(i)"
-					>{{ tab }}</text>
+				<!-- 分类切换 Tab -->
+				<view class="tab-section">
+					<view class="scroll-x">
+						<text
+							v-for="(tab, i) in tabList"
+							:key="i"
+							:class="['tab-chip', { active: currentTab === i }]"
+							@click="switchTab(i)"
+						>{{ tab }}</text>
+					</view>
 				</view>
 			</view>
 
@@ -209,7 +210,12 @@ export default {
 
 <style scoped>
 @import '@/styles/common.scss';
-
+.search-barbox{
+	position: sticky;
+	background-color: #FFF;
+	z-index: 10000;
+	top: 0%;
+}
 .exchange-header { display: flex; align-items: center; gap: 16rpx; margin-bottom: 16rpx; }
 .exchange-header .search-bar { margin-bottom: 0; }
 .message-btn {
@@ -253,5 +259,5 @@ export default {
 	display: flex; align-items: center; gap: 30rpx; padding-top: 16rpx; border-top: 1px solid #F5F5F5;
 }
 .post-action { display: flex; align-items: center; gap: 6rpx; padding: 4rpx 0; }
-.action-text { font-size: 24rpx; color: #999; }
+.action-text { font-size: 24rpx; color: #CCC; }
 </style>
