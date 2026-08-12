@@ -1,6 +1,6 @@
 {
     "name" : "拾闲小栈",
-    "appid" : "__UNI__7079DA9",
+    "appid" : "__UNI__8655E20",
     "description" : "校园闲置物品智能交换小程序",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -42,14 +42,14 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wxb144a5bab0501de0",
+        "appid" : "wx6a34a77131b1e02d",
         "setting" : {
             "urlCheck" : false
         },
         "usingComponents" : true,
-        "permission": {
-            "scope.userLocation": {
-                "desc": "用于获取您的位置信息，优先展示同校区闲置物品"
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "用于获取您的位置信息，优先展示同校区闲置物品"
             }
         }
     },
