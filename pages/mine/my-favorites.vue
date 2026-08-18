@@ -8,7 +8,7 @@
 					class="fav-card"
 					@click="goDetail(item)"
 				>
-					<view class="fav-image" :style="{ background: item.imageBg || '#F3F4F8' }">
+					<view class="fav-image" :style="{ background: item.imageBg || '#F2F3F8' }">
 						<AppIcon name="image" :size="36" color="#D0D3E0" />
 					</view>
 					<view class="fav-info">
@@ -77,7 +77,7 @@ export default {
 	border-radius: 20rpx;
 	padding: 20rpx 24rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 .fav-image {
 	width: 120rpx;
@@ -94,5 +94,5 @@ export default {
 .fav-price { font-size: 30rpx; font-weight: 700; color: #FF6B3D; }
 .fav-price.free { color: #22C55E; }
 .fav-action { padding: 10rpx; flex-shrink: 0; }
-.empty-sub { font-size: 24rpx; color: #B0B4C0; margin-top: 8rpx; }
+.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; }
 </style>

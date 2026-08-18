@@ -69,7 +69,7 @@
 									<text :class="{ placeholder: !selectedSchool }">
 										{{ selectedSchool || '请选择你的学校' }}
 									</text>
-									<AppIcon name="arrow-right" :size="28" color="#B0B4C0" />
+									<AppIcon name="arrow-right" :size="28" color="#6B6F80" />
 								</view>
 							</picker>
 						</view>
@@ -86,7 +86,7 @@
 									<text :class="{ placeholder: !selectedCampus }">
 										{{ selectedCampus || '请选择你的校区' }}
 									</text>
-									<AppIcon name="arrow-right" :size="28" color="#B0B4C0" />
+									<AppIcon name="arrow-right" :size="28" color="#6B6F80" />
 								</view>
 							</picker>
 						</view>
@@ -145,7 +145,7 @@
 									class="avatar-image"
 									mode="aspectFill"
 								/>
-								<AppIcon v-else name="user" :size="52" color="#B0B4C0" />
+								<AppIcon v-else name="user" :size="52" color="#6B6F80" />
 							</view>
 							<view class="avatar-edit-badge">
 								<AppIcon name="edit" :size="24" color="#FFFFFF" />
@@ -402,7 +402,7 @@ export default {
 .logo-icon {
 	width: 120rpx;
 	height: 120rpx;
-	border-radius: 30rpx;
+	border-radius: 20rpx;
 	background: rgba(255, 255, 255, 0.15);
 	display: flex;
 	align-items: center;
@@ -425,17 +425,18 @@ export default {
 	letter-spacing: 2rpx;
 }
 
-/* 步骤指示器 */
+/* 步骤指示器（统一圆点：进行中高亮，已完成绿色打勾） */
 .steps-dots {
 	display: flex;
-	gap: 16rpx;
+	align-items: center;
+	gap: 20rpx;
 }
 
 .dot {
-	width: 16rpx;
-	height: 16rpx;
+	width: 24rpx;
+	height: 24rpx;
 	border-radius: 50%;
-	background: rgba(255, 255, 255, 0.3);
+	background: rgba(255, 255, 255, 0.35);
 	transition: all 0.3s;
 	display: flex;
 	align-items: center;
@@ -443,20 +444,15 @@ export default {
 }
 
 .dot.active {
-	width: 40rpx;
-	border-radius: 20rpx;
-	background: rgba(255, 255, 255, 0.5);
+	background: rgba(255, 255, 255, 0.95);
 }
 
 .dot.done {
-	width: 32rpx;
-	height: 32rpx;
-	border-radius: 50%;
 	background: #22C55E;
 }
 
 .dot-check {
-	font-size: 18rpx;
+	font-size: 16rpx;
 	color: #FFFFFF;
 	font-weight: 700;
 }
@@ -509,7 +505,7 @@ export default {
 	width: 100%;
 	height: 100rpx;
 	background: #07C160;
-	border-radius: 20rpx;
+	border-radius: 9999rpx;
 	margin-bottom: 32rpx;
 	transition: all 0.15s;
 	gap: 16rpx;
@@ -536,7 +532,7 @@ export default {
 
 .agreement-text {
 	font-size: 22rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 	text-align: center;
 	line-height: 1.6;
 }
@@ -567,7 +563,7 @@ export default {
 	height: 88rpx;
 	padding: 0 24rpx;
 	border-radius: 16rpx;
-	background: #F3F4F8;
+	background: #F2F3F8;
 	font-size: 28rpx;
 	color: #1A1D28;
 }
@@ -577,7 +573,7 @@ export default {
 	height: 88rpx;
 	padding: 0 24rpx;
 	border-radius: 16rpx;
-	background: #F3F4F8;
+	background: #F2F3F8;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -586,7 +582,7 @@ export default {
 }
 
 .form-picker .placeholder {
-	color: #B0B4C0;
+	color: #6B6F80;
 }
 
 /* 验证状态 */
@@ -597,8 +593,8 @@ export default {
 	gap: 12rpx;
 	margin-bottom: 20rpx;
 	padding: 16rpx;
-	border-radius: 12rpx;
-	background: #F3F4F8;
+	border-radius: 16rpx;
+	background: #F2F3F8;
 }
 
 .verify-loading {
@@ -640,8 +636,8 @@ export default {
 .btn-verify {
 	width: 100%;
 	height: 88rpx;
-	border-radius: 20rpx;
-	background: #4F6EF7;
+	border-radius: 9999rpx;
+	background: #3D56D4;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -682,7 +678,7 @@ export default {
 	width: 160rpx;
 	height: 160rpx;
 	border-radius: 50%;
-	background: #F3F4F8;
+	background: #F2F3F8;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -702,7 +698,7 @@ export default {
 	width: 44rpx;
 	height: 44rpx;
 	border-radius: 50%;
-	background: #4F6EF7;
+	background: #3D56D4;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -711,7 +707,7 @@ export default {
 
 .avatar-hint {
 	font-size: 24rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 	margin-top: 8rpx;
 }
 </style>

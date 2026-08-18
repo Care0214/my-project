@@ -14,7 +14,7 @@
 			<view v-if="list.length > 0">
 				<view v-for="order in list" :key="order.id" class="order-card">
 					<view class="order-item">
-						<view class="order-image" :style="{ background: order.item.imageBg || '#F3F4F8' }">
+						<view class="order-image" :style="{ background: order.item.imageBg || '#F2F3F8' }">
 							<AppIcon name="image" :size="32" color="#D0D3E0" />
 						</view>
 						<view class="order-info">
@@ -96,14 +96,14 @@ export default {
 	background: #FFFFFF;
 	transition: all 0.2s;
 }
-.tab-item.active { color: #FFFFFF; background: #4F6EF7; font-weight: 500; }
+.tab-item.active { color: #FFFFFF; background: #3D56D4; font-weight: 500; }
 
 .order-card {
 	background: #FFFFFF;
 	border-radius: 20rpx;
 	padding: 24rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 .order-item { display: flex; align-items: center; margin-bottom: 16rpx; }
 .order-image {
@@ -127,10 +127,10 @@ export default {
 .order-status.shipped { background: #E8F0FF; color: #6366F1; }
 .order-status.completed { background: #E8F9EF; color: #22C55E; }
 
-.order-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 16rpx; border-top: 1px solid #F3F4F8; }
+.order-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 16rpx; border-top: 1px solid #F2F3F8; }
 .order-counterparty { font-size: 24rpx; color: #8B8FA3; }
 .order-action { font-size: 24rpx; color: #EF4444; }
-.order-action.done { color: #B0B4C0; }
+.order-action.done { color: #6B6F80; }
 
-.empty-sub { font-size: 24rpx; color: #B0B4C0; margin-top: 8rpx; }
+.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; }
 </style>

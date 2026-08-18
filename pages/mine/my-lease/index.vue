@@ -34,7 +34,7 @@
 					</view>
 
 					<view class="lease-dates" v-if="item.startDate && item.endDate">
-						<AppIcon name="clock" :size="24" color="#B0B4C0" />
+						<AppIcon name="clock" :size="24" color="#6B6F80" />
 						<text class="date-text">{{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}</text>
 					</view>
 				</view>
@@ -42,7 +42,7 @@
 
 			<!-- 空状态 -->
 			<view v-else class="empty-state">
-				<text class="empty-icon">📅</text>
+				<AppIcon name="clock" :size="64" color="#8B8FA3" />
 				<text class="empty-text">暂无租借记录</text>
 				<text class="empty-sub">去校园租借看看有什么好物可租吧~</text>
 			</view>
@@ -75,7 +75,7 @@ export default {
 				renter: { label: '借入方', color: '#4F6EF7', bg: '#EDF0FE' },
 				lender: { label: '出租方', color: '#F59E0B', bg: '#FFF3E0' },
 			};
-			return map[role] || { label: '参与', color: '#666666', bg: '#F2F3F8' };
+			return map[role] || { label: '参与', color: '#6B6F80', bg: '#F2F3F8' };
 		},
 		statusInfo(status) {
 			const map = {
@@ -83,7 +83,7 @@ export default {
 				returned: { label: '已归还', color: '#22C55E', bg: '#E8F8EE' },
 				overdue: { label: '已逾期', color: '#FF4D4F', bg: '#FFF0F0' },
 			};
-			return map[status] || { label: '未知', color: '#999999', bg: '#F2F3F8' };
+			return map[status] || { label: '未知', color: '#6B6F80', bg: '#F2F3F8' };
 		},
 		formatDate(ts) {
 			if (!ts) return '';
@@ -101,24 +101,24 @@ export default {
 .lease-top { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-bottom: 14rpx; }
 .lease-badges { display: flex; align-items: center; gap: 10rpx; }
 .role-badge, .status-badge { padding: 4rpx 14rpx; border-radius: 8rpx; font-size: 22rpx; }
-.lease-campus { font-size: 22rpx; color: #B0B4C0; }
+.lease-campus { font-size: 22rpx; color: #6B6F80; }
 
 .lease-title { font-size: 30rpx; font-weight: 600; color: #1A1D28; display: block; line-height: 1.4; margin-bottom: 18rpx; }
 
 .lease-meta {
 	display: flex;
 	background: #F8F9FC;
-	border-radius: 12rpx;
+	border-radius: 16rpx;
 	padding: 20rpx 0;
 	margin-bottom: 16rpx;
 }
 .meta-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6rpx; }
-.meta-label { font-size: 22rpx; color: #B0B4C0; }
+.meta-label { font-size: 22rpx; color: #6B6F80; }
 .meta-value { font-size: 26rpx; color: #1A1D28; font-weight: 600; }
 .meta-value.price { color: #FF6B3D; }
 
 .lease-dates { display: flex; align-items: center; gap: 6rpx; }
-.date-text { font-size: 22rpx; color: #B0B4C0; }
+.date-text { font-size: 22rpx; color: #6B6F80; }
 
-.empty-sub { font-size: 24rpx; color: #B0B4C0; margin-top: 8rpx; }
+.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; }
 </style>

@@ -3,7 +3,7 @@
 		<!-- 自定义导航栏（蓝色渐变） -->
 		<view class="mine-header">
 			<view class="header-status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
-			<view class="header-nav">
+			<view class="header-nav" :style="navStyle">
 				<text class="header-nav-title">我的</text>
 				<view class="header-nav-actions">
 					<view class="nav-btn" @click="goToPage('/pages/mine/messages/index')">
@@ -22,7 +22,7 @@
 			<view class="profile-content">
 				<view
 					class="profile-avatar"
-					:style="{ background: user.avatarColor || 'linear-gradient(135deg, #4F6EF7, #6366F1)' }"
+					:style="{ background: user.avatarColor || 'linear-gradient(135deg, #4F6EF7, #3D56D4)' }"
 					@click="goToPage('/pages/mine/edit-profile/index')"
 				>
 					<text class="profile-avatar-text">{{ userInitial }}</text>
@@ -76,7 +76,7 @@
 				<view class="credit-right">
 					<text class="credit-score">{{ creditScore }}</text>
 					<text class="credit-level">{{ creditLevelName }}</text>
-					<AppIcon name="arrow-right" :size="28" color="#CCC" />
+					<AppIcon name="arrow-right" :size="28" color="#8B8FA3" />
 				</view>
 			</view>
 
@@ -94,9 +94,9 @@
 				</view>
 			</view>
 
-			<!-- 功能菜单 -->
+			<!-- 我的服务 -->
 			<view class="menu-group">
-				<text class="menu-group-title">其他功能</text>
+				<text class="menu-group-title">我的服务</text>
 				<view class="menu-list">
 					<view class="menu-item" v-for="m in funcMenus" :key="m.name" @click="goToPage(m.page)">
 						<view class="menu-left">
@@ -106,7 +106,7 @@
 							<text class="menu-text">{{ m.name }}</text>
 							<view class="badge menu-badge" v-if="m.badge">{{ m.badge }}</view>
 						</view>
-						<AppIcon name="arrow-right" :size="32" color="#CCC" />
+						<AppIcon name="arrow-right" :size="32" color="#8B8FA3" />
 					</view>
 				</view>
 			</view>
@@ -121,7 +121,7 @@
 							</view>
 							<text class="menu-text">分享给同学</text>
 						</view>
-						<AppIcon name="arrow-right" :size="32" color="#CCC" />
+						<AppIcon name="arrow-right" :size="32" color="#8B8FA3" />
 					</view>
 					<view class="menu-item" @click="goAbout">
 						<view class="menu-left">
@@ -135,13 +135,27 @@
 				</view>
 			</view>
 
+			<!-- 后台管理（仅管理员 / 演示环境显示） -->
+			<view class="menu-group" v-if="SHOW_ADMIN_ENTRY">
+				<view class="menu-item" @click="goToPage('/pages/admin/index')">
+					<view class="menu-left">
+						<view class="menu-icon-sm menu-icon-admin">
+							<AppIcon name="shield" :size="36" color="#FFFFFF" />
+						</view>
+						<text class="menu-text">后台管理</text>
+						<text class="admin-tag">管理员</text>
+					</view>
+					<AppIcon name="arrow-right" :size="32" color="#8B8FA3" />
+				</view>
+			</view>
+
 			<!-- 退出登录 -->
 			<view class="logout-btn" @click="handleLogout">
 				<text class="logout-text">退出登录</text>
 			</view>
 
-			<!-- 演示工具入口 -->
-			<view class="demo-footer">
+			<!-- 演示工具入口（仅开发/答辩演示时显示，见 utils/store.js 的 SHOW_DEMO_TOOLS） -->
+			<view class="demo-footer" v-if="SHOW_DEMO_TOOLS">
 				<text class="demo-version">拾闲小栈 · 演示版 v1.0.0</text>
 				<view class="demo-actions">
 					<view class="demo-btn" @click="resetDemoData"><text>重置数据</text></view>
@@ -159,18 +173,20 @@
 <script>
 import CustomTabBar from '@/components/CustomTabBar.vue';
 import AppIcon from '@/components/AppIcon.vue';
-import store from '@/utils/store.js';
+import store, { SHOW_DEMO_TOOLS, SHOW_ADMIN_ENTRY } from '@/utils/store.js';
 import { get, post } from '@/utils/request.js';
+import { getMenuRightPadding } from '@/utils/nav.js';
 
 export default {
 	components: { CustomTabBar, AppIcon },
 	data() {
 		return {
 			statusBarHeight: 44,
+			menuRight: 0,
 			user: {
 				nickname: '校园小闲er',
 				avatar: '',
-				avatarColor: 'linear-gradient(135deg, #4F6EF7, #6366F1)',
+				avatarColor: 'linear-gradient(135deg, #4F6EF7, #3D56D4)',
 				bio: '热爱环保的校园闲置交换达人~',
 				school: '山东师范大学',
 				campus: '长清湖校区',
@@ -184,17 +200,18 @@ export default {
 				{ name: '我的租借', icon: 'clock', page: '/pages/mine/my-lease/index' },
 			],
 			funcMenus: [
-				{ name: '消息通知', icon: 'message', page: '/pages/mine/messages/index', badge: 0 },
 				{ name: '浏览记录', icon: 'search', page: '/pages/mine/browse-history/index' },
-				{ name: '黑名单', icon: 'block', page: '/pages/mine/blacklist/index' },
-				{ name: '信用分', icon: 'shield', page: '/pages/mine/credit/index' },
 				{ name: '二手估价', icon: 'price', page: '/pages/price/index' },
-				{ name: '后台管理', icon: 'category', page: '/pages/admin/index' },
+				{ name: '黑名单', icon: 'block', page: '/pages/mine/blacklist/index' },
 			],
 			creditScore: 0,
 		};
 	},
 	computed: {
+		navStyle() {
+			// 微信胶囊按钮避让：非 0 时输出 padding-right 字符串
+			return this.menuRight ? 'padding-right:' + this.menuRight + 'px' : '';
+		},
 		userInfo() {
 			return this.$store ? this.$store.userInfo : null;
 		},
@@ -228,6 +245,7 @@ export default {
 	mounted() {
 		const systemInfo = uni.getSystemInfoSync();
 		this.statusBarHeight = systemInfo.statusBarHeight || 44;
+		this.menuRight = getMenuRightPadding();
 	},
 	onShow() {
 		if (!store.isLoggedIn) {
@@ -252,7 +270,6 @@ export default {
 			try {
 				const data = await get('/api/conversations/unread-count');
 				this.unreadCount = data.count || 0;
-				this.funcMenus[0].badge = this.unreadCount || 0;
 				if (store.setUnreadCount) store.setUnreadCount(this.unreadCount);
 			} catch (e) {
 				this.unreadCount = 0;
@@ -276,7 +293,7 @@ export default {
 		goAbout() {
 			uni.showModal({
 				title: '关于拾闲小栈',
-				content: '拾闲小栈 v1.0.0\n\n专为校园打造的闲置物品交易平台。在这里你可以出售闲置、交换好物、租借物品，践行环保校园生活。\n\n— 让每件物品都有第二次生命 —',
+				content: '拾闲小栈 v1.0.0\n\n专为校园打造的闲置物品交易平台。在这里你可以出售闲置、交换好物、租借物品，践行环保校园生活。\n\n让每件物品都有第二次生命',
 				showCancel: false,
 				confirmText: '知道了',
 			});
@@ -336,8 +353,8 @@ export default {
 <style scoped>
 @import '@/styles/common.scss';
 
-.mine-page { background: #F5F5F5; }
-.mine-header { background: linear-gradient(180deg, #4F6EF7 0%, #6366F1 100%); }
+.mine-page { background: #F2F3F8; }
+.mine-header { background: linear-gradient(180deg, #4F6EF7 0%, #3D56D4 100%); }
 .header-nav {
 	display: flex; align-items: center; justify-content: space-between; padding: 20rpx 30rpx;
 }
@@ -346,7 +363,7 @@ export default {
 .nav-btn { position: relative; padding: 8rpx; }
 
 .profile-section {
-	background: linear-gradient(180deg, #4F6EF7 0%, #6366F1 60%, #F5F5F5 60%);
+	background: linear-gradient(180deg, #4F6EF7 0%, #3D56D4 60%, #F2F3F8 60%);
 	padding: 0 24rpx;
 }
 .profile-content { display: flex; align-items: center; gap: 24rpx; padding: 20rpx 0 30rpx; }
@@ -362,24 +379,24 @@ export default {
 .profile-bio { display: block; font-size: 24rpx; color: rgba(255, 255, 255, 0.8); margin-top: 6rpx; margin-bottom: 10rpx; }
 .profile-tags { display: flex; gap: 10rpx; }
 .profile-tag {
-	padding: 4rpx 14rpx; font-size: 20rpx; color: rgba(255, 255, 255, 0.9);
-	background: rgba(255, 255, 255, 0.2); border-radius: 6rpx;
+	padding: 4rpx 14rpx; font-size: 22rpx; color: rgba(255, 255, 255, 0.9);
+	background: rgba(255, 255, 255, 0.2); border-radius: 8rpx;
 }
 .profile-edit-btn { padding: 10rpx; flex-shrink: 0; }
 
 .stats-card {
 	display: flex; background: #FFF; border-radius: 20rpx; padding: 30rpx 20rpx;
-	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06); margin-bottom: 24rpx;
+	box-shadow: 0 4rpx 20rpx rgba(31, 41, 88, 0.08); margin-bottom: 24rpx;
 }
 .stat-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6rpx; }
-.stat-num { font-size: 36rpx; font-weight: bold; color: #333; }
-.stat-label { font-size: 22rpx; color: #999; }
-.stat-divider { width: 1px; height: 40rpx; background: #F0F0F0; align-self: center; }
+.stat-num { font-size: 36rpx; font-weight: bold; color: #1A1D28; }
+.stat-label { font-size: 22rpx; color: #6B6F80; }
+.stat-divider { width: 1px; height: 40rpx; background: #EEF0F5; align-self: center; }
 
 .credit-card {
 	display: flex; align-items: center; justify-content: space-between;
 	background: #FFF; border-radius: 20rpx; padding: 24rpx;
-	margin-bottom: 24rpx; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	margin-bottom: 24rpx; box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 .credit-card:active { background: #F8FAFF; }
 .credit-left { display: flex; align-items: center; gap: 16rpx; }
@@ -389,7 +406,7 @@ export default {
 }
 .credit-info { display: flex; flex-direction: column; gap: 4rpx; }
 .credit-title { font-size: 28rpx; font-weight: 600; color: #1A1D28; }
-.credit-sub { font-size: 20rpx; color: #999; }
+.credit-sub { font-size: 22rpx; color: #6B6F80; }
 .credit-right { display: flex; align-items: center; gap: 10rpx; }
 .credit-score { font-size: 40rpx; font-weight: bold; color: #4F6EF7; }
 .credit-level {
@@ -399,9 +416,9 @@ export default {
 
 .menu-group {
 	background: #FFF; border-radius: 20rpx; margin-bottom: 24rpx; overflow: hidden;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
-.menu-group-title { font-size: 28rpx; font-weight: 600; color: #333; padding: 24rpx 28rpx 10rpx; display: block; }
+.menu-group-title { font-size: 28rpx; font-weight: 600; color: #1A1D28; padding: 24rpx 28rpx 10rpx; display: block; }
 .menu-grid { display: flex; padding: 10rpx 10rpx 20rpx; }
 .menu-grid-item {
 	flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10rpx;
@@ -412,13 +429,13 @@ export default {
 	display: flex; align-items: center; justify-content: center;
 }
 .menu-grid-item:active .menu-icon-box { transform: scale(0.9); }
-.menu-grid-text { font-size: 24rpx; color: #666; }
+.menu-grid-text { font-size: 24rpx; color: #6B6F80; }
 .menu-grid-badge { position: absolute; top: 8rpx; right: 12rpx; }
 
 .menu-list { padding: 0 28rpx; }
 .menu-item {
 	display: flex; align-items: center; justify-content: space-between;
-	padding: 26rpx 0; border-bottom: 1px solid #F5F5F5;
+	padding: 26rpx 0; border-bottom: 1px solid #F2F3F8;
 }
 .menu-item:active { background: #F8FAFF; }
 .menu-item:last-child { border-bottom: none; }
@@ -427,13 +444,18 @@ export default {
 	width: 56rpx; height: 56rpx; background: #EDF0FE; border-radius: 50%;
 	display: flex; align-items: center; justify-content: center; margin-right: 18rpx;
 }
-.menu-text { font-size: 28rpx; color: #333; }
+.menu-icon-admin { background: linear-gradient(135deg, #4F6EF7, #3D56D4); }
+.admin-tag {
+	margin-left: 12rpx; padding: 4rpx 14rpx; border-radius: 8rpx;
+	background: #EDF0FE; color: #3D56D4; font-size: 22rpx;
+}
+.menu-text { font-size: 28rpx; color: #1A1D28; }
 .menu-badge { margin-left: 10rpx; }
-.menu-extra { font-size: 24rpx; color: #999; margin-right: 6rpx; }
+.menu-extra { font-size: 24rpx; color: #6B6F80; margin-right: 6rpx; }
 
 .logout-btn {
 	margin-top: 30rpx; padding: 24rpx 0; text-align: center;
-	background: #FFF; border-radius: 20rpx; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	background: #FFF; border-radius: 20rpx; box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 .logout-btn:active { background: #FFF0F0; }
 .logout-text { font-size: 28rpx; color: #FF4D4F; }
@@ -442,13 +464,13 @@ export default {
 	display: flex; flex-direction: column; align-items: center; gap: 8rpx;
 	margin-top: 30rpx; padding: 10rpx 0 20rpx;
 }
-.demo-version { font-size: 22rpx; color: #BBB; }
+.demo-version { font-size: 22rpx; color: #8B8FA3; }
 .demo-actions { display: flex; gap: 16rpx; margin-top: 4rpx; }
 .demo-btn {
 	padding: 10rpx 32rpx; border-radius: 30rpx;
-	border: 1rpx solid #E0E0E0; font-size: 22rpx; color: #666;
+	border: 1rpx solid #8FA1F8; font-size: 22rpx; color: #6B6F80;
 }
-.demo-btn:active { background: #F5F5F5; }
+.demo-btn:active { background: #F2F3F8; }
 .demo-btn-primary {
 	border-color: #4F6EF7; color: #4F6EF7; background: #EDF0FE;
 }

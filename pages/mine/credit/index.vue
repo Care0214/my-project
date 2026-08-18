@@ -64,7 +64,7 @@
 					</view>
 				</view>
 				<view v-else class="empty-state">
-					<text class="empty-icon">🛡</text>
+					<AppIcon name="shield" :size="64" color="#8B8FA3" />
 					<text>暂无信用记录</text>
 				</view>
 			</view>
@@ -189,10 +189,10 @@ export default {
 	color: #4F6EF7; font-size: 22rpx; font-weight: 600;
 	display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.tip-item-text { font-size: 26rpx; color: #333; }
+.tip-item-text { font-size: 26rpx; color: #1A1D28; }
 
 .history-card { padding: 24rpx; }
-.history-item { display: flex; align-items: flex-start; gap: 16rpx; padding: 20rpx 0; border-bottom: 1px solid #F5F5F5; }
+.history-item { display: flex; align-items: flex-start; gap: 16rpx; padding: 20rpx 0; border-bottom: 1px solid #F2F3F8; }
 .history-item:last-child { border-bottom: none; padding-bottom: 4rpx; }
 .history-icon {
 	width: 56rpx; height: 56rpx; border-radius: 50%; background: #E8F8EE;
@@ -201,6 +201,6 @@ export default {
 .history-info { flex: 1; min-width: 0; }
 .history-title { font-size: 27rpx; font-weight: 500; color: #1A1D28; display: block; }
 .history-desc { font-size: 22rpx; color: #8B8FA3; display: block; margin-top: 6rpx; line-height: 1.4; }
-.history-time { font-size: 20rpx; color: #CCC; display: block; margin-top: 6rpx; }
+.history-time { font-size: 22rpx; color: #8B8FA3; display: block; margin-top: 6rpx; }
 .history-score { font-size: 30rpx; font-weight: 700; color: #22C55E; flex-shrink: 0; }
 </style>

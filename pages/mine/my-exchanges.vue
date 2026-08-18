@@ -64,7 +64,7 @@ export default {
 	border-radius: 20rpx;
 	padding: 24rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 .card-top {
 	display: flex;
@@ -81,10 +81,10 @@ export default {
 	flex-shrink: 0;
 }
 .status-tag.active { background: #EDF0FE; color: #4F6EF7; }
-.status-tag.closed { background: #F3F4F8; color: #B0B4C0; }
+.status-tag.closed { background: #F2F3F8; color: #6B6F80; }
 .card-desc { font-size: 24rpx; color: #8B8FA3; line-height: 1.5; display: block; margin-bottom: 14rpx; }
 .card-footer { display: flex; justify-content: space-between; align-items: center; }
-.footer-meta { font-size: 22rpx; color: #B0B4C0; }
+.footer-meta { font-size: 22rpx; color: #6B6F80; }
 .footer-action { font-size: 24rpx; color: #EF4444; }
-.empty-sub { font-size: 24rpx; color: #B0B4C0; margin-top: 8rpx; }
+.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; }
 </style>

@@ -11,7 +11,7 @@
 						class="history-card"
 						@click="goDetail(item.item)"
 					>
-						<view class="hist-image" :style="{ background: item.item.imageBg || '#F3F4F8' }">
+						<view class="hist-image" :style="{ background: item.item.imageBg || '#F2F3F8' }">
 							<AppIcon name="image" :size="32" color="#D0D3E0" />
 						</view>
 						<view class="hist-info">
@@ -76,7 +76,7 @@ export default {
 .history-group { margin-bottom: 16rpx; }
 .group-date {
 	font-size: 24rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 	font-weight: 500;
 	display: block;
 	margin-bottom: 12rpx;
@@ -104,5 +104,5 @@ export default {
 .hist-title { font-size: 28rpx; font-weight: 600; color: #1A1D28; display: block; margin-bottom: 6rpx; }
 .hist-price { font-size: 26rpx; font-weight: 700; color: #FF6B3D; }
 .hist-price.free { color: #22C55E; }
-.empty-sub { font-size: 24rpx; color: #B0B4C0; margin-top: 8rpx; }
+.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; }
 </style>

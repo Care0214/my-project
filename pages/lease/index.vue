@@ -4,7 +4,7 @@
 			<!-- 搜索栏 -->
 			<view class="search-barbox">
 				<view class="search-bar" @click="goSearch">
-					<AppIcon name="search" :size="36" color="#999" />
+					<AppIcon name="search" :size="36" color="#6B6F80" />
 					<text class="search-placeholder">搜索可租借物品（相机、自行车…）</text>
 				</view>
 				<!-- 筛选栏 -->
@@ -30,10 +30,24 @@
 
 			
 
+			<!-- 租借物品列表：加载骨架屏 -->
+			<view v-if="loading && leaseItems.length === 0" class="lease-list">
+				<view class="card lease-card" v-for="i in 4" :key="'sk' + i">
+					<view class="lease-row">
+						<view class="skeleton-block" style="width:180rpx;height:180rpx;border-radius:16rpx;flex-shrink:0;"></view>
+						<view class="lease-info" style="gap:12rpx;">
+							<view class="skeleton-block" style="width:70%;height:32rpx;border-radius:8rpx;"></view>
+							<view class="skeleton-block" style="width:100%;height:24rpx;border-radius:8rpx;"></view>
+							<view class="skeleton-block" style="width:50%;height:24rpx;border-radius:8rpx;"></view>
+						</view>
+					</view>
+				</view>
+			</view>
+
 			<!-- 租借物品列表 -->
-			<view class="lease-list">
+			<view class="lease-list" v-else>
 				<view
-					class="card lease-card"
+					class="card lease-card anim-in"
 					v-for="item in leaseItems"
 					:key="item.id"
 					@click="goDetail(item)"
@@ -48,7 +62,7 @@
 								lazy-load
 							/>
 							<view v-else class="lease-img-placeholder">
-								<AppIcon :name="item.category === 'digital' ? 'digital' : item.category === 'sports' ? 'sports' : 'daily'" :size="56" color="#CCC" />
+								<AppIcon :name="item.category === 'digital' ? 'digital' : item.category === 'sports' ? 'sports' : 'daily'" :size="56" color="#8B8FA3" />
 							</view>
 							<view class="tag tag-lease">可租</view>
 						</view>
@@ -77,7 +91,7 @@
 								</view>
 								<view class="lease-meta">
 									<view class="lease-campus">
-										<AppIcon name="location" :size="22" color="#999" />
+										<AppIcon name="location" :size="22" color="#6B6F80" />
 										<text class="meta-text">{{ item.campus }}</text>
 									</view>
 									<text class="meta-text">{{ timeAgo(item.publishTime) }}</text>
@@ -88,14 +102,14 @@
 				</view>
 
 				<view v-if="loadError && leaseItems.length === 0" class="error-state">
-					<text class="error-icon">⚠️</text>
+					<AppIcon name="close" :size="56" color="#EF4444" />
 					<text class="error-text">加载失败，请检查网络后重试</text>
 					<view class="retry-btn" @click="loadLeaseItems"><text>重新加载</text></view>
 				</view>
 				<view class="empty-state" v-else-if="leaseItems.length === 0">
-					<view class="empty-icon"><AppIcon name="lease" :size="80" color="#CCC" /></view>
+					<view class="empty-icon"><AppIcon name="lease" :size="80" color="#8B8FA3" /></view>
 					<text>暂无可租物品</text>
-					<text class="mt-8" style="font-size:24rpx;color:#CCC;">快发布你的闲置物品来出租吧~</text>
+					<text class="mt-8" style="font-size:24rpx;color:#8B8FA3;">快发布你的闲置物品来出租吧~</text>
 				</view>
 			</view>
 
@@ -148,6 +162,7 @@ export default {
 			showCampusPicker: false,
 			leaseItems: [],
 			loadError: false,
+			loading: false,
 		};
 	},
 	onLoad() {
@@ -182,6 +197,7 @@ export default {
 			return new Date(timestamp).toLocaleDateString('zh-CN');
 		},
 		async loadLeaseItems() {
+			this.loading = true;
 			try {
 				const data = await get('/api/lease-items', {
 					sort: this.currentSort,
@@ -192,6 +208,8 @@ export default {
 			} catch (e) {
 				this.leaseItems = [];
 				this.loadError = true;
+			} finally {
+				this.loading = false;
 			}
 		},
 		goSearch() {
@@ -231,50 +249,52 @@ export default {
 .filter-row { display: flex; align-items: center; padding: 0 0 20rpx; gap: 16rpx; }
 .filter-chip {
 	display: flex; align-items: center; padding: 10rpx 20rpx;
-	background: #FFF; border-radius: 30rpx; gap: 6rpx; border: 1px solid #E5E5E5; flex-shrink: 0;
+	background: #FFF; border-radius: 30rpx; gap: 6rpx; border: 1px solid #E8EAF0; flex-shrink: 0;
 }
 .filter-chip-text { font-size: 24rpx; color: #4F6EF7; }
 .filter-sorts { flex: 1; }
 .sort-item {
 	flex-shrink: 0; padding: 10rpx 24rpx; border-radius: 30rpx; font-size: 24rpx;
-	color: #666; background: #FFF; white-space: nowrap;
+	color: #6B6F80; background: #FFF; white-space: nowrap;
 }
-.sort-item.active { color: #FFF; background: #4F6EF7; font-weight: 500; }
+.sort-item.active { color: #FFF; background: #3D56D4; font-weight: 500; }
 
 .lease-card { padding: 20rpx; }
+.lease-list .lease-card:nth-child(2) { animation-delay: 60ms; }
+.lease-list .lease-card:nth-child(3) { animation-delay: 120ms; }
 .lease-row { display: flex; gap: 20rpx; }
 .lease-img { width: 180rpx; height: 180rpx; position: relative; flex-shrink: 0; }
-.lease-img__img { width: 100%; height: 100%; border-radius: 12rpx; }
+.lease-img__img { width: 100%; height: 100%; border-radius: 16rpx; }
 .lease-img-placeholder {
-	width: 100%; height: 100%; background: #F5F5F5; border-radius: 12rpx;
+	width: 100%; height: 100%; background: #F2F3F8; border-radius: 16rpx;
 	display: flex; align-items: center; justify-content: center;
 }
 .lease-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-.lease-title { font-size: 30rpx; font-weight: 600; color: #333; }
-.lease-desc { font-size: 24rpx; color: #999; margin-top: 6rpx; }
+.lease-title { font-size: 30rpx; font-weight: 600; color: #1A1D28; }
+.lease-desc { font-size: 24rpx; color: #6B6F80; margin-top: 6rpx; }
 .lease-price-row { display: flex; align-items: center; gap: 20rpx; margin-top: 10rpx; }
 .lease-price { display: flex; align-items: baseline; gap: 4rpx; }
 .price-num { font-size: 36rpx; font-weight: bold; color: #FF6B3D; }
 .price-unit { font-size: 22rpx; color: #FF6B3D; }
 .lease-deposit {
 	display: flex; align-items: center; gap: 4rpx;
-	padding: 2rpx 12rpx; background: #FFF3E0; border-radius: 6rpx;
+	padding: 2rpx 12rpx; background: #FFF3E0; border-radius: 8rpx;
 }
-.deposit-label, .deposit-num { font-size: 20rpx; color: #FF9800; }
+.deposit-label, .deposit-num { font-size: 22rpx; color: #F59E0B; }
 .deposit-num { font-weight: 500; }
 .lease-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12rpx; }
 .lease-user { display: flex; align-items: center; gap: 10rpx; }
-.user-avatar-lease { width: 40rpx; height: 40rpx; font-size: 20rpx; }
-.lease-nickname { font-size: 22rpx; color: #666; }
+.user-avatar-lease { width: 40rpx; height: 40rpx; font-size: 22rpx; }
+.lease-nickname { font-size: 22rpx; color: #6B6F80; }
 .lease-meta { display: flex; align-items: center; gap: 12rpx; }
 .lease-campus { display: flex; align-items: center; gap: 4rpx; }
-.meta-text { font-size: 20rpx; color: #999; }
+.meta-text { font-size: 22rpx; color: #6B6F80; }
 
 .lease-publish-btn {
 	position: fixed; right: 30rpx; bottom: calc(180rpx + env(safe-area-inset-bottom));
 	display: flex; align-items: center; gap: 8rpx; padding: 16rpx 28rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1); color: #FFF;
-	border-radius: 40rpx; box-shadow: 0 8rpx 24rpx rgba(79, 110, 247, 0.35); z-index: 100;
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4); color: #FFF;
+	border-radius: 9999rpx; box-shadow: 0 8rpx 24rpx rgba(79, 110, 247, 0.35); z-index: 100;
 }
 .lease-publish-text { font-size: 26rpx; font-weight: 500; }
 
@@ -286,10 +306,10 @@ export default {
 	width: 100%; background: #FFF; border-radius: 32rpx 32rpx 0 0;
 	padding: 40rpx 30rpx calc(30rpx + env(safe-area-inset-bottom));
 }
-.picker-title { font-size: 34rpx; font-weight: bold; color: #333; display: block; text-align: center; margin-bottom: 30rpx; }
+.picker-title { font-size: 34rpx; font-weight: bold; color: #1A1D28; display: block; text-align: center; margin-bottom: 30rpx; }
 .picker-item {
 	display: flex; justify-content: space-between; align-items: center;
-	padding: 28rpx 16rpx; font-size: 30rpx; color: #333; border-bottom: 1px solid #F5F5F5;
+	padding: 28rpx 16rpx; font-size: 30rpx; color: #1A1D28; border-bottom: 1px solid #F2F3F8;
 }
 .picker-item.active { color: #4F6EF7; font-weight: 500; }
 .picker-cancel { margin-top: 30rpx; text-align: center; }

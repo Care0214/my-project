@@ -34,11 +34,11 @@
 
 					<view class="post-stats">
 						<view class="stat-item">
-							<AppIcon name="eye" :size="26" color="#B0B4C0" />
+							<AppIcon name="eye" :size="26" color="#6B6F80" />
 							<text class="stat-text">{{ item.viewCount }}</text>
 						</view>
 						<view class="stat-item">
-							<AppIcon name="heart" :size="26" color="#B0B4C0" />
+							<AppIcon name="heart" :size="26" color="#6B6F80" />
 							<text class="stat-text">{{ item.favCount }}</text>
 						</view>
 					</view>
@@ -47,7 +47,7 @@
 
 			<!-- 空状态 -->
 			<view v-else class="empty-state">
-				<text class="empty-icon">📦</text>
+				<AppIcon name="daily" :size="64" color="#8B8FA3" />
 				<text class="empty-text">暂无相关发布</text>
 				<text class="empty-sub">去发布第一件闲置吧~</text>
 				<view class="empty-action" @click="goPublish"><text>去发布</text></view>
@@ -98,9 +98,9 @@ export default {
 			const map = {
 				active: { label: '出售中', color: '#4F6EF7', bg: '#EDF0FE' },
 				sold: { label: '已售出', color: '#22C55E', bg: '#E8F8EE' },
-				offline: { label: '已下架', color: '#999999', bg: '#F2F3F8' },
+				offline: { label: '已下架', color: '#6B6F80', bg: '#F2F3F8' },
 			};
-			return map[status] || { label: '未知', color: '#999999', bg: '#F2F3F8' };
+			return map[status] || { label: '未知', color: '#6B6F80', bg: '#F2F3F8' };
 		},
 		formatTime(ts) {
 			if (!ts) return '';
@@ -131,7 +131,7 @@ export default {
 	border-radius: 16rpx;
 	padding: 10rpx;
 	margin-bottom: 24rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 .filter-tab {
 	flex: 1;
@@ -139,11 +139,11 @@ export default {
 	padding: 14rpx 0;
 	border-radius: 12rpx;
 	font-size: 26rpx;
-	color: #666;
+	color: #6B6F80;
 	transition: all 0.2s;
 }
 .filter-tab.active {
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	color: #FFF;
 	font-weight: 600;
 	box-shadow: 0 4rpx 12rpx rgba(79, 110, 247, 0.3);
@@ -162,16 +162,16 @@ export default {
 .post-desc { font-size: 24rpx; color: #8B8FA3; line-height: 1.5; display: block; margin-bottom: 14rpx; }
 .post-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16rpx; }
 .post-price { font-size: 32rpx; font-weight: 700; color: #FF6B3D; }
-.post-time { font-size: 22rpx; color: #B0B4C0; }
-.post-stats { display: flex; align-items: center; gap: 28rpx; padding-top: 16rpx; border-top: 1px solid #F5F5F5; }
+.post-time { font-size: 22rpx; color: #6B6F80; }
+.post-stats { display: flex; align-items: center; gap: 28rpx; padding-top: 16rpx; border-top: 1px solid #F2F3F8; }
 .stat-item { display: flex; align-items: center; gap: 6rpx; }
-.stat-text { font-size: 22rpx; color: #B0B4C0; }
+.stat-text { font-size: 22rpx; color: #6B6F80; }
 
-.empty-sub { font-size: 24rpx; color: #B0B4C0; margin-top: 8rpx; margin-bottom: 32rpx; }
+.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; margin-bottom: 32rpx; }
 .empty-action {
 	padding: 16rpx 48rpx;
 	border-radius: 40rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	box-shadow: 0 6rpx 20rpx rgba(79, 110, 247, 0.25);
 }
 .empty-action:active { transform: scale(0.95); }

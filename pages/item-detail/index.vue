@@ -1,7 +1,7 @@
 <template>
 	<view class="detail-page">
 		<!-- 图片展示区 -->
-		<view class="image-stage" :style="{ background: item.imageBg || '#F3F4F8' }">
+		<view class="image-stage" :style="{ background: item.imageBg || '#F2F3F8' }">
 			<!-- 模拟物品大图 -->
 			<view class="image-placeholder">
 				<AppIcon name="image" :size="80" color="#D0D3E0" />
@@ -46,7 +46,7 @@
 			<view class="seller-card">
 				<view
 					class="seller-avatar"
-					:style="{ background: item.seller ? item.seller.avatarBg : '#E0E0E0' }"
+					:style="{ background: item.seller ? item.seller.avatarBg : '#8FA1F8' }"
 				></view>
 				<view class="seller-info">
 					<view class="seller-top">
@@ -153,9 +153,9 @@ export default {
 					title: '物品详情加载中...',
 					description: '',
 					price: 0,
-					imageBg: '#F3F4F8',
+					imageBg: '#F2F3F8',
 					condition: '全新',
-					seller: { nickname: '未知用户', avatarBg: '#E0E0E0', stats: { posts: 0 } },
+					seller: { nickname: '未知用户', avatarBg: '#8FA1F8', stats: { posts: 0 } },
 					publishTimeText: '刚刚',
 					viewCount: 0,
 				};
@@ -218,7 +218,7 @@ export default {
 	left: 0;
 	right: 0;
 	height: 80rpx;
-	background: linear-gradient(to top, rgba(0,0,0,0.05), transparent);
+	background: linear-gradient(to top, rgba(31, 41, 88, 0.08), transparent);
 }
 
 /* 返回按钮 */
@@ -234,7 +234,7 @@ export default {
 	align-items: center;
 	justify-content: center;
 	/* backdrop-filter 在小程序中不支持，使用更高不透明度替代 */
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.1);
 	z-index: 10;
 }
 
@@ -291,7 +291,7 @@ export default {
 
 .price-original {
 	font-size: 26rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 	text-decoration: line-through;
 }
 
@@ -337,7 +337,7 @@ export default {
 	border-radius: 20rpx;
 	padding: 24rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 
 .seller-card:active { background: #F8F9FC; }
@@ -368,14 +368,14 @@ export default {
 .seller-badge {
 	padding: 2rpx 12rpx;
 	border-radius: 10rpx;
-	font-size: 20rpx;
+	font-size: 22rpx;
 	color: #4F6EF7;
 	background: #EDF0FE;
 }
 
 .seller-stats {
 	font-size: 22rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 }
 
 /* ========== 描述 ========== */
@@ -384,7 +384,7 @@ export default {
 	border-radius: 20rpx;
 	padding: 24rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 
 .section-label {
@@ -424,7 +424,7 @@ export default {
 	border-radius: 20rpx;
 	padding: 24rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 
 .meta-grid {
@@ -460,7 +460,7 @@ export default {
 	padding: 16rpx 24rpx;
 	padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
 	background: #FFFFFF;
-	box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
+	box-shadow: 0 -4rpx 24rpx rgba(31, 41, 88, 0.08);
 	z-index: 100;
 }
 
@@ -474,7 +474,7 @@ export default {
 }
 
 .fav-text {
-	font-size: 20rpx;
+	font-size: 22rpx;
 	color: #8B8FA3;
 	transition: color 0.2s;
 }
@@ -485,7 +485,7 @@ export default {
 	flex: 1;
 	height: 88rpx;
 	border-radius: 22rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	display: flex;
 	align-items: center;
 	justify-content: center;

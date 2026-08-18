@@ -8,7 +8,7 @@
 					:key="item.id"
 					class="post-card"
 				>
-					<view class="post-image" :style="{ background: item.imageBg || '#F3F4F8' }">
+					<view class="post-image" :style="{ background: item.imageBg || '#F2F3F8' }">
 						<AppIcon name="image" :size="40" color="#D0D3E0" />
 						<view class="post-price">
 							<text v-if="item.price === 0" class="price-free">免费</text>
@@ -82,7 +82,7 @@ export default {
 	border-radius: 20rpx;
 	padding: 24rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 
 .post-image {
@@ -141,7 +141,7 @@ export default {
 
 .post-status {
 	font-size: 22rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 }
 
 .post-actions {
@@ -158,5 +158,5 @@ export default {
 	color: #EF4444;
 }
 
-.empty-sub { font-size: 24rpx; color: #B0B4C0; margin-top: 8rpx; }
+.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; }
 </style>

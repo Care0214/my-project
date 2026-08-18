@@ -4,10 +4,10 @@
 			<!-- 搜索栏（固定顶部，下滑不跟随） -->
 			<view class="search-bar-fixed">
 				<view class="search-bar" @click="goSearch">
-					<AppIcon name="search" :size="36" color="#999" />
+					<AppIcon name="search" :size="36" color="#6B6F80" />
 					<text class="search-placeholder">搜索闲置物品、教材、数码…</text>
 					<view class="search-filter">
-						<AppIcon name="camera" :size="32" color="#999" />
+						<AppIcon name="camera" :size="32" color="#6B6F80" />
 					</view>
 				</view>
 			</view>
@@ -49,14 +49,26 @@
 				</view>
 			</view>
 
-			<!-- ========== 猜你喜欢 - 个性化推荐 ========== -->
-			<view class="recommend-section" v-if="recommendList.length > 0">
+			<!-- ========== 为你推荐（猜你喜欢 + 智能匹配） ========== -->
+			<view class="recommend-section" v-if="recommendList.length > 0 || matchList.length > 0">
 				<view class="section-header">
-					<text class="section-title">🎯 猜你喜欢</text>
-					<text class="section-sub" v-if="browseCount > 0">基于你最近的 {{ browseCount }} 次浏览推荐</text>
+					<text class="section-title">为你推荐</text>
+					<view class="rec-tabs">
+						<text
+							v-if="recommendList.length > 0"
+							:class="['rec-tab', { active: recommendTab === 'rec' }]"
+							@click="recommendTab = 'rec'"
+						>猜你喜欢</text>
+						<text
+							v-if="matchList.length > 0"
+							:class="['rec-tab', { active: recommendTab === 'match' }]"
+							@click="recommendTab = 'match'"
+						>智能匹配</text>
+					</view>
 				</view>
+				<view v-show="recommendTab === 'rec'" class="fade-switch">
 				<scroll-view scroll-x class="recommend-scroll">
-					<view class="recommend-item" v-for="item in recommendList" :key="item.id" @click="goDetail(item)">
+					<view class="recommend-item anim-in" v-for="item in recommendList" :key="item.id" @click="goDetail(item)">
 						<view class="rec-image">
 							<image
 								v-if="item.images && item.images.length > 0"
@@ -66,7 +78,7 @@
 								lazy-load
 							/>
 							<view v-else class="rec-image-placeholder">
-								<AppIcon :name="getCategoryIcon(item.category)" :size="52" color="#CCC" />
+								<AppIcon :name="getCategoryIcon(item.category)" :size="52" color="#8B8FA3" />
 							</view>
 							<view class="rec-type-tag">{{ item.type === 'sell' ? '出售' : item.type === 'lease' ? '出租' : '置换' }}</view>
 						</view>
@@ -83,15 +95,10 @@
 						</view>
 					</view>
 				</scroll-view>
-			</view>
-
-			<!-- ========== 智能匹配 - 双向匹配 ========== -->
-			<view class="match-section" v-if="matchList.length > 0">
-				<view class="section-header">
-					<text class="section-title">⚡ 智能匹配</text>
-					<text class="section-sub">人找物 · 物找人 双向精准对接</text>
 				</view>
-				<view class="match-card" v-for="match in matchList" :key="match.id">
+
+				<view v-show="recommendTab === 'match'" class="fade-switch">
+				<view class="match-card anim-in" v-for="match in matchList" :key="match.id">
 					<view class="match-header">
 						<view :class="['match-badge', match.type === 'item-to-wish' ? 'badge-find-people' : 'badge-find-item']">
 							{{ match.type === 'item-to-wish' ? '物找人' : '人找物' }}
@@ -112,11 +119,12 @@
 								<text class="match-price">¥{{ m.price }}</text>
 							</view>
 							<view class="match-meta">
-								<AppIcon name="location" :size="18" color="#CCC" />
+								<AppIcon name="location" :size="18" color="#8B8FA3" />
 								<text class="match-meta-text">{{ m.campus }}</text>
 							</view>
 						</view>
 					</scroll-view>
+				</view>
 				</view>
 			</view>
 
@@ -152,8 +160,8 @@
 			<!-- 双列商品网格 -->
 			<view v-if="itemList.length > 0" class="item-grid">
 				<view class="item-col">
-					<view v-for="item in leftColumn" :key="item.id" class="item-card" @click="goDetail(item)">
-						<view class="item-image" :style="{ background: item.imageBg || '#F3F4F8' }">
+					<view v-for="item in leftColumn" :key="item.id" class="item-card anim-in" @click="goDetail(item)">
+						<view class="item-image" :style="{ background: item.imageBg || '#F2F3F8' }">
 							<image
 								v-if="item.images && item.images.length > 0"
 								:src="item.images[0]"
@@ -178,7 +186,7 @@
 							<text class="item-title text-ellipsis-2">{{ item.title }}</text>
 							<view class="item-meta-row">
 								<view class="item-meta-item" v-if="item.viewCount">
-									<AppIcon name="eye" :size="20" color="#B0B4C0" />
+									<AppIcon name="eye" :size="20" color="#6B6F80" />
 									<text>{{ item.viewCount }}</text>
 								</view>
 								<text class="item-location">{{ item.location || item.campus }}</text>
@@ -187,8 +195,8 @@
 					</view>
 				</view>
 				<view class="item-col">
-					<view v-for="item in rightColumn" :key="item.id" class="item-card" @click="goDetail(item)">
-						<view class="item-image" :style="{ background: item.imageBg || '#F3F4F8' }">
+					<view v-for="item in rightColumn" :key="item.id" class="item-card anim-in" @click="goDetail(item)">
+						<view class="item-image" :style="{ background: item.imageBg || '#F2F3F8' }">
 							<image
 								v-if="item.images && item.images.length > 0"
 								:src="item.images[0]"
@@ -213,7 +221,7 @@
 							<text class="item-title text-ellipsis-2">{{ item.title }}</text>
 							<view class="item-meta-row">
 								<view class="item-meta-item" v-if="item.viewCount">
-									<AppIcon name="eye" :size="20" color="#B0B4C0" />
+									<AppIcon name="eye" :size="20" color="#6B6F80" />
 									<text>{{ item.viewCount }}</text>
 								</view>
 								<text class="item-location">{{ item.location || item.campus }}</text>
@@ -225,14 +233,14 @@
 
 			<!-- 加载失败 -->
 			<view v-else-if="loadError && !loading" class="error-state">
-				<text class="error-icon">⚠️</text>
+				<AppIcon name="close" :size="56" color="#EF4444" />
 				<text class="error-text">加载失败，请检查网络后重试</text>
 				<view class="retry-btn" @click="retryLoad"><text>重新加载</text></view>
 			</view>
 
 			<!-- 空状态 -->
 			<view v-else-if="!loading" class="empty-state">
-				<text class="empty-icon">📦</text>
+				<AppIcon name="daily" :size="72" color="#8B8FA3" />
 				<text class="empty-text">暂无物品</text>
 				<text class="empty-sub">下拉刷新试试，或者去发布闲置吧~</text>
 			</view>
@@ -242,7 +250,7 @@
 				<text class="loading-text">加载中...</text>
 			</view>
 			<view v-if="!hasMore && itemList.length > 0" class="loading-row">
-				<text class="loading-text">— 已经到底了 —</text>
+				<text class="loading-text">已经到底了，去逛逛别的吧</text>
 			</view>
 		</view>
 
@@ -281,6 +289,7 @@ export default {
 			currentSort: 'latest',
 			currentCampus: '全部校区',
 			showCampusPicker: false,
+			recommendTab: 'rec',
 			sortOptions: [
 				{ label: '最新', value: 'latest' },
 				{ label: '热门', value: 'hot' },
@@ -395,6 +404,7 @@ export default {
 			} catch (e) {
 				this.recommendList = [];
 			}
+			this.syncRecommendTab();
 		},
 		async loadMatches() {
 			try {
@@ -402,6 +412,13 @@ export default {
 				this.matchList = (data || []).slice(0, 2);
 			} catch (e) {
 				this.matchList = [];
+			}
+			this.syncRecommendTab();
+		},
+		syncRecommendTab() {
+			// 猜你喜欢为空、智能匹配有数据时，自动切到智能匹配
+			if (this.recommendTab === 'rec' && this.recommendList.length === 0 && this.matchList.length > 0) {
+				this.recommendTab = 'match';
 			}
 		},
 		async loadBrowseCount() {
@@ -464,7 +481,7 @@ export default {
 	width: 80rpx; height: 80rpx; border-radius: 50%;
 	display: flex; align-items: center; justify-content: center; margin-bottom: 10rpx;
 }
-.category-text { font-size: 24rpx; color: #666; }
+.category-text { font-size: 24rpx; color: #6B6F80; }
 
 /* ======== 筛选栏 ======== */
 .box-3{
@@ -472,115 +489,124 @@ export default {
 	top: 91rpx;
 	z-index: 1000;
 	background-color: #FFF;
-	margin-left: -2rpx;
-	margin-right: -2rpx;
 }
 .filter-row { display: flex; align-items: center; padding: 0 0 20rpx; gap: 16rpx; }
 .filter-left { flex-shrink: 0; }
 .filter-chip {
 	display: flex; align-items: center; padding: 10rpx 20rpx;
-	background: #FFF; border-radius: 30rpx; gap: 6rpx; border: 1px solid #E5E5E5;
+	background: #FFF; border-radius: 30rpx; gap: 6rpx; border: 1px solid #E8EAF0;
 }
 .filter-chip-text { font-size: 24rpx; color: #4F6EF7; }
 .filter-sorts { flex: 1; }
 .sort-item {
 	flex-shrink: 0; padding: 10rpx 24rpx; border-radius: 30rpx;
-	font-size: 25rpx; color: #666; background: #FFF; white-space: nowrap;
+	font-size: 25rpx; color: #6B6F80; background: #FFF; white-space: nowrap;
 }
-.sort-item.active { color: #FFF; background: #4F6EF7; font-weight: 500; }
+.sort-item.active { color: #FFF; background: #3D56D4; font-weight: 500; }
 
 /* ======== 区域标题 ======== */
 .section-header { display: flex; align-items: baseline; gap: 12rpx; margin-bottom: 16rpx; }
-.section-title { font-size: 30rpx; font-weight: 600; color: #333; }
-.section-sub { font-size: 24rpx; color: #999; }
+.section-title { font-size: 30rpx; font-weight: 600; color: #1A1D28; }
+.section-sub { font-size: 24rpx; color: #6B6F80; }
+
+/* ======== 为你推荐 Tab ======== */
+.rec-tabs { display: flex; align-items: center; gap: 8rpx; margin-left: auto; }
+.rec-tab {
+	padding: 6rpx 20rpx; border-radius: 9999rpx; font-size: 22rpx;
+	color: #6B6F80; background: #EDF0FE;
+}
+.rec-tab.active { color: #FFF; background: #3D56D4; font-weight: 500; }
 
 /* ======== 猜你喜欢 ======== */
 .recommend-section { margin-bottom: 30rpx; }
 .recommend-scroll { display: flex; flex-wrap: nowrap; white-space: nowrap; }
 .recommend-item {
 	display: inline-flex; flex-direction: column; width: 280rpx;
-	background: #FFF; border-radius: 16rpx; margin-right: 16rpx; overflow: hidden;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	background: #FFF; border-radius: 20rpx; margin-right: 16rpx; overflow: hidden;
+	box-shadow: 0 2rpx 16rpx rgba(31, 41, 88, 0.06);
 }
 .rec-image { position: relative; width: 100%; height: 200rpx; }
 .rec-image__img { width: 100%; height: 100%; }
 .rec-image-placeholder {
-	width: 100%; height: 100%; background: linear-gradient(135deg, #F5F5F5, #ECECEC);
+	width: 100%; height: 100%; background: linear-gradient(135deg, #F2F3F8, #E8EAF0);
 	display: flex; align-items: center; justify-content: center;
 }
 .rec-type-tag {
 	position: absolute; top: 12rpx; right: 12rpx; padding: 4rpx 14rpx;
-	background: rgba(0, 0, 0, 0.5); color: #FFF; font-size: 20rpx; border-radius: 8rpx;
+	background: rgba(0, 0, 0, 0.5); color: #FFF; font-size: 22rpx; border-radius: 8rpx;
 }
 .rec-body { padding: 16rpx 18rpx; display: flex; flex-direction: column; gap: 8rpx; }
-.rec-title { font-size: 26rpx; font-weight: 600; color: #333; line-height: 1.4; white-space: normal; }
+.rec-title { font-size: 26rpx; font-weight: 600; color: #1A1D28; line-height: 1.4; white-space: normal; }
 .rec-price { font-size: 32rpx; font-weight: bold; color: #FF6B3D; }
 .rec-free { font-size: 28rpx; font-weight: bold; color: #22C55E; }
 .rec-reason {
 	display: flex; align-items: center; gap: 6rpx; padding: 6rpx 10rpx;
-	background: #EDF0FE; border-radius: 6rpx;
+	background: #EDF0FE; border-radius: 8rpx;
 }
 .rec-reason-text { font-size: 22rpx; color: #4F6EF7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ======== 智能匹配 ======== */
 .match-section { margin-bottom: 30rpx; }
 .match-card {
-	background: #FFF; border-radius: 16rpx; padding: 20rpx; margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	background: #FFF; border-radius: 20rpx; padding: 20rpx; margin-bottom: 16rpx;
+	box-shadow: 0 2rpx 16rpx rgba(31, 41, 88, 0.06);
 }
 .match-header { display: flex; align-items: center; gap: 12rpx; margin-bottom: 16rpx; }
-.match-badge { padding: 4rpx 14rpx; border-radius: 6rpx; font-size: 20rpx; font-weight: 500; flex-shrink: 0; }
-.badge-find-people { background: #EDF0FE; color: #4F6EF7; }
+.match-badge { padding: 4rpx 14rpx; border-radius: 8rpx; font-size: 22rpx; font-weight: 500; flex-shrink: 0; }
+.badge-find-people { background: #EDF0FE; color: #3D56D4; }
 .badge-find-item { background: #FFF0EB; color: #FF6B3D; }
-.match-title { font-size: 26rpx; color: #666; font-weight: 500; }
+.match-title { font-size: 26rpx; color: #6B6F80; font-weight: 500; }
 .match-scroll { white-space: nowrap; }
 .match-item {
 	display: inline-flex; flex-direction: column; width: 240rpx; padding: 18rpx;
-	background: #F8FAFF; border-radius: 12rpx; margin-right: 14rpx; gap: 8rpx; white-space: normal;
+	background: #F8FAFF; border-radius: 16rpx; margin-right: 14rpx; gap: 8rpx; white-space: normal;
 }
 .match-user-row { display: flex; align-items: center; gap: 8rpx; }
 .match-avatar {
 	width: 40rpx; height: 40rpx; border-radius: 50%;
-	background: linear-gradient(135deg, #E0E0E0, #D0D0D0);
+	background: linear-gradient(135deg, #8FA1F8, #6B82F5);
 	display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .match-avatar-text { font-size: 18rpx; font-weight: bold; color: #FFF; }
-.match-nickname { font-size: 22rpx; color: #333; }
-.match-item-title { font-size: 24rpx; color: #333; font-weight: 500; }
-.match-item-desc { font-size: 20rpx; color: #999; }
+.match-nickname { font-size: 22rpx; color: #1A1D28; }
+.match-item-title { font-size: 24rpx; color: #1A1D28; font-weight: 500; }
+.match-item-desc { font-size: 22rpx; color: #6B6F80; }
 .match-price { font-size: 28rpx; font-weight: bold; color: #FF6B3D; }
 .match-meta { display: flex; align-items: center; gap: 4rpx; }
-.match-meta-text { font-size: 22rpx; color: #999; }
+.match-meta-text { font-size: 22rpx; color: #6B6F80; }
 
 /* ======== 物品Feed列表（双列网格） ======== */
 .item-grid { display: flex; gap: 16rpx; align-items: flex-start; }
 .item-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16rpx; }
 .item-card {
-	background: #FFF; border-radius: 16rpx; overflow: hidden;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	background: #FFF; border-radius: 20rpx; overflow: hidden;
+	box-shadow: 0 2rpx 16rpx rgba(31, 41, 88, 0.06);
 }
+.item-col .item-card:nth-child(2) { animation-delay: 60ms; }
+.item-col .item-card:nth-child(3) { animation-delay: 120ms; }
+.item-col .item-card:nth-child(4) { animation-delay: 180ms; }
 .item-card:active { transform: scale(0.98); }
 .item-image { width: 100%; height: 300rpx; position: relative; overflow: hidden; }
 .item-image__img { width: 100%; height: 100%; }
 .item-image__placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
 .item-price-tag {
 	position: absolute; right: 12rpx; bottom: 12rpx; padding: 4rpx 16rpx;
-	border-radius: 20rpx; background: rgba(0, 0, 0, 0.6); z-index: 2;
+	border-radius: 9999rpx; background: rgba(0, 0, 0, 0.6); z-index: 2;
 }
 .price-num { font-size: 26rpx; font-weight: 700; color: #FF6B3D; }
 .price-free { font-size: 24rpx; font-weight: 600; color: #22C55E; }
 .item-type-tag {
 	position: absolute; left: 12rpx; top: 12rpx; padding: 4rpx 14rpx;
-	border-radius: 10rpx; background: rgba(34, 197, 94, 0.85); z-index: 2;
+	border-radius: 8rpx; background: rgba(34, 197, 94, 0.85); z-index: 2;
 }
-.item-type-tag text { font-size: 20rpx; color: #FFF; font-weight: 500; }
+.item-type-tag text { font-size: 22rpx; color: #FFF; font-weight: 500; }
 .tag-hot-corner {
 	position: absolute; top: 0; left: 0; padding: 4rpx 16rpx;
-	background: #FF6B3D; color: #FFF; font-size: 20rpx; font-weight: bold; border-radius: 0 0 10rpx 0;
+	background: #FF6B3D; color: #FFF; font-size: 22rpx; font-weight: bold; border-radius: 0 0 8rpx 0;
 }
 .tag-new-corner {
 	position: absolute; top: 0; left: 0; padding: 4rpx 16rpx;
-	background: #22C55E; color: #FFF; font-size: 20rpx; font-weight: bold; border-radius: 0 0 10rpx 0;
+	background: #22C55E; color: #FFF; font-size: 22rpx; font-weight: bold; border-radius: 0 0 8rpx 0;
 }
 .item-info { padding: 16rpx 16rpx 20rpx; display: flex; flex-direction: column; gap: 12rpx; }
 .item-title { font-size: 26rpx; font-weight: 600; color: #1A1D28; line-height: 1.4; }
@@ -594,8 +620,8 @@ export default {
 
 /* ======== 骨架屏 ======== */
 .skeleton-card {
-	background: #FFF; border-radius: 16rpx; overflow: hidden;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	background: #FFF; border-radius: 20rpx; overflow: hidden;
+	box-shadow: 0 2rpx 16rpx rgba(31, 41, 88, 0.06);
 }
 .skeleton-block {
 	background: linear-gradient(90deg, #F2F3F8 25%, #E8EAF0 37%, #F2F3F8 63%);
@@ -614,23 +640,21 @@ export default {
 
 /* ======== 加载 ======== */
 .loading-row { display: flex; justify-content: center; padding: 30rpx 0; }
-.loading-text { font-size: 24rpx; color: #B0B4C0; }
+.loading-text { font-size: 24rpx; color: #6B6F80; }
 
 /* ======== 搜索栏额外按钮 ======== */
 .search-filter {
 	width: 56rpx; height: 56rpx; border-radius: 50%;
-	background: #F5F5F5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+	background: #EDF0FE; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
 /* ======== 固定搜索栏 ======== */
 .search-bar-fixed {
 	position: sticky;
-	top: -3rpx; 
+	top: 0;
 	z-index: 100;
-	background: #F5F5F5;
-	padding: 0rpx 10rpx 10rpx;
-	margin-left: -2rpx;
-	margin-right: -2rpx;
+	background: #FFFFFF;
+	padding: 0 0 10rpx;
 }
 .search-bar-fixed .search-bar { margin-bottom: 0; }
 
@@ -643,10 +667,10 @@ export default {
 	width: 100%; background: #FFF; border-radius: 32rpx 32rpx 0 0;
 	padding: 40rpx 30rpx calc(30rpx + env(safe-area-inset-bottom));
 }
-.picker-title { font-size: 34rpx; font-weight: bold; color: #333; display: block; text-align: center; margin-bottom: 30rpx; }
+.picker-title { font-size: 34rpx; font-weight: bold; color: #1A1D28; display: block; text-align: center; margin-bottom: 30rpx; }
 .picker-item {
 	display: flex; justify-content: space-between; align-items: center;
-	padding: 28rpx 16rpx; font-size: 30rpx; color: #333; border-bottom: 1px solid #F5F5F5;
+	padding: 28rpx 16rpx; font-size: 30rpx; color: #1A1D28; border-bottom: 1px solid #F2F3F8;
 }
 .picker-item.active { color: #4F6EF7; font-weight: 500; }
 .picker-cancel { margin-top: 30rpx; text-align: center; }

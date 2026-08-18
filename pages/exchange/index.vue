@@ -5,11 +5,11 @@
 			<view class="search-barbox">
 				<view class="exchange-header">
 					<view class="search-bar flex-1" @click="goSearch">
-						<AppIcon name="search" :size="36" color="#999" />
+						<AppIcon name="search" :size="36" color="#6B6F80" />
 						<text class="search-placeholder">搜索心愿、求助、置换信息…</text>
 					</view>
 					<view class="message-btn" @click="goMessages">
-						<AppIcon name="message" :size="40" color="#666" />
+						<AppIcon name="message" :size="40" color="#6B6F80" />
 						<view class="badge" v-if="unreadCount > 0">{{ unreadCount > 99 ? '99+' : unreadCount }}</view>
 					</view>
 				</view>
@@ -35,10 +35,21 @@
 				<view class="btn-outline">发布</view>
 			</view>
 
+			<!-- 帖子列表：加载骨架屏 -->
+			<view v-if="loading && filteredPosts.length === 0" class="post-list">
+				<view class="card post-card" v-for="i in 4" :key="'sk' + i">
+					<view class="skeleton-block" style="width:60%;height:32rpx;border-radius:8rpx;margin-bottom:16rpx;"></view>
+					<view class="skeleton-block" style="width:100%;height:30rpx;border-radius:8rpx;margin-bottom:12rpx;"></view>
+					<view class="skeleton-block" style="width:80%;height:24rpx;border-radius:8rpx;margin-bottom:20rpx;"></view>
+					<view class="skeleton-block" style="width:40%;height:24rpx;border-radius:8rpx;"></view>
+				</view>
+			</view>
+
 			<!-- 帖子列表 -->
-			<view class="post-list">
+			<view class="post-list" v-else>
+				<view class="post-group">
 				<view
-					class="card post-card"
+					class="post-card anim-in"
 					v-for="post in filteredPosts"
 					:key="post.id"
 					@click="goPostDetail(post)"
@@ -85,25 +96,26 @@
 					<!-- 底部 -->
 					<view class="post-footer">
 						<view class="post-action" @click.stop="likePost(post)">
-							<AppIcon :name="post.liked ? 'heart-fill' : 'heart'" :size="32" :color="post.liked ? '#FF4D4F' : '#CCC'" />
+							<AppIcon :name="post.liked ? 'heart-fill' : 'heart'" :size="32" :color="post.liked ? '#FF4D4F' : '#8B8FA3'" />
 							<text class="action-text">{{ post.replyCount || 0 }}</text>
 						</view>
 						<view class="post-action" @click.stop="goChat(post)">
-							<AppIcon name="chat-bubble" :size="30" color="#CCC" />
+							<AppIcon name="chat-bubble" :size="30" color="#8B8FA3" />
 							<text class="action-text">私信</text>
 						</view>
 					</view>
 				</view>
+				</view>
 
 				<view v-if="loadError && filteredPosts.length === 0" class="error-state">
-					<text class="error-icon">⚠️</text>
+					<AppIcon name="close" :size="56" color="#EF4444" />
 					<text class="error-text">加载失败，请检查网络后重试</text>
 					<view class="retry-btn" @click="loadPosts"><text>重新加载</text></view>
 				</view>
 				<view class="empty-state" v-else-if="filteredPosts.length === 0">
-					<view class="empty-icon"><AppIcon name="exchange" :size="80" color="#CCC" /></view>
+					<view class="empty-icon"><AppIcon name="exchange" :size="80" color="#8B8FA3" /></view>
 					<text>暂无相关内容</text>
-					<text class="mt-8" style="font-size:24rpx;color:#CCC;">快去发布第一条互助帖吧~</text>
+					<text class="mt-8" style="font-size:24rpx;color:#8B8FA3;">快去发布第一条互助帖吧~</text>
 				</view>
 			</view>
 		</view>
@@ -130,6 +142,7 @@ export default {
 			posts: [],
 			unreadCount: 0,
 			loadError: false,
+			loading: false,
 		};
 	},
 	computed: {
@@ -154,6 +167,7 @@ export default {
 			return post.tab || TAG_LABEL_MAP[post.type] || '其他';
 		},
 		async loadPosts() {
+			this.loading = true;
 			try {
 				const data = await get('/api/exchange-posts', { page: 1, pageSize: 20 });
 				this.posts = (data.list || []).map((p) => ({
@@ -164,6 +178,8 @@ export default {
 			} catch (e) {
 				this.posts = [];
 				this.loadError = true;
+			} finally {
+				this.loading = false;
 			}
 		},
 		async loadUnreadCount() {
@@ -221,43 +237,65 @@ export default {
 .message-btn {
 	position: relative; width: 80rpx; height: 80rpx; background: #FFF; border-radius: 50%;
 	display: flex; align-items: center; justify-content: center;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04); flex-shrink: 0;
+	box-shadow: 0 2rpx 16rpx rgba(31, 41, 88, 0.06); flex-shrink: 0;
 }
 .tab-section { margin-bottom: 20rpx; }
 .tab-chip {
 	flex-shrink: 0; padding: 12rpx 28rpx; border-radius: 30rpx; font-size: 26rpx;
-	color: #666; background: #FFF; white-space: nowrap; transition: all 0.2s;
+	color: #6B6F80; background: #FFF; white-space: nowrap; transition: all 0.2s;
 }
-.tab-chip.active { color: #FFF; background: #4F6EF7; font-weight: 500; }
+.tab-chip.active { color: #FFF; background: #3D56D4; font-weight: 500; }
 .post-entry {
 	display: flex; align-items: center; justify-content: space-between;
-	background: #FFF; border-radius: 16rpx; padding: 18rpx 24rpx; margin-bottom: 20rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	background: #FFF; border-radius: 20rpx; padding: 18rpx 24rpx; margin-bottom: 20rpx;
+	box-shadow: 0 2rpx 16rpx rgba(31, 41, 88, 0.06);
 }
 .post-entry-content { display: flex; align-items: center; gap: 14rpx; }
-.post-entry-text { font-size: 28rpx; color: #999; }
+.post-entry-text { font-size: 28rpx; color: #6B6F80; }
+
+/* 帖子分组：白底容器 + 内部细分隔线，避免区块堆叠 */
+.post-group {
+	background: #FFF;
+	border-radius: 20rpx;
+	overflow: hidden;
+	box-shadow: 0 2rpx 16rpx rgba(31, 41, 88, 0.06);
+	margin-bottom: 20rpx;
+}
+.post-group .post-card {
+	background: #FFF;
+	border-radius: 0;
+	box-shadow: none;
+	margin-bottom: 0;
+	padding: 24rpx;
+}
+.post-group .post-card + .post-card {
+	border-top: 1px solid #EEF0F5;
+}
+.post-group .post-card:nth-child(2) { animation-delay: 60ms; }
+.post-group .post-card:nth-child(3) { animation-delay: 120ms; }
+.post-group .post-card:nth-child(4) { animation-delay: 180ms; }
 .post-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16rpx; }
 .post-user { display: flex; align-items: center; gap: 14rpx; }
 .user-avatar-post { width: 64rpx; height: 64rpx; font-size: 24rpx; flex-shrink: 0; }
-.post-nickname { font-size: 28rpx; color: #333; font-weight: 500; }
-.post-time { font-size: 22rpx; color: #999; margin-top: 2rpx; }
-.post-title { font-size: 32rpx; color: #333; font-weight: 600; display: block; margin-bottom: 10rpx; }
-.post-desc { font-size: 26rpx; color: #999; line-height: 1.5; display: block; margin-bottom: 14rpx; }
+.post-nickname { font-size: 28rpx; color: #1A1D28; font-weight: 500; }
+.post-time { font-size: 22rpx; color: #6B6F80; margin-top: 2rpx; }
+.post-title { font-size: 32rpx; color: #1A1D28; font-weight: 600; display: block; margin-bottom: 10rpx; }
+.post-desc { font-size: 26rpx; color: #6B6F80; line-height: 1.5; display: block; margin-bottom: 14rpx; }
 .post-reward {
 	display: inline-flex; align-items: center; gap: 8rpx;
 	background: #FFF3E0; padding: 6rpx 16rpx; border-radius: 8rpx; margin-bottom: 14rpx;
 }
 .reward-text { font-size: 30rpx; color: #FF6B3D; font-weight: bold; }
-.reward-label { font-size: 22rpx; color: #FF9800; }
-.exchange-info { background: #F8F9FC; border-radius: 12rpx; padding: 20rpx; margin-bottom: 16rpx; }
+.reward-label { font-size: 22rpx; color: #F59E0B; }
+.exchange-info { background: #F8F9FC; border-radius: 16rpx; padding: 20rpx; margin-bottom: 16rpx; }
 .exchange-flow { display: flex; align-items: center; justify-content: space-between; }
 .flow-item { display: flex; flex-direction: column; flex: 1; }
-.flow-label { font-size: 20rpx; color: #B0B4C0; margin-bottom: 4rpx; }
+.flow-label { font-size: 22rpx; color: #6B6F80; margin-bottom: 4rpx; }
 .flow-value { font-size: 26rpx; color: #1A1D28; font-weight: 500; }
 .flow-arrow { padding: 0 16rpx; }
 .post-footer {
-	display: flex; align-items: center; gap: 30rpx; padding-top: 16rpx; border-top: 1px solid #F5F5F5;
+	display: flex; align-items: center; gap: 30rpx; padding-top: 16rpx; border-top: 1px solid #F2F3F8;
 }
 .post-action { display: flex; align-items: center; gap: 6rpx; padding: 4rpx 0; }
-.action-text { font-size: 24rpx; color: #CCC; }
+.action-text { font-size: 24rpx; color: #6B6F80; }
 </style>

@@ -48,7 +48,7 @@ export default {
 	data() {
 		return {
 			activeColor: '#4F6EF7',
-			inactiveColor: '#999999',
+			inactiveColor: '#6B6F80',
 		};
 	},
 	methods: {
@@ -83,7 +83,7 @@ image{
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	box-shadow: 0 -2rpx 16rpx rgba(0, 0, 0, 0.06);
+	box-shadow: 0 -2rpx 16rpx rgba(31, 41, 88, 0.08);
 	z-index: 999;
 }
 
@@ -99,7 +99,7 @@ image{
 
 .tabbar-text {
 	font-size: 20rpx;
-	color: #999999;
+	color: #6B6F80;
 	transition: color 0.2s;
 }
 
@@ -118,7 +118,7 @@ image{
 .publish-btn {
 	width: 100rpx;
 	height: 100rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;

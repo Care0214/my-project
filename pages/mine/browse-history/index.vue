@@ -22,7 +22,7 @@
 								<text class="history-time">{{ formatTime(item.time) }}</text>
 							</view>
 						</view>
-						<AppIcon name="arrow-right" :size="28" color="#CCC" />
+						<AppIcon name="arrow-right" :size="28" color="#8B8FA3" />
 					</view>
 				</view>
 
@@ -32,9 +32,9 @@
 			</view>
 
 			<view v-else class="empty-state">
-				<AppIcon name="clock" :size="80" color="#CCC" />
+				<AppIcon name="clock" :size="80" color="#8B8FA3" />
 				<text>暂无浏览记录</text>
-				<text class="mt-8" style="font-size:24rpx;color:#CCC;">去首页逛逛吧~</text>
+				<text class="mt-8" style="font-size:24rpx;color:#8B8FA3;">去首页逛逛吧~</text>
 			</view>
 		</view>
 	</view>
@@ -93,8 +93,8 @@ export default {
 @import '@/styles/common.scss';
 
 .list-header { margin-bottom: 24rpx; }
-.header-title-sm { font-size: 36rpx; font-weight: bold; color: #333; display: block; }
-.header-desc { font-size: 24rpx; color: #999; margin-top: 8rpx; display: block; }
+.header-title-sm { font-size: 36rpx; font-weight: bold; color: #1A1D28; display: block; }
+.header-desc { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; display: block; }
 
 .history-card { padding: 20rpx 24rpx; }
 .history-row { display: flex; align-items: center; gap: 16rpx; }
@@ -103,13 +103,13 @@ export default {
 	display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .history-info { flex: 1; min-width: 0; }
-.history-title { font-size: 28rpx; color: #333; font-weight: 500; display: block; margin-bottom: 8rpx; }
+.history-title { font-size: 28rpx; color: #1A1D28; font-weight: 500; display: block; margin-bottom: 8rpx; }
 .history-meta { display: flex; align-items: center; gap: 12rpx; }
-.type-tag { padding: 2rpx 12rpx; border-radius: 6rpx; font-size: 20rpx; }
+.type-tag { padding: 2rpx 12rpx; border-radius: 8rpx; font-size: 22rpx; }
 .tag-sell { background: #EDF0FE; color: #4F6EF7; }
-.tag-lease { background: #FFF3E0; color: #FF9800; }
+.tag-lease { background: #FFF3E0; color: #F59E0B; }
 .history-price { font-size: 24rpx; color: #FF6B3D; font-weight: 500; }
-.history-time { font-size: 22rpx; color: #CCC; }
+.history-time { font-size: 22rpx; color: #8B8FA3; }
 
 .clear-all { display: flex; justify-content: center; padding: 30rpx 0; }
 .clear-all-text { font-size: 26rpx; color: #FF4D4F; }

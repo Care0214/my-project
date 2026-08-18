@@ -55,7 +55,7 @@
 				</view>
 			</view>
 			<view v-else class="empty-state">
-				<AppIcon name="check" :size="80" color="#CCC" />
+				<AppIcon name="check" :size="80" color="#8B8FA3" />
 				<text>暂无待审核内容</text>
 			</view>
 		</scroll-view>
@@ -81,7 +81,7 @@
 				</view>
 			</view>
 			<view v-else class="empty-state">
-				<AppIcon name="user" :size="80" color="#CCC" />
+				<AppIcon name="user" :size="80" color="#8B8FA3" />
 				<text>暂无用户</text>
 			</view>
 		</scroll-view>
@@ -105,7 +105,7 @@
 				</view>
 			</view>
 			<view v-else class="empty-state">
-				<AppIcon name="shield" :size="80" color="#CCC" />
+				<AppIcon name="shield" :size="80" color="#8B8FA3" />
 				<text>暂无举报</text>
 			</view>
 		</scroll-view>
@@ -229,28 +229,28 @@ export default {
 <style scoped>
 @import '@/styles/common.scss';
 
-.admin-page { min-height: 100vh; background: #F5F5F5; }
+.admin-page { min-height: 100vh; background: #F2F3F8; }
 .admin-stats {
 	display: flex; background: #FFF; padding: 28rpx 12rpx;
 	margin-bottom: 16rpx;
 }
 .stat-card { flex: 1; text-align: center; }
 .stat-value { font-size: 40rpx; font-weight: 700; color: #4F6EF7; display: block; }
-.stat-label { font-size: 22rpx; color: #999; margin-top: 6rpx; display: block; }
+.stat-label { font-size: 22rpx; color: #6B6F80; margin-top: 6rpx; display: block; }
 
 .admin-tabs {
 	display: flex; background: #FFF; padding: 0 24rpx;
-	border-bottom: 1rpx solid #F0F0F0;
+	border-bottom: 1rpx solid #EEF0F5;
 }
 .admin-tab {
 	flex: 1; text-align: center; padding: 24rpx 0;
-	font-size: 28rpx; color: #666; position: relative;
+	font-size: 28rpx; color: #6B6F80; position: relative;
 }
 .admin-tab.active { color: #4F6EF7; font-weight: 700; }
 .admin-tab.active::after {
 	content: ''; position: absolute; bottom: 0; left: 50%;
 	transform: translateX(-50%); width: 40rpx; height: 6rpx;
-	background: #4F6EF7; border-radius: 3rpx;
+	background: #3D56D4; border-radius: 3rpx;
 }
 
 .admin-scroll { padding: 20rpx 24rpx; }
@@ -258,22 +258,22 @@ export default {
 
 .review-top { display: flex; align-items: center; gap: 16rpx; }
 .review-img {
-	width: 88rpx; height: 88rpx; border-radius: 12rpx; flex-shrink: 0;
-	background: #F5F5F5; display: flex; align-items: center; justify-content: center;
+	width: 88rpx; height: 88rpx; border-radius: 16rpx; flex-shrink: 0;
+	background: #F2F3F8; display: flex; align-items: center; justify-content: center;
 }
 .review-info { flex: 1; min-width: 0; }
-.review-title { font-size: 28rpx; color: #333; font-weight: 600; display: block; }
+.review-title { font-size: 28rpx; color: #1A1D28; font-weight: 600; display: block; }
 .review-user { font-size: 22rpx; color: #BBB; display: block; margin-top: 6rpx; }
 .review-bottom {
 	display: flex; align-items: center; justify-content: space-between;
-	margin-top: 16rpx; padding-top: 16rpx; border-top: 1rpx solid #F5F5F5;
+	margin-top: 16rpx; padding-top: 16rpx; border-top: 1rpx solid #F2F3F8;
 }
-.review-category { font-size: 24rpx; color: #999; }
+.review-category { font-size: 24rpx; color: #6B6F80; }
 .review-actions, .report-actions { display: flex; gap: 12rpx; }
 
 .action-btn {
-	padding: 10rpx 28rpx; border-radius: 10rpx; font-size: 24rpx;
-	background: #F5F5F5; color: #666;
+	padding: 10rpx 28rpx; border-radius: 9999rpx; font-size: 24rpx;
+	background: #F2F3F8; color: #6B6F80;
 }
 .action-btn.approve { background: #E8F8EE; color: #22C55E; }
 .action-btn.reject { background: #FFF0F0; color: #FF4D4F; }
@@ -283,26 +283,26 @@ export default {
 .user-top { display: flex; align-items: center; gap: 16rpx; }
 .user-avatar {
 	width: 76rpx; height: 76rpx; border-radius: 50%; flex-shrink: 0;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	display: flex; align-items: center; justify-content: center;
 }
 .user-avatar text { font-size: 30rpx; font-weight: bold; color: #FFF; }
 .user-info { flex: 1; min-width: 0; }
-.user-name { font-size: 28rpx; color: #333; font-weight: 600; display: block; }
-.user-meta { font-size: 22rpx; color: #999; display: block; margin-top: 6rpx; }
+.user-name { font-size: 28rpx; color: #1A1D28; font-weight: 600; display: block; }
+.user-meta { font-size: 22rpx; color: #6B6F80; display: block; margin-top: 6rpx; }
 .user-bottom {
 	display: flex; align-items: center; justify-content: flex-end; gap: 12rpx;
-	margin-top: 16rpx; padding-top: 16rpx; border-top: 1rpx solid #F5F5F5;
+	margin-top: 16rpx; padding-top: 16rpx; border-top: 1rpx solid #F2F3F8;
 }
-.user-status { font-size: 22rpx; padding: 4rpx 14rpx; border-radius: 6rpx; }
+.user-status { font-size: 22rpx; padding: 4rpx 14rpx; border-radius: 8rpx; }
 .user-status.normal { background: #E8F8EE; color: #22C55E; }
 .user-status.blocked { background: #FFF0F0; color: #FF4D4F; }
 
 .report-top { display: flex; align-items: center; justify-content: space-between; }
-.report-type { font-size: 22rpx; padding: 4rpx 14rpx; border-radius: 6rpx; }
+.report-type { font-size: 22rpx; padding: 4rpx 14rpx; border-radius: 8rpx; }
 .report-type.fake { background: #FFF0F0; color: #FF4D4F; }
 .report-type.violation { background: #FFF8E1; color: #F59E0B; }
-.report-time { font-size: 22rpx; color: #CCC; }
-.report-reason { font-size: 26rpx; color: #333; display: block; margin-top: 14rpx; }
-.report-target { font-size: 24rpx; color: #999; display: block; margin-top: 8rpx; }
+.report-time { font-size: 22rpx; color: #8B8FA3; }
+.report-reason { font-size: 26rpx; color: #1A1D28; display: block; margin-top: 14rpx; }
+.report-target { font-size: 24rpx; color: #6B6F80; display: block; margin-top: 8rpx; }
 </style>

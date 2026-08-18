@@ -44,7 +44,7 @@
 						:class="['chip', { active: selectedCategory === cat.key }]"
 						@click="selectCategory(cat)"
 					>
-						<AppIcon :name="cat.icon" :size="28" :color="selectedCategory === cat.key ? '#FFF' : '#666'" />
+						<AppIcon :name="cat.icon" :size="28" :color="selectedCategory === cat.key ? '#FFF' : '#6B6F80'" />
 						<text class="chip-text">{{ cat.name }}</text>
 					</view>
 				</view>
@@ -123,7 +123,7 @@ export default {
 					{ id: 'c3', name: '生活用品', icon: 'daily', color: '#FF6B3D', key: 'daily' },
 					{ id: 'c4', name: '运动户外', icon: 'sports', color: '#22C55E', key: 'sports' },
 					{ id: 'c5', name: '服饰箱包', icon: 'fashion', color: '#F59E0B', key: 'fashion' },
-					{ id: 'c6', name: '其他', icon: 'other', color: '#8B5CF6', key: 'other' },
+					{ id: 'c6', name: '其他', icon: 'other', color: '#6366F1', key: 'other' },
 				];
 			}
 		},
@@ -212,10 +212,10 @@ export default {
 .recognize-left { display: flex; align-items: center; gap: 16rpx; }
 .recognize-info { display: flex; flex-direction: column; gap: 4rpx; }
 .recognize-title { font-size: 28rpx; font-weight: 600; color: #1A1D28; }
-.recognize-sub { font-size: 22rpx; color: #999; }
+.recognize-sub { font-size: 22rpx; color: #6B6F80; }
 .recognize-btn {
 	padding: 14rpx 28rpx; border-radius: 30rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	color: #FFF; font-size: 26rpx; font-weight: 500;
 	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
 }
@@ -229,10 +229,10 @@ export default {
 .chip {
 	display: flex; align-items: center; gap: 8rpx;
 	padding: 12rpx 22rpx; border-radius: 30rpx;
-	background: #F5F5F5; transition: all 0.2s;
+	background: #F2F3F8; transition: all 0.2s;
 }
-.chip.active { background: #4F6EF7; }
-.chip-text { font-size: 24rpx; color: #666; }
+.chip.active { background: #3D56D4; }
+.chip-text { font-size: 24rpx; color: #6B6F80; }
 .chip.active .chip-text { color: #FFF; font-weight: 500; }
 
 .estimate-card {
@@ -241,16 +241,16 @@ export default {
 	padding: 30rpx 26rpx; margin-top: 20rpx;
 }
 .estimate-top { display: flex; align-items: baseline; justify-content: space-between; }
-.estimate-label { font-size: 26rpx; color: #666; }
+.estimate-label { font-size: 26rpx; color: #6B6F80; }
 .estimate-range { font-size: 48rpx; font-weight: bold; color: #FF6B3D; }
 .estimate-mid { display: flex; align-items: center; justify-content: space-between; margin-top: 12rpx; }
 .estimate-avg { font-size: 24rpx; color: #4F6EF7; font-weight: 500; }
-.estimate-count { font-size: 20rpx; color: #999; }
+.estimate-count { font-size: 22rpx; color: #6B6F80; }
 .estimate-reason {
 	display: flex; align-items: flex-start; gap: 10rpx;
 	margin-top: 20rpx; padding-top: 18rpx; border-top: 1px dashed #C9D7F5;
 }
 .estimate-reason-text { flex: 1; font-size: 22rpx; color: #6B6F80; line-height: 1.5; }
 
-.disclaimer { text-align: center; font-size: 20rpx; color: #CCC; margin-top: 24rpx; }
+.disclaimer { text-align: center; font-size: 22rpx; color: #8B8FA3; margin-top: 24rpx; }
 </style>

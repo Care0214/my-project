@@ -80,7 +80,7 @@ export default {
 		},
 		avatarBg() {
 			if (this.avatarPath) return 'transparent';
-			return 'linear-gradient(135deg, #4F6EF7, #6366F1)';
+			return 'linear-gradient(135deg, #4F6EF7, #3D56D4)';
 		},
 	},
 	methods: {
@@ -127,7 +127,7 @@ export default {
 	border-radius: 20rpx;
 	margin-bottom: 16rpx;
 	overflow: hidden;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 
 .edit-row {
@@ -139,11 +139,11 @@ export default {
 }
 
 .edit-row + .edit-row {
-	border-top: 1px solid #F3F4F8;
+	border-top: 1px solid #F2F3F8;
 }
 
 .edit-row-last {
-	border-top: 1px solid #F3F4F8;
+	border-top: 1px solid #F2F3F8;
 }
 
 .edit-label {
@@ -163,7 +163,7 @@ export default {
 
 .edit-value {
 	font-size: 26rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 }
 
 .edit-avatar {
@@ -197,7 +197,7 @@ export default {
 	width: 100%;
 	height: 92rpx;
 	border-radius: 20rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	display: flex;
 	align-items: center;
 	justify-content: center;

@@ -40,7 +40,7 @@
 						<view class="msg-avatar-wrap">
 							<view
 								class="msg-avatar"
-								:style="{ background: conv.user.avatarBg || '#E0E0E0' }"
+								:style="{ background: conv.user.avatarBg || '#8FA1F8' }"
 							>
 								<text class="msg-avatar-text">{{ conv.user.nickname ? conv.user.nickname.charAt(0) : '?' }}</text>
 							</view>
@@ -235,12 +235,12 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 8rpx rgba(31, 41, 88, 0.06);
 	transition: all 0.15s;
 }
 
 .header-action-btn:active {
-	background: #F3F4F8;
+	background: #F2F3F8;
 	transform: scale(0.95);
 }
 
@@ -257,7 +257,7 @@ export default {
 	background: #FFFFFF;
 	font-size: 26rpx;
 	color: #1A1D28;
-	box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 8rpx rgba(31, 41, 88, 0.06);
 }
 
 /* 分组标签 */
@@ -279,7 +279,7 @@ export default {
 	border-radius: 20rpx;
 	padding: 24rpx;
 	margin-bottom: 12rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.03);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.05);
 	transition: all 0.15s;
 	position: relative;
 }
@@ -359,13 +359,13 @@ export default {
 }
 
 .msg-item-tag-text {
-	font-size: 20rpx;
+	font-size: 22rpx;
 	color: #8B8FA3;
 }
 
 .msg-time {
 	font-size: 22rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 	flex-shrink: 0;
 	margin-left: 12rpx;
 	margin-top: 4rpx;
@@ -394,7 +394,7 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 20rpx;
+	font-size: 22rpx;
 	color: #FFFFFF;
 	font-weight: 600;
 	margin-left: 12rpx;
@@ -413,7 +413,7 @@ export default {
 
 .empty-sub {
 	font-size: 24rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 	margin-top: 8rpx;
 	margin-bottom: 32rpx;
 }
@@ -421,7 +421,7 @@ export default {
 .empty-action {
 	padding: 16rpx 48rpx;
 	border-radius: 40rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	box-shadow: 0 6rpx 20rpx rgba(79, 110, 247, 0.25);
 	transition: all 0.15s;
 }

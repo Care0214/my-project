@@ -1,8 +1,8 @@
 /**
  * 拾闲小栈 - 公共样式库（整合版）
  *
- * 合并 项目开发 的 SCSS 变量体系和 8月项目 的实用类。
- * 所有页面共享的样式类，避免重复代码。
+ * Taste-skill 审计后整理：颜色 / 圆角 / 阴影统一走 uni.scss 的 token。
+ * 圆角规则：卡片 20rpx、图片与输入框 16rpx、标签 8rpx、按钮与搜索框全圆角。
  *
  * 引用方式：在各页面 style 中: @import '@/styles/common.scss';
  */
@@ -10,14 +10,14 @@
 /* ========== 页面容器 ========== */
 .page-container {
 	min-height: 100vh;
-	background: #F5F5F5;
+	background: $uni-bg-color-page;
 	padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
 }
 
 /* 无底部 tab 的页面 */
 .page-container--clean {
 	min-height: 100vh;
-	background: #F5F5F5;
+	background: $uni-bg-color-page;
 	padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -29,36 +29,76 @@
 
 /* ========== 页面标题 ========== */
 .page-title {
-	font-size: 44rpx;
+	font-size: $uni-font-size-title;
 	font-weight: bold;
-	color: #333;
+	color: $uni-text-color;
 	display: block;
 	margin-bottom: 0;
 }
 
-/* ========== 通用卡片 ========== */
-.card {
-	background: #FFFFFF;
-	border-radius: 16rpx;
-	padding: 24rpx;
-	margin-bottom: 20rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+/* ========== 文字层级（统一字号与字重） ========== */
+.text-display { font-size: $uni-font-size-display; font-weight: $uni-font-weight-bold; line-height: 1.3; }
+.text-title   { font-size: $uni-font-size-title; font-weight: $uni-font-weight-semibold; line-height: 1.4; }
+.text-lg      { font-size: $uni-font-size-lg; font-weight: $uni-font-weight-semibold; line-height: 1.4; }
+.text-body    { font-size: $uni-font-size-md; line-height: 1.6; }
+.text-base    { font-size: $uni-font-size-base; line-height: 1.5; }
+.text-caption { font-size: $uni-font-size-sm; line-height: 1.5; color: $uni-text-color-secondary; }
+
+/* ========== 列表进入动画 ========== */
+@keyframes fade-in-up {
+	from { opacity: 0; transform: translateY(24rpx); }
+	to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ========== 搜索栏 ========== */
+.anim-in {
+	animation: fade-in-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* Tab / 面板切换淡入 */
+@keyframes fade-in {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+.fade-switch {
+	animation: fade-in 0.25s ease backwards;
+}
+
+/* ========== 骨架屏 ========== */
+.skeleton-block {
+	background: linear-gradient(90deg, #EEF0F5 25%, #E3E6EE 37%, #EEF0F5 63%);
+	background-size: 400% 100%;
+	animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+@keyframes skeleton-shimmer {
+	0% { background-position: 100% 50%; }
+	100% { background-position: 0 50%; }
+}
+
+/* ========== 通用卡片（圆角 20rpx，统一靛蓝灰投影） ========== */
+.card {
+	background: $uni-bg-color;
+	border-radius: $uni-border-radius-lg;
+	padding: $uni-spacing-lg;
+	margin-bottom: $uni-spacing-md;
+	box-shadow: $uni-shadow-card;
+}
+
+/* ========== 搜索栏（浅灰底 + 描边的全圆角胶囊，与页面背景明确区分） ========== */
 .search-bar {
 	display: flex;
 	align-items: center;
-	background: #FFFFFF;
-	border-radius: 40rpx;
+	background: $uni-bg-color-page;
+	border-radius: $uni-border-radius-round;
+	border: 2rpx solid $uni-border-color;
 	padding: 18rpx 28rpx;
-	margin-bottom: 24rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	margin-bottom: $uni-spacing-lg;
 }
 
 .search-placeholder {
-	color: #999999;
-	font-size: 28rpx;
+	color: $uni-text-color-secondary;
+	font-size: $uni-font-size-md;
 	margin-left: 14rpx;
 	flex: 1;
 }
@@ -70,8 +110,8 @@
 	align-items: center;
 	justify-content: center;
 	padding: 80rpx 40rpx;
-	color: #999;
-	font-size: 28rpx;
+	color: $uni-text-color-grey;
+	font-size: $uni-font-size-md;
 }
 
 .empty-state .empty-icon { margin-bottom: 20rpx; opacity: 0.4; }
@@ -83,44 +123,44 @@
 	align-items: center;
 	justify-content: center;
 	padding: 80rpx 40rpx;
-	color: #999;
-	font-size: 28rpx;
+	color: $uni-text-color-grey;
+	font-size: $uni-font-size-md;
 }
 
 .error-state .error-icon { margin-bottom: 20rpx; font-size: 64rpx; }
 
 .error-state .error-text {
-	font-size: 26rpx;
-	color: #666;
+	font-size: $uni-font-size-base;
+	color: $uni-text-color-secondary;
 	margin-bottom: 28rpx;
 }
 
 .retry-btn {
 	padding: 14rpx 48rpx;
-	border-radius: 40rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
-	color: #FFF;
-	font-size: 26rpx;
-	font-weight: 500;
+	border-radius: $uni-border-radius-round;
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
+	color: $uni-text-color-inverse;
+	font-size: $uni-font-size-base;
+	font-weight: $uni-font-weight-medium;
 	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
 }
 
 .retry-btn:active { transform: scale(0.96); }
 
-/* ========== 标签 ========== */
+/* ========== 标签（圆角 8rpx） ========== */
 .tag {
 	display: inline-block;
 	padding: 4rpx 14rpx;
-	border-radius: 8rpx;
-	font-size: 22rpx;
-	background: #EEF4FF;
-	color: #4F6EF7;
+	border-radius: $uni-border-radius-sm;
+	font-size: $uni-font-size-sm;
+	background: $uni-color-primary-light;
+	color: $uni-color-primary;
 }
 
 .tag-hot    { background: #FFF0EB; color: #FF6B3D; }
 .tag-new    { background: #E8F8EE; color: #22C55E; }
-.tag-lease  { background: #FFF3E0; color: #FF9800; }
-.tag-barter { background: #F3E5F5; color: #9C27B0; }
+.tag-lease  { background: #FFF3E0; color: #F59E0B; }
+.tag-barter { background: #EDF0FE; color: #4F6EF7; }
 
 /* ========== 徽章 ========== */
 .badge {
@@ -131,23 +171,23 @@
 	height: 32rpx;
 	padding: 0 8rpx;
 	border-radius: 16rpx;
-	font-size: 20rpx;
-	color: #FFF;
+	font-size: $uni-font-size-xs;
+	color: $uni-text-color-inverse;
 	background: #FF4D4F;
 	line-height: 1;
 }
 
-/* ========== 按钮 ========== */
+/* ========== 按钮（全圆角） ========== */
 .btn-primary {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	padding: 16rpx 40rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
-	color: #FFF;
-	border-radius: 40rpx;
-	font-size: 28rpx;
-	font-weight: 500;
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
+	color: $uni-text-color-inverse;
+	border-radius: $uni-border-radius-round;
+	font-size: $uni-font-size-md;
+	font-weight: $uni-font-weight-medium;
 	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
 	transition: transform 0.15s;
 }
@@ -161,9 +201,9 @@
 	padding: 14rpx 36rpx;
 	border: 2rpx solid #4F6EF7;
 	color: #4F6EF7;
-	border-radius: 40rpx;
-	font-size: 26rpx;
-	background: #FFF;
+	border-radius: $uni-border-radius-round;
+	font-size: $uni-font-size-base;
+	background: $uni-bg-color;
 }
 
 .btn-ghost {
@@ -171,21 +211,21 @@
 	align-items: center;
 	justify-content: center;
 	padding: 12rpx 28rpx;
-	color: #666;
-	border-radius: 30rpx;
+	color: $uni-text-color-secondary;
+	border-radius: $uni-border-radius-round;
 	font-size: 24rpx;
-	background: #F5F5F5;
+	background: $uni-bg-color-page;
 }
 
-/* ========== 头像占位 ========== */
+/* ========== 头像占位（品牌渐变） ========== */
 .avatar-placeholder {
-	background: linear-gradient(135deg, #E0E0E0, #D0D0D0);
+	background: linear-gradient(135deg, #8FA1F8, #6B82F5);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: #FFF;
-	font-size: 28rpx;
+	color: $uni-text-color-inverse;
+	font-size: $uni-font-size-md;
 	font-weight: bold;
 }
 
@@ -227,6 +267,15 @@
 .divider {
 	width: 100%;
 	height: 1px;
-	background: #F0F0F0;
+	background: $uni-divider-color;
 	margin: 16rpx 0;
+}
+
+/* ========== 减少动态效果偏好 ========== */
+@media (prefers-reduced-motion: reduce) {
+	.skeleton-block,
+	.anim-in,
+	.fade-switch {
+		animation: none !important;
+	}
 }

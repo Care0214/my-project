@@ -1,7 +1,7 @@
 <template>
 	<view class="detail-page">
 		<!-- 图片展示区 -->
-		<view class="image-stage" :style="{ background: post.imageBg || '#F3F4F8' }">
+		<view class="image-stage" :style="{ background: post.imageBg || '#F2F3F8' }">
 			<swiper v-if="post.images && post.images.length > 0" class="image-swiper" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#FFFFFF">
 				<swiper-item v-for="(img, idx) in post.images" :key="idx">
 					<image :src="img" class="swiper-image" mode="aspectFill" />
@@ -76,7 +76,7 @@
 			<view class="seller-card">
 				<view
 					class="seller-avatar"
-					:style="{ background: post.user ? post.user.avatarBg : '#E0E0E0' }"
+					:style="{ background: post.user ? post.user.avatarBg : '#8FA1F8' }"
 				></view>
 				<view class="seller-info">
 					<view class="seller-top">
@@ -127,11 +127,11 @@
 			<!-- 发布时间和浏览 -->
 			<view class="meta-section">
 				<view class="meta-item">
-					<AppIcon name="clock" :size="28" color="#B0B4C0" />
+					<AppIcon name="clock" :size="28" color="#6B6F80" />
 					<text class="meta-text">{{ post.createdAtText }}</text>
 				</view>
 				<view class="meta-item">
-					<AppIcon name="eye" :size="28" color="#B0B4C0" />
+					<AppIcon name="eye" :size="28" color="#6B6F80" />
 					<text class="meta-text">{{ post.views || 0 }} 次浏览</text>
 				</view>
 			</view>
@@ -194,8 +194,8 @@ export default {
 					myItem: { name: '', condition: '' },
 					wantItem: { name: '', category: '' },
 					images: [],
-					imageBg: '#F3F4F8',
-					user: { nickname: '未知用户', avatarBg: '#E0E0E0', stats: { exchanges: 0 } },
+					imageBg: '#F2F3F8',
+					user: { nickname: '未知用户', avatarBg: '#8FA1F8', stats: { exchanges: 0 } },
 					createdAtText: '刚刚',
 					views: 0,
 				};
@@ -286,7 +286,7 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.1);
 	z-index: 10;
 }
 
@@ -341,7 +341,7 @@ export default {
 	padding: 6rpx 16rpx;
 	border-radius: 14rpx;
 	font-size: 22rpx;
-	background: #F3F4F8;
+	background: #F2F3F8;
 	color: #8B8FA3;
 }
 
@@ -396,8 +396,8 @@ export default {
 }
 
 .flow-label {
-	font-size: 20rpx;
-	color: #B0B4C0;
+	font-size: 22rpx;
+	color: #6B6F80;
 	margin-bottom: 6rpx;
 }
 
@@ -454,7 +454,7 @@ export default {
 	border-radius: 20rpx;
 	padding: 24rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 
 .seller-card:active { background: #F8F9FC; }
@@ -485,14 +485,14 @@ export default {
 .seller-badge {
 	padding: 2rpx 12rpx;
 	border-radius: 10rpx;
-	font-size: 20rpx;
+	font-size: 22rpx;
 	color: #4F6EF7;
 	background: #EDF0FE;
 }
 
 .seller-stats {
 	font-size: 22rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 }
 
 /* 描述 */
@@ -501,7 +501,7 @@ export default {
 	border-radius: 20rpx;
 	padding: 24rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 
 .section-label {
@@ -544,7 +544,7 @@ export default {
 	background: #FFFFFF;
 	border-radius: 20rpx;
 	padding: 24rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 
 .contact-item {
@@ -574,7 +574,7 @@ export default {
 	height: 210rpx;
 	border-radius: 12rpx;
 	overflow: hidden;
-	background: #F3F4F8;
+	background: #F2F3F8;
 }
 
 .images-preview {
@@ -598,7 +598,7 @@ export default {
 
 .meta-text {
 	font-size: 24rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 }
 
 /* 底部占位 */
@@ -618,7 +618,7 @@ export default {
 	padding: 16rpx 24rpx;
 	padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
 	background: #FFFFFF;
-	box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
+	box-shadow: 0 -4rpx 24rpx rgba(31, 41, 88, 0.08);
 	z-index: 100;
 }
 
@@ -632,7 +632,7 @@ export default {
 }
 
 .action-label {
-	font-size: 20rpx;
+	font-size: 22rpx;
 	color: #8B8FA3;
 }
 
@@ -640,7 +640,7 @@ export default {
 	flex: 1;
 	height: 88rpx;
 	border-radius: 22rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	display: flex;
 	align-items: center;
 	justify-content: center;

@@ -3,7 +3,7 @@
 		<view class="page-body">
 			<!-- 用户信息头部 -->
 			<view class="user-hero">
-				<view class="hero-avatar" :style="{ background: user.avatarBg || 'linear-gradient(135deg, #4F6EF7, #6366F1)' }">
+				<view class="hero-avatar" :style="{ background: user.avatarBg || 'linear-gradient(135deg, #4F6EF7, #3D56D4)' }">
 					<text class="hero-avatar-text">{{ initial }}</text>
 				</view>
 				<view class="hero-info">
@@ -57,7 +57,7 @@
 				<view v-if="items.length > 0" class="item-grid">
 					<view class="item-col">
 						<view v-for="item in leftColumn" :key="item.id" class="item-card" @click="goItem(item)">
-							<view class="item-image" :style="{ background: item.imageBg || '#F3F4F8' }">
+							<view class="item-image" :style="{ background: item.imageBg || '#F2F3F8' }">
 								<image
 									v-if="item.images && item.images.length > 0"
 									:src="item.images[0]"
@@ -81,7 +81,7 @@
 					</view>
 					<view class="item-col">
 						<view v-for="item in rightColumn" :key="item.id" class="item-card" @click="goItem(item)">
-							<view class="item-image" :style="{ background: item.imageBg || '#F3F4F8' }">
+							<view class="item-image" :style="{ background: item.imageBg || '#F2F3F8' }">
 								<image
 									v-if="item.images && item.images.length > 0"
 									:src="item.images[0]"
@@ -105,7 +105,7 @@
 					</view>
 				</view>
 				<view v-else class="empty-state">
-					<text class="empty-icon">📦</text>
+					<AppIcon name="daily" :size="64" color="#8B8FA3" />
 					<text>暂无在售物品</text>
 				</view>
 			</view>
@@ -118,7 +118,7 @@
 							<view class="lease-img">
 								<image v-if="item.images && item.images.length > 0" :src="item.images[0]" class="lease-img__img" mode="aspectFill" lazy-load />
 								<view v-else class="lease-img-placeholder">
-									<AppIcon name="lease" :size="40" color="#CCC" />
+									<AppIcon name="lease" :size="40" color="#8B8FA3" />
 								</view>
 							</view>
 							<view class="lease-info">
@@ -133,7 +133,7 @@
 					</view>
 				</view>
 				<view v-else class="empty-state">
-					<text class="empty-icon">☰</text>
+					<AppIcon name="lease" :size="64" color="#8B8FA3" />
 					<text>暂无出租物品</text>
 				</view>
 			</view>
@@ -150,7 +150,7 @@
 					</view>
 				</view>
 				<view v-else class="empty-state">
-					<text class="empty-icon">🤝</text>
+					<AppIcon name="exchange" :size="64" color="#8B8FA3" />
 					<text>暂无互助帖子</text>
 				</view>
 			</view>
@@ -234,42 +234,42 @@ export default {
 .user-hero {
 	display: flex; align-items: center; gap: 24rpx;
 	background: #FFF; border-radius: 20rpx; padding: 30rpx 24rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04); margin-bottom: 20rpx;
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06); margin-bottom: 20rpx;
 }
 .hero-avatar {
 	width: 120rpx; height: 120rpx; border-radius: 50%; flex-shrink: 0;
 	display: flex; align-items: center; justify-content: center;
-	box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+	box-shadow: 0 4rpx 16rpx rgba(31, 41, 88, 0.1);
 }
 .hero-avatar-text { font-size: 44rpx; font-weight: bold; color: #FFF; }
 .hero-info { flex: 1; min-width: 0; }
 .hero-name-row { display: flex; align-items: center; gap: 12rpx; }
 .hero-name { font-size: 34rpx; font-weight: 700; color: #1A1D28; }
 .verify-badge { display: flex; align-items: center; gap: 4rpx; background: #E8F8EE; padding: 4rpx 12rpx; border-radius: 20rpx; }
-.verify-text { font-size: 20rpx; color: #22C55E; font-weight: 500; }
+.verify-text { font-size: 22rpx; color: #22C55E; font-weight: 500; }
 .hero-tags { display: flex; gap: 10rpx; margin-top: 10rpx; }
-.hero-tag { padding: 4rpx 14rpx; background: #F5F5F5; border-radius: 6rpx; font-size: 20rpx; color: #666; }
+.hero-tag { padding: 4rpx 14rpx; background: #F2F3F8; border-radius: 8rpx; font-size: 22rpx; color: #6B6F80; }
 .hero-bio { display: block; font-size: 22rpx; color: #8B8FA3; margin-top: 10rpx; }
 
 .stats-card {
 	display: flex; background: #FFF; border-radius: 20rpx; padding: 30rpx 20rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04); margin-bottom: 20rpx;
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06); margin-bottom: 20rpx;
 }
 .stat-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6rpx; }
-.stat-num { font-size: 36rpx; font-weight: bold; color: #333; }
-.stat-label { font-size: 22rpx; color: #999; }
-.stat-divider { width: 1px; height: 40rpx; background: #F0F0F0; align-self: center; }
+.stat-num { font-size: 36rpx; font-weight: bold; color: #1A1D28; }
+.stat-label { font-size: 22rpx; color: #6B6F80; }
+.stat-divider { width: 1px; height: 40rpx; background: #EEF0F5; align-self: center; }
 
 .tabs {
 	display: flex; background: #FFF; border-radius: 16rpx; padding: 10rpx;
-	margin-bottom: 20rpx; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	margin-bottom: 20rpx; box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
-.tab-item { flex: 1; text-align: center; padding: 14rpx 0; border-radius: 12rpx; font-size: 26rpx; color: #666; }
-.tab-item.active { background: linear-gradient(135deg, #4F6EF7, #6366F1); color: #FFF; font-weight: 600; }
+.tab-item { flex: 1; text-align: center; padding: 14rpx 0; border-radius: 9999rpx; font-size: 26rpx; color: #6B6F80; }
+.tab-item.active { background: linear-gradient(135deg, #4F6EF7, #3D56D4); color: #FFF; font-weight: 600; }
 
 .item-grid { display: flex; gap: 16rpx; align-items: flex-start; }
 .item-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16rpx; }
-.item-card { background: #FFF; border-radius: 16rpx; overflow: hidden; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04); }
+.item-card { background: #FFF; border-radius: 16rpx; overflow: hidden; box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06); }
 .item-image { width: 100%; height: 260rpx; position: relative; overflow: hidden; }
 .item-image__img { width: 100%; height: 100%; }
 .item-image__placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
@@ -281,25 +281,25 @@ export default {
 .price-free { font-size: 24rpx; font-weight: 600; color: #22C55E; }
 .item-info { padding: 14rpx 14rpx 18rpx; display: flex; flex-direction: column; gap: 8rpx; }
 .item-title { font-size: 25rpx; font-weight: 600; color: #1A1D28; line-height: 1.4; }
-.item-campus { font-size: 20rpx; color: #B0B4C0; }
+.item-campus { font-size: 22rpx; color: #6B6F80; }
 
 .lease-card { padding: 20rpx; }
 .lease-row { display: flex; gap: 20rpx; align-items: center; }
 .lease-img { width: 140rpx; height: 140rpx; flex-shrink: 0; position: relative; }
-.lease-img__img { width: 100%; height: 100%; border-radius: 12rpx; }
+.lease-img__img { width: 100%; height: 100%; border-radius: 16rpx; }
 .lease-img-placeholder {
-	width: 100%; height: 100%; border-radius: 12rpx; background: #F5F5F5;
+	width: 100%; height: 100%; border-radius: 16rpx; background: #F2F3F8;
 	display: flex; align-items: center; justify-content: center;
 }
 .lease-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8rpx; }
 .lease-title { font-size: 28rpx; font-weight: 600; color: #1A1D28; }
 .price-num { font-size: 30rpx; font-weight: 700; color: #FF6B3D; }
-.price-unit { font-size: 20rpx; color: #FF6B3D; }
-.lease-meta { font-size: 22rpx; color: #999; }
+.price-unit { font-size: 22rpx; color: #FF6B3D; }
+.lease-meta { font-size: 22rpx; color: #6B6F80; }
 
 .post-card { padding: 22rpx 24rpx; }
 .post-top { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; }
 .post-title { font-size: 28rpx; font-weight: 600; color: #1A1D28; flex: 1; min-width: 0; }
-.post-tag { flex-shrink: 0; padding: 4rpx 14rpx; background: #EDF0FE; color: #4F6EF7; font-size: 20rpx; border-radius: 6rpx; }
+.post-tag { flex-shrink: 0; padding: 4rpx 14rpx; background: #EDF0FE; color: #4F6EF7; font-size: 22rpx; border-radius: 8rpx; }
 .post-desc { display: block; font-size: 24rpx; color: #8B8FA3; line-height: 1.5; margin-top: 10rpx; }
 </style>

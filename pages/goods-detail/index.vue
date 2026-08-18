@@ -2,7 +2,7 @@
 	<view class="page-container--clean">
 		<view class="page-body">
 			<!-- 物品图片区 -->
-			<view class="detail-image" :style="{ background: item.imageBg || '#F3F4F8' }">
+			<view class="detail-image" :style="{ background: item.imageBg || '#F2F3F8' }">
 				<swiper
 					v-if="item.images && item.images.length > 0"
 					class="detail-swiper"
@@ -15,7 +15,7 @@
 					</swiper-item>
 				</swiper>
 				<view v-else class="detail-image-placeholder">
-					<AppIcon name="image" :size="80" color="#CCC" />
+					<AppIcon name="image" :size="80" color="#8B8FA3" />
 				</view>
 				<view class="detail-type-tag">
 					{{ item.type === 'sell' ? '出售' : item.type === 'lease' ? '出租' : '置换' }}
@@ -29,7 +29,7 @@
 					<text class="detail-free" v-else>免费</text>
 					<view class="detail-actions">
 						<view class="detail-action-btn" @click="toggleFavorite">
-							<AppIcon :name="isFavorited ? 'heart-fill' : 'heart'" :size="36" :color="isFavorited ? '#FF4D4F' : '#CCC'" />
+							<AppIcon :name="isFavorited ? 'heart-fill' : 'heart'" :size="36" :color="isFavorited ? '#FF4D4F' : '#8B8FA3'" />
 						</view>
 					</view>
 				</view>
@@ -40,7 +40,7 @@
 			<!-- 卖家信息 -->
 			<view class="card seller-card">
 				<view class="seller-row" @click="goUser(item.seller)">
-					<view class="seller-avatar" :style="{ background: item.seller ? item.seller.avatarBg || '#E0E0E0' : '#E0E0E0' }">
+					<view class="seller-avatar" :style="{ background: item.seller ? item.seller.avatarBg || '#8FA1F8' : '#8FA1F8' }">
 						<text class="seller-avatar-text">{{ item.seller ? item.seller.nickname.charAt(0) : '?' }}</text>
 					</view>
 					<view class="seller-info">
@@ -75,7 +75,7 @@
 			<!-- 底部操作 -->
 			<view class="detail-bottom">
 				<view class="detail-bottom-btn btn-fav" @click="toggleFavorite">
-					<AppIcon :name="isFavorited ? 'heart-fill' : 'heart'" :size="40" :color="isFavorited ? '#FF4D4F' : '#999'" />
+					<AppIcon :name="isFavorited ? 'heart-fill' : 'heart'" :size="40" :color="isFavorited ? '#FF4D4F' : '#6B6F80'" />
 					<text>收藏</text>
 				</view>
 				<view class="detail-bottom-btn btn-chat" @click="goChat">
@@ -177,7 +177,7 @@ export default {
 .detail-swiper { width: 100%; height: 100%; }
 .detail-swiper__img { width: 100%; height: 100%; }
 .detail-image-placeholder {
-	width: 100%; height: 100%; background: linear-gradient(135deg, #F5F5F5, #ECECEC);
+	width: 100%; height: 100%; background: linear-gradient(135deg, #F2F3F8, #E8EAF0);
 	display: flex; align-items: center; justify-content: center;
 }
 .detail-type-tag {
@@ -189,7 +189,7 @@ export default {
 .detail-price { font-size: 52rpx; font-weight: bold; color: #FF6B3D; }
 .detail-free { font-size: 44rpx; font-weight: bold; color: #22C55E; }
 .detail-title { font-size: 34rpx; font-weight: 600; color: #1A1D28; display: block; margin-top: 16rpx; }
-.detail-desc { font-size: 28rpx; color: #666; line-height: 1.6; display: block; margin-top: 16rpx; }
+.detail-desc { font-size: 28rpx; color: #6B6F80; line-height: 1.6; display: block; margin-top: 16rpx; }
 
 .seller-card { padding: 24rpx; }
 .seller-row { display: flex; align-items: center; gap: 16rpx; }
@@ -199,29 +199,29 @@ export default {
 }
 .seller-avatar-text { font-size: 32rpx; font-weight: bold; color: #FFF; }
 .seller-info { flex: 1; }
-.seller-name { font-size: 30rpx; font-weight: 600; color: #333; display: block; }
+.seller-name { font-size: 30rpx; font-weight: 600; color: #1A1D28; display: block; }
 .seller-name-row { display: flex; align-items: center; gap: 8rpx; }
-.seller-anon-tag { padding: 2rpx 10rpx; background: #F3E8FF; color: #8B5CF6; font-size: 18rpx; border-radius: 6rpx; }
-.seller-campus { font-size: 24rpx; color: #999; margin-top: 4rpx; }
+.seller-anon-tag { padding: 2rpx 10rpx; background: #EDF0FE; color: #6366F1; font-size: 18rpx; border-radius: 8rpx; }
+.seller-campus { font-size: 24rpx; color: #6B6F80; margin-top: 4rpx; }
 .seller-chat-btn {
 	padding: 14rpx 28rpx; background: #EDF0FE; border-radius: 30rpx;
 	font-size: 26rpx; color: #4F6EF7; font-weight: 500;
 }
 
 .info-row { display: flex; justify-content: space-between; padding: 20rpx 0; }
-.info-row + .info-row { border-top: 1px solid #F5F5F5; }
-.info-label { font-size: 26rpx; color: #999; }
-.info-value { font-size: 26rpx; color: #333; }
+.info-row + .info-row { border-top: 1px solid #F2F3F8; }
+.info-label { font-size: 26rpx; color: #6B6F80; }
+.info-value { font-size: 26rpx; color: #1A1D28; }
 
 .detail-bottom {
 	position: fixed; left: 0; right: 0; bottom: 0; padding: 16rpx 30rpx calc(16rpx + env(safe-area-inset-bottom));
-	background: #FFF; display: flex; gap: 20rpx; box-shadow: 0 -2rpx 16rpx rgba(0, 0, 0, 0.06);
+	background: #FFF; display: flex; gap: 20rpx; box-shadow: 0 -2rpx 16rpx rgba(31, 41, 88, 0.08);
 	z-index: 100;
 }
 .detail-bottom-btn {
 	flex: 1; height: 88rpx; border-radius: 44rpx; display: flex;
 	align-items: center; justify-content: center; gap: 10rpx; font-size: 28rpx; font-weight: 500;
 }
-.btn-fav { background: #F5F5F5; color: #999; }
-.btn-chat { background: linear-gradient(135deg, #4F6EF7, #6366F1); color: #FFF; }
+.btn-fav { background: #F2F3F8; color: #6B6F80; }
+.btn-chat { background: linear-gradient(135deg, #4F6EF7, #3D56D4); color: #FFF; }
 </style>

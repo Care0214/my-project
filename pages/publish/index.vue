@@ -1,10 +1,11 @@
 <template>
 	<view class="page-container">
 		<view class="page-body">
-			<!-- 顶部导航 -->
-			<view class="publish-header">
+			<!-- 顶部导航（自定义导航，状态栏占位） -->
+			<view class="header-status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
+			<view class="publish-header" :style="navStyle">
 				<view class="back-btn" @click="goBack">
-					<AppIcon name="close" :size="44" color="#333" />
+					<AppIcon name="back" :size="40" color="#1A1D28" />
 				</view>
 				<text class="header-title">发布</text>
 				<view class="submit-btn" @click="submitPublish"><text>{{ priceBlocked ? '价格异常，请修改' : '发布' }}</text></view>
@@ -41,7 +42,7 @@
 							</view>
 						</view>
 						<view class="upload-add" @click="chooseImage" v-if="formData.images.length < 6">
-							<AppIcon name="plus" :size="48" color="#CCC" />
+							<AppIcon name="plus" :size="48" color="#8B8FA3" />
 							<text class="upload-add-text">添加图片</text>
 						</view>
 					</view>
@@ -71,7 +72,7 @@
 								:class="['fix-chip', { active: formData.category === cat.id }]"
 								@click="selectCategory(cat.id)"
 							>
-								<AppIcon :name="cat.icon" :size="24" :color="formData.category === cat.id ? '#FFF' : '#666'" />
+								<AppIcon :name="cat.icon" :size="24" :color="formData.category === cat.id ? '#FFF' : '#6B6F80'" />
 								<text class="fix-chip-text">{{ cat.name }}</text>
 							</view>
 						</view>
@@ -181,7 +182,7 @@
 					<picker :range="campusNames" @change="onCampusChange">
 						<view class="form-picker">
 							<text :class="{ placeholder: !formData.campus }">{{ formData.campus || '请选择校区' }}</text>
-							<AppIcon name="arrow-right" :size="28" color="#B0B4C0" />
+							<AppIcon name="arrow-right" :size="28" color="#6B6F80" />
 						</view>
 					</picker>
 				</view>
@@ -221,7 +222,7 @@
 
 			<!-- 发布须知 -->
 			<view class="publish-notice">
-				<AppIcon name="shield" :size="32" color="#FF9800" />
+				<AppIcon name="shield" :size="32" color="#F59E0B" />
 				<text class="notice-text">发布即代表同意平台规则。请保证信息真实准确，共同维护校园交易环境。</text>
 			</view>
 
@@ -235,11 +236,14 @@ import AppIcon from '@/components/AppIcon.vue';
 import { get, post } from '@/utils/request.js';
 import store from '@/utils/store.js';
 import { recognizeImage } from '@/utils/ai-vision.js';
+import { getMenuRightPadding } from '@/utils/nav.js';
 
 export default {
 	components: { AppIcon },
 	data() {
 		return {
+			statusBarHeight: 44,
+			menuRight: 0,
 			publishTypes: [
 				{ label: '闲置出售', value: 'sell', desc: '发布闲置物品，设置价格出售' },
 				{ label: '以物换物', value: 'exchange', desc: '用闲置物品交换你想要的东西' },
@@ -269,6 +273,9 @@ export default {
 		};
 	},
 	computed: {
+		navStyle() {
+			return this.menuRight ? 'padding-right:' + this.menuRight + 'px' : '';
+		},
 		anonymousTitle() {
 			return (this.$store && this.$store.title) || '拾闲用户';
 		},
@@ -284,6 +291,9 @@ export default {
 		},
 	},
 	onLoad(options) {
+		const systemInfo = uni.getSystemInfoSync();
+		this.statusBarHeight = systemInfo.statusBarHeight || 44;
+		this.menuRight = getMenuRightPadding();
 		if (!store.isLoggedIn) {
 			uni.reLaunch({ url: '/pages/login/index' });
 			return;
@@ -311,7 +321,7 @@ export default {
 					{ id: 'c3', name: '生活用品', icon: 'daily', color: '#FF6B3D' },
 					{ id: 'c4', name: '运动户外', icon: 'sports', color: '#22C55E' },
 					{ id: 'c5', name: '服饰箱包', icon: 'fashion', color: '#F59E0B' },
-					{ id: 'c6', name: '其他', icon: 'other', color: '#8B5CF6' },
+					{ id: 'c6', name: '其他', icon: 'other', color: '#6366F1' },
 				];
 			}
 		},
@@ -503,18 +513,19 @@ export default {
 <style scoped>
 @import '@/styles/common.scss';
 
+.header-status-bar { width: 100%; }
 .publish-header { display: flex; align-items: center; justify-content: space-between; padding: 16rpx 0 30rpx; }
 .back-btn { padding: 8rpx; }
-.header-title { font-size: 36rpx; font-weight: bold; color: #333; }
+.header-title { font-size: 36rpx; font-weight: bold; color: #1A1D28; }
 .submit-btn {
-	padding: 12rpx 36rpx; background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	padding: 12rpx 36rpx; background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	color: #FFF; border-radius: 30rpx; font-size: 28rpx; font-weight: 500;
 	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
 }
 
 .type-section { margin-bottom: 24rpx; }
-.section-label { font-size: 28rpx; font-weight: 600; color: #333; display: block; margin-bottom: 16rpx; }
-.hint-text { font-size: 24rpx; color: #CCC; font-weight: 400; }
+.section-label { font-size: 28rpx; font-weight: 600; color: #1A1D28; display: block; margin-bottom: 16rpx; }
+.hint-text { font-size: 24rpx; color: #8B8FA3; font-weight: 400; }
 .type-row { display: flex; gap: 14rpx; flex-wrap: wrap; }
 .type-card {
 	flex: 1; min-width: calc(50% - 14rpx); padding: 20rpx 16rpx;
@@ -522,83 +533,83 @@ export default {
 	position: relative; transition: all 0.2s;
 }
 .type-card.active { border-color: #4F6EF7; background: #EDF0FE; }
-.type-label { font-size: 28rpx; font-weight: 600; color: #333; display: block; margin-bottom: 6rpx; }
-.type-desc { font-size: 20rpx; color: #999; line-height: 1.4; display: block; }
+.type-label { font-size: 28rpx; font-weight: 600; color: #1A1D28; display: block; margin-bottom: 6rpx; }
+.type-desc { font-size: 22rpx; color: #6B6F80; line-height: 1.4; display: block; }
 .type-check {
 	position: absolute; top: 8rpx; right: 8rpx; width: 36rpx; height: 36rpx;
-	background: #4F6EF7; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+	background: #3D56D4; border-radius: 50%; display: flex; align-items: center; justify-content: center;
 }
 
 .upload-area { display: flex; flex-wrap: wrap; gap: 16rpx; margin-bottom: 16rpx; }
 .upload-item { position: relative; width: 160rpx; height: 160rpx; }
-.upload-image { width: 100%; height: 100%; border-radius: 12rpx; }
+.upload-image { width: 100%; height: 100%; border-radius: 16rpx; }
 .upload-placeholder {
-	width: 100%; height: 100%; background: #F5F5F5; border-radius: 12rpx;
+	width: 100%; height: 100%; background: #F2F3F8; border-radius: 16rpx;
 	border: 2rpx dashed #DDD; display: flex; flex-direction: column;
 	align-items: center; justify-content: center; gap: 6rpx;
 }
-.upload-hint { font-size: 20rpx; color: #999; }
+.upload-hint { font-size: 22rpx; color: #6B6F80; }
 .upload-delete {
 	position: absolute; top: -8rpx; right: -8rpx; width: 40rpx; height: 40rpx;
 	background: #FF4D4F; border-radius: 50%; display: flex; align-items: center; justify-content: center;
 }
 .upload-add {
-	width: 160rpx; height: 160rpx; background: #F5F5F5; border-radius: 12rpx;
+	width: 160rpx; height: 160rpx; background: #F2F3F8; border-radius: 16rpx;
 	border: 2rpx dashed #DDD; display: flex; flex-direction: column;
 	align-items: center; justify-content: center; gap: 6rpx;
 }
-.upload-add-text { font-size: 22rpx; color: #999; }
+.upload-add-text { font-size: 22rpx; color: #6B6F80; }
 
 .ai-card {
 	padding: 20rpx; background: linear-gradient(135deg, #EDF0FE, #F5F8FF);
-	border-radius: 14rpx; border: 1px solid #D6E4FF; margin-bottom: 16rpx;
+	border-radius: 16rpx; border: 1px solid #D6E4FF; margin-bottom: 16rpx;
 }
 .ai-card-header { display: flex; align-items: center; gap: 10rpx; margin-bottom: 14rpx; }
 .ai-card-title { font-size: 26rpx; color: #4F6EF7; font-weight: 600; }
 .ai-card-body { display: flex; align-items: center; gap: 10rpx; margin-bottom: 12rpx; }
-.ai-result-label { font-size: 24rpx; color: #666; }
+.ai-result-label { font-size: 24rpx; color: #6B6F80; }
 .ai-result-value { font-size: 28rpx; color: #4F6EF7; font-weight: 600; }
 .ai-tags { display: flex; flex-wrap: wrap; gap: 10rpx; }
 .ai-tag {
 	font-size: 22rpx; color: #4F6EF7; background: rgba(79, 110, 247, 0.1);
-	padding: 4rpx 14rpx; border-radius: 6rpx;
+	padding: 4rpx 14rpx; border-radius: 8rpx;
 }
 
 .category-fix { margin-top: 8rpx; }
-.fix-label { font-size: 24rpx; color: #999; display: block; margin-bottom: 12rpx; }
+.fix-label { font-size: 24rpx; color: #6B6F80; display: block; margin-bottom: 12rpx; }
 .fix-chips { display: flex; flex-wrap: wrap; gap: 12rpx; }
 .fix-chip {
 	display: flex; align-items: center; gap: 6rpx; padding: 10rpx 20rpx;
-	background: #F5F5F5; border-radius: 30rpx; transition: all 0.2s;
+	background: #F2F3F8; border-radius: 30rpx; transition: all 0.2s;
 }
-.fix-chip.active { background: #4F6EF7; }
-.fix-chip-text { font-size: 24rpx; color: #666; }
+.fix-chip.active { background: #3D56D4; }
+.fix-chip-text { font-size: 24rpx; color: #6B6F80; }
 .fix-chip.active .fix-chip-text { color: #FFF; }
 
 .form-card {
 	background: #FFF; border-radius: 20rpx; padding: 24rpx; margin-bottom: 24rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
-.form-item { padding: 24rpx 0; border-bottom: 1px solid #F5F5F5; }
+.form-item { padding: 24rpx 0; border-bottom: 1px solid #F2F3F8; }
 .form-item-last { border-bottom: none; }
-.form-label { font-size: 28rpx; color: #333; font-weight: 500; display: block; margin-bottom: 14rpx; }
+.form-label { font-size: 28rpx; color: #1A1D28; font-weight: 500; display: block; margin-bottom: 14rpx; }
 .required { color: #FF4D4F; }
-.form-input { font-size: 28rpx; color: #333; width: 100%; }
+.form-input { font-size: 28rpx; color: #1A1D28; width: 100%; }
 .form-input-row { display: flex; align-items: center; gap: 8rpx; }
-.input-prefix { font-size: 32rpx; color: #333; font-weight: bold; }
-.input-suffix { font-size: 24rpx; color: #999; }
-.form-textarea { font-size: 28rpx; color: #333; width: 100%; min-height: 140rpx; }
+.input-prefix { font-size: 32rpx; color: #1A1D28; font-weight: bold; }
+.input-suffix { font-size: 24rpx; color: #6B6F80; }
+.form-textarea { font-size: 28rpx; color: #1A1D28; width: 100%; min-height: 140rpx; }
 .form-picker {
 	display: flex; align-items: center; justify-content: space-between;
-	height: 80rpx; padding: 0 24rpx; background: #F5F5F5;
-	border-radius: 12rpx; font-size: 28rpx; color: #333;
+	height: 80rpx; padding: 0 24rpx; background: #F2F3F8;
+	border-radius: 16rpx; font-size: 28rpx; color: #1A1D28;
 }
-.form-picker .placeholder { color: #B0B4C0; }
+.form-picker .placeholder { color: #6B6F80; }
 
 .wish-type-row { display: flex; gap: 16rpx; }
 .wish-type {
 	flex: 1; text-align: center; padding: 16rpx 0;
-	background: #F5F5F5; border-radius: 12rpx; font-size: 26rpx; color: #666;
+	background: #F2F3F8; border-radius: 16rpx; font-size: 26rpx; color: #6B6F80;
 }
 .wish-type.active { background: #EDF0FE; color: #4F6EF7; font-weight: 600; }
 
@@ -611,35 +622,35 @@ export default {
 .tag-list { display: flex; flex-wrap: wrap; gap: 12rpx; margin-top: 14rpx; }
 .tag-chip {
 	display: flex; align-items: center; gap: 8rpx;
-	padding: 8rpx 18rpx; background: #F5F5F5; border-radius: 30rpx;
-	font-size: 22rpx; color: #666;
+	padding: 8rpx 18rpx; background: #F2F3F8; border-radius: 30rpx;
+	font-size: 22rpx; color: #6B6F80;
 }
-.tag-close { color: #BBB; font-size: 20rpx; }
+.tag-close { color: #BBB; font-size: 22rpx; }
 
 .anon-row { display: flex; align-items: center; justify-content: space-between; }
 .anon-info { display: flex; flex-direction: column; gap: 6rpx; }
-.anon-title { font-size: 28rpx; color: #333; font-weight: 500; }
-.anon-desc { font-size: 22rpx; color: #999; }
+.anon-title { font-size: 28rpx; color: #1A1D28; font-weight: 500; }
+.anon-desc { font-size: 22rpx; color: #6B6F80; }
 
 .cond-row { margin-top: 16rpx; }
-.cond-label { font-size: 24rpx; color: #999; display: block; margin-bottom: 12rpx; }
+.cond-label { font-size: 24rpx; color: #6B6F80; display: block; margin-bottom: 12rpx; }
 .cond-chips { display: flex; flex-wrap: wrap; gap: 12rpx; }
 .cond-chip {
-	padding: 8rpx 24rpx; border-radius: 30rpx; background: #F5F5F5;
-	font-size: 24rpx; color: #666;
+	padding: 8rpx 24rpx; border-radius: 30rpx; background: #F2F3F8;
+	font-size: 24rpx; color: #6B6F80;
 }
-.cond-chip.active { background: #4F6EF7; color: #FFF; font-weight: 500; }
+.cond-chip.active { background: #3D56D4; color: #FFF; font-weight: 500; }
 
 .estimate-wrap {
 	margin-top: 16rpx; padding: 18rpx;
 	background: linear-gradient(135deg, #EDF0FE, #F5F8FF);
-	border-radius: 14rpx; border: 1px solid #D6E4FF;
+	border-radius: 16rpx; border: 1px solid #D6E4FF;
 }
 .estimate-head { display: flex; align-items: center; gap: 10rpx; }
 .estimate-label { font-size: 24rpx; color: #4F6EF7; font-weight: 600; }
 .estimate-range { margin-left: auto; font-size: 30rpx; font-weight: bold; color: #FF6B3D; }
 .estimate-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12rpx; }
-.estimate-avg { font-size: 20rpx; color: #999; }
+.estimate-avg { font-size: 22rpx; color: #6B6F80; }
 .estimate-status { font-size: 22rpx; font-weight: 500; }
 .estimate-status.ok { color: #22C55E; }
 .estimate-status.warn { color: #F59E0B; }
@@ -647,7 +658,7 @@ export default {
 
 .publish-notice {
 	display: flex; align-items: flex-start; gap: 12rpx; padding: 20rpx;
-	background: #FFF8E1; border-radius: 12rpx;
+	background: #FFF8E1; border-radius: 16rpx;
 }
-.notice-text { flex: 1; font-size: 24rpx; color: #999; line-height: 1.6; }
+.notice-text { flex: 1; font-size: 24rpx; color: #6B6F80; line-height: 1.6; }
 </style>

@@ -1,10 +1,11 @@
 <template>
 	<view class="page-container--clean edit-profile-page">
 		<view class="page-body">
-			<!-- 顶部导航栏 -->
-			<view class="profile-header">
+			<!-- 顶部导航栏（自定义导航，状态栏占位） -->
+			<view class="header-status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
+			<view class="profile-header" :style="navStyle">
 				<view class="back-btn" @click="goBack">
-					<AppIcon name="back" :size="40" color="#333" />
+					<AppIcon name="back" :size="40" color="#1A1D28" />
 				</view>
 				<text class="header-title">编辑资料</text>
 				<view class="save-btn" @click="saveProfile"><text>保存</text></view>
@@ -68,14 +69,15 @@
 <script>
 import AppIcon from '@/components/AppIcon.vue';
 import { get } from '@/utils/request.js';
+import { getMenuRightPadding } from '@/utils/nav.js';
 
 const DEFAULT_AVATAR_COLORS = [
-	'linear-gradient(135deg, #4F6EF7, #6366F1)',
+	'linear-gradient(135deg, #4F6EF7, #3D56D4)',
 	'linear-gradient(135deg, #FF6B3D, #FF9F43)',
 	'linear-gradient(135deg, #22C55E, #4ADE80)',
 	'linear-gradient(135deg, #F59E0B, #FBBF24)',
 	'linear-gradient(135deg, #EF4444, #F87171)',
-	'linear-gradient(135deg, #8B5CF6, #A78BFA)',
+	'linear-gradient(135deg, #6366F1, #A78BFA)',
 	'linear-gradient(135deg, #EC4899, #F472B6)',
 	'linear-gradient(135deg, #06B6D4, #22D3EE)',
 ];
@@ -86,6 +88,8 @@ export default {
 	components: { AppIcon },
 	data() {
 		return {
+			statusBarHeight: 44,
+			menuRight: 0,
 			avatarColors: DEFAULT_AVATAR_COLORS,
 			campuses: [...DEFAULT_CAMPUSES],
 			form: {
@@ -98,12 +102,18 @@ export default {
 		};
 	},
 	computed: {
+		navStyle() {
+			return this.menuRight ? 'padding-right:' + this.menuRight + 'px' : '';
+		},
 		initial() {
 			const nickname = this.form.nickname.trim();
 			return nickname ? nickname.charAt(0) : '闲';
 		},
 	},
 	onLoad() {
+		const systemInfo = uni.getSystemInfoSync();
+		this.statusBarHeight = systemInfo.statusBarHeight || 44;
+		this.menuRight = getMenuRightPadding();
 		const info = (this.$store && this.$store.userInfo) || {};
 		this.form.nickname = info.nickname || '';
 		this.form.bio = info.bio || '';
@@ -154,26 +164,27 @@ export default {
 <style scoped>
 @import '@/styles/common.scss';
 
-.edit-profile-page { background: #F5F5F5; }
+.edit-profile-page { background: #F2F3F8; }
 
+.header-status-bar { width: 100%; }
 .profile-header { display: flex; align-items: center; justify-content: space-between; padding: 16rpx 0 30rpx; }
 .back-btn { padding: 8rpx; }
-.header-title { font-size: 36rpx; font-weight: bold; color: #333; }
+.header-title { font-size: 36rpx; font-weight: bold; color: #1A1D28; }
 .save-btn {
 	padding: 12rpx 36rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	color: #FFF; border-radius: 30rpx; font-size: 28rpx; font-weight: 500;
 	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
 }
 .save-btn:active { transform: scale(0.96); }
 
 .avatar-card { margin-bottom: 24rpx; }
-.section-label { font-size: 28rpx; font-weight: 600; color: #333; display: block; margin-bottom: 24rpx; }
+.section-label { font-size: 28rpx; font-weight: 600; color: #1A1D28; display: block; margin-bottom: 24rpx; }
 .avatar-row { display: flex; align-items: center; gap: 30rpx; }
 .avatar-preview {
 	width: 120rpx; height: 120rpx; border-radius: 50%; flex-shrink: 0;
 	display: flex; align-items: center; justify-content: center;
-	box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4rpx 16rpx rgba(31, 41, 88, 0.12);
 }
 .avatar-text { font-size: 44rpx; font-weight: bold; color: #FFF; }
 
@@ -186,20 +197,20 @@ export default {
 .color-swatch.active { border-color: #FFF; box-shadow: 0 0 0 4rpx #4F6EF7; }
 
 .form-card { margin-bottom: 24rpx; }
-.form-item { padding: 26rpx 0; border-bottom: 1px solid #F5F5F5; }
+.form-item { padding: 26rpx 0; border-bottom: 1px solid #F2F3F8; }
 .form-item-last { border-bottom: none; padding-bottom: 8rpx; }
-.form-label { font-size: 28rpx; color: #333; font-weight: 500; display: block; margin-bottom: 14rpx; }
-.form-input { font-size: 28rpx; color: #333; width: 100%; height: 60rpx; }
-.form-textarea { font-size: 28rpx; color: #333; width: 100%; min-height: 140rpx; line-height: 1.5; }
+.form-label { font-size: 28rpx; color: #1A1D28; font-weight: 500; display: block; margin-bottom: 14rpx; }
+.form-input { font-size: 28rpx; color: #1A1D28; width: 100%; height: 60rpx; }
+.form-textarea { font-size: 28rpx; color: #1A1D28; width: 100%; min-height: 140rpx; line-height: 1.5; }
 
 .campus-chips { display: flex; flex-wrap: wrap; gap: 16rpx; }
 .campus-chip {
 	padding: 12rpx 30rpx; border-radius: 32rpx;
-	background: #F5F5F5; color: #666; font-size: 26rpx;
+	background: #F2F3F8; color: #6B6F80; font-size: 26rpx;
 	transition: all 0.2s;
 }
 .campus-chip.active {
-	background: #4F6EF7; color: #FFF;
+	background: #3D56D4; color: #FFF;
 	box-shadow: 0 4rpx 12rpx rgba(79, 110, 247, 0.3);
 }
 </style>

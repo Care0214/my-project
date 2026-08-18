@@ -1,8 +1,12 @@
 <template>
 	<view class="page-container--clean">
 		<view class="page-body">
-			<!-- 顶部标题栏 -->
-			<view class="msg-header">
+			<!-- 顶部标题栏（自定义导航，状态栏占位） -->
+			<view class="header-status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
+			<view class="msg-header" :style="navStyle">
+				<view class="back-btn" @click="goBack">
+					<AppIcon name="back" :size="40" color="#1A1D28" />
+				</view>
 				<text class="header-title">消息中心</text>
 				<view class="header-actions">
 					<view class="header-action-btn" @click="showSearch = !showSearch">
@@ -29,7 +33,7 @@
 						@longpress="showActionSheet(conv)"
 					>
 						<view class="msg-avatar-wrap">
-							<view class="msg-avatar" :style="{ background: conv.user.avatarBg || '#E0E0E0' }">
+							<view class="msg-avatar" :style="{ background: conv.user.avatarBg || '#8FA1F8' }">
 								<text class="msg-avatar-text">{{ conv.user.nickname ? conv.user.nickname.charAt(0) : '?' }}</text>
 							</view>
 							<view v-if="conv.user.online" class="online-dot"></view>
@@ -58,14 +62,14 @@
 
 			<!-- 加载失败 -->
 			<view v-else-if="loadError" class="error-state">
-				<text class="error-icon">⚠️</text>
+				<AppIcon name="close" :size="56" color="#EF4444" />
 				<text class="error-text">加载失败，请检查网络后重试</text>
 				<view class="retry-btn" @click="loadConversations"><text>重新加载</text></view>
 			</view>
 
 			<!-- 空状态 -->
 			<view v-else class="empty-state">
-				<view class="empty-illustration"><text class="empty-illustration-icon">💬</text></view>
+				<view class="empty-illustration"><AppIcon name="chat-bubble" :size="100" color="#8B8FA3" /></view>
 				<text class="empty-text">暂无消息</text>
 				<text class="empty-sub">去首页逛逛，和同学们打个招呼吧~</text>
 				<view class="empty-action" @click="goHome"><text>去首页看看</text></view>
@@ -77,19 +81,30 @@
 <script>
 import AppIcon from '@/components/AppIcon.vue';
 import { get } from '@/utils/request.js';
+import { getMenuRightPadding } from '@/utils/nav.js';
 import store from '@/utils/store.js';
 
 export default {
 	components: { AppIcon },
 	data() {
 		return {
+			statusBarHeight: 44,
+			menuRight: 0,
 			conversations: [],
 			searchText: '',
 			showSearch: false,
 			loadError: false,
 		};
 	},
+	onLoad() {
+		const systemInfo = uni.getSystemInfoSync();
+		this.statusBarHeight = systemInfo.statusBarHeight || 44;
+		this.menuRight = getMenuRightPadding();
+	},
 	computed: {
+		navStyle() {
+			return this.menuRight ? 'padding-right:' + this.menuRight + 'px' : '';
+		},
 		filteredConversations() {
 			if (!this.searchText.trim()) return this.conversations;
 			const keyword = this.searchText.trim().toLowerCase();
@@ -128,6 +143,9 @@ export default {
 		this.loadConversations().then(() => { uni.stopPullDownRefresh(); });
 	},
 	methods: {
+		goBack() {
+			uni.navigateBack();
+		},
 		async loadConversations() {
 			try {
 				const list = await get('/api/conversations');
@@ -181,21 +199,23 @@ export default {
 <style scoped>
 @import '@/styles/common.scss';
 
-.msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24rpx; }
-.header-title { font-size: 40rpx; font-weight: 700; color: #1A1D28; }
-.header-actions { display: flex; gap: 16rpx; }
+.msg-header { display: flex; align-items: center; margin-bottom: 24rpx; }
+.header-status-bar { width: 100%; }
+.msg-header .back-btn { width: 64rpx; padding: 8rpx 0; }
+.header-title { flex: 1; text-align: center; font-size: 36rpx; font-weight: bold; color: #1A1D28; }
+.header-actions { display: flex; width: 64rpx; gap: 16rpx; justify-content: flex-end; }
 .header-action-btn {
 	width: 64rpx; height: 64rpx; border-radius: 50%; background: #FFF;
 	display: flex; align-items: center; justify-content: center;
-	box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 8rpx rgba(31, 41, 88, 0.06);
 }
-.header-action-btn:active { background: #F3F4F8; transform: scale(0.95); }
+.header-action-btn:active { background: #F2F3F8; transform: scale(0.95); }
 
 .search-row { margin-bottom: 20rpx; }
 .search-input {
 	width: 100%; height: 72rpx; padding: 0 28rpx; border-radius: 36rpx;
 	background: #FFF; font-size: 26rpx; color: #1A1D28;
-	box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 2rpx 8rpx rgba(31, 41, 88, 0.06);
 }
 
 .group-label { padding: 16rpx 0 12rpx 8rpx; }
@@ -203,7 +223,7 @@ export default {
 
 .msg-card {
 	display: flex; align-items: center; background: #FFF; border-radius: 20rpx;
-	padding: 24rpx; margin-bottom: 12rpx; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.03);
+	padding: 24rpx; margin-bottom: 12rpx; box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.05);
 	transition: all 0.15s;
 }
 .msg-card:active { background: #F8F9FC; transform: scale(0.985); }
@@ -227,23 +247,23 @@ export default {
 	display: inline-flex; align-self: flex-start; max-width: 280rpx;
 	padding: 2rpx 12rpx; border-radius: 8rpx; background: #F8F9FC;
 }
-.msg-item-tag-text { font-size: 20rpx; color: #8B8FA3; }
-.msg-time { font-size: 22rpx; color: #B0B4C0; flex-shrink: 0; margin-left: 12rpx; margin-top: 4rpx; }
+.msg-item-tag-text { font-size: 22rpx; color: #8B8FA3; }
+.msg-time { font-size: 22rpx; color: #6B6F80; flex-shrink: 0; margin-left: 12rpx; margin-top: 4rpx; }
 .msg-bottom { display: flex; justify-content: space-between; align-items: center; }
 .msg-preview { font-size: 24rpx; color: #8B8FA3; flex: 1; min-width: 0; line-height: 1.4; }
 .msg-badge {
 	min-width: 36rpx; height: 36rpx; padding: 0 10rpx; border-radius: 18rpx;
 	background: #EF4444; display: flex; align-items: center; justify-content: center;
-	font-size: 20rpx; color: #FFF; font-weight: 600; margin-left: 12rpx; flex-shrink: 0;
+	font-size: 22rpx; color: #FFF; font-weight: 600; margin-left: 12rpx; flex-shrink: 0;
 	box-shadow: 0 2rpx 8rpx rgba(239, 68, 68, 0.3);
 }
 
 .empty-illustration { margin-bottom: 24rpx; }
 .empty-illustration-icon { font-size: 100rpx; }
-.empty-sub { font-size: 24rpx; color: #B0B4C0; margin-top: 8rpx; margin-bottom: 32rpx; }
+.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; margin-bottom: 32rpx; }
 .empty-action {
 	padding: 16rpx 48rpx; border-radius: 40rpx;
-	background: linear-gradient(135deg, #4F6EF7, #6366F1);
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
 	box-shadow: 0 6rpx 20rpx rgba(79, 110, 247, 0.25);
 }
 .empty-action:active { transform: scale(0.95); }

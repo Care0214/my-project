@@ -25,9 +25,9 @@
 			</view>
 
 			<view v-else class="empty-state">
-				<AppIcon name="shield" :size="80" color="#CCC" />
+				<AppIcon name="shield" :size="80" color="#8B8FA3" />
 				<text>黑名单为空</text>
-				<text class="mt-8" style="font-size:24rpx;color:#CCC;">还没有屏蔽任何用户</text>
+				<text class="mt-8" style="font-size:24rpx;color:#8B8FA3;">还没有屏蔽任何用户</text>
 			</view>
 		</view>
 	</view>
@@ -72,20 +72,20 @@ export default {
 @import '@/styles/common.scss';
 
 .list-header { margin-bottom: 24rpx; }
-.header-title-sm { font-size: 36rpx; font-weight: bold; color: #333; display: block; }
-.header-desc { font-size: 24rpx; color: #999; margin-top: 8rpx; display: block; }
+.header-title-sm { font-size: 36rpx; font-weight: bold; color: #1A1D28; display: block; }
+.header-desc { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; display: block; }
 
 .block-row { display: flex; align-items: center; gap: 16rpx; }
 .block-avatar {
 	width: 72rpx; height: 72rpx; border-radius: 50%; flex-shrink: 0;
-	background: linear-gradient(135deg, #E0E0E0, #D0D0D0);
+	background: linear-gradient(135deg, #8FA1F8, #6B82F5);
 	display: flex; align-items: center; justify-content: center;
 	font-size: 32rpx; font-weight: bold; color: #FFF;
 }
 .block-info { flex: 1; }
-.block-name { font-size: 28rpx; font-weight: 600; color: #333; display: block; }
-.block-reason { font-size: 24rpx; color: #999; display: block; margin-top: 4rpx; }
-.block-time { font-size: 22rpx; color: #CCC; margin-top: 4rpx; }
+.block-name { font-size: 28rpx; font-weight: 600; color: #1A1D28; display: block; }
+.block-reason { font-size: 24rpx; color: #6B6F80; display: block; margin-top: 4rpx; }
+.block-time { font-size: 22rpx; color: #8B8FA3; margin-top: 4rpx; }
 .block-remove { padding: 12rpx 28rpx; border-radius: 30rpx; border: 1px solid #FF4D4F; }
 .block-remove text { font-size: 24rpx; color: #FF4D4F; }
 </style>

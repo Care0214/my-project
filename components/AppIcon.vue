@@ -12,7 +12,7 @@
  * Props:
  *   name  - 图标名称
  *   size  - 图标尺寸（rpx），默认 40
- *   color - 图标颜色（仅纯文本符号响应），默认 #333
+ *   color - 图标颜色（仅纯文本符号响应），默认 #1A1D28
  */
 
 const ICON_MAP = {
@@ -100,7 +100,7 @@ export default {
 		},
 		color: {
 			type: String,
-			default: '#333333',
+			default: '#1A1D28',
 		},
 	},
 	computed: {

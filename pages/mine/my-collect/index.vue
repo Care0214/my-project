@@ -10,7 +10,7 @@
 					@click="goDetail(item)"
 					@longpress="removeFav(item)"
 				>
-					<view class="fav-image" :style="{ background: item.imageBg || '#F3F4F8' }">
+					<view class="fav-image" :style="{ background: item.imageBg || '#F2F3F8' }">
 						<image
 							v-if="item.images && item.images.length > 0"
 							:src="item.images[0]"
@@ -28,9 +28,9 @@
 							<text class="fav-collect-time" v-if="collectTime(item)">{{ formatTime(collectTime(item)) }}</text>
 						</view>
 						<view class="fav-seller">
-							<AppIcon name="user" :size="24" color="#B0B4C0" />
+							<AppIcon name="user" :size="24" color="#6B6F80" />
 							<text class="fav-seller-name text-ellipsis">{{ sellerName(item) }}</text>
-							<AppIcon name="location" :size="24" color="#B0B4C0" />
+							<AppIcon name="location" :size="24" color="#6B6F80" />
 							<text class="fav-campus text-ellipsis">{{ item.campus || '未知校区' }}</text>
 						</view>
 					</view>
@@ -43,14 +43,14 @@
 
 			<!-- 加载失败 -->
 			<view v-else-if="loadError" class="error-state">
-				<text class="error-icon">⚠️</text>
+				<AppIcon name="close" :size="56" color="#EF4444" />
 				<text class="error-text">加载失败，请检查网络后重试</text>
 				<view class="retry-btn" @click="loadData"><text>重新加载</text></view>
 			</view>
 
 			<!-- 空状态 -->
 			<view v-else class="empty-state">
-				<text class="empty-icon">💝</text>
+				<AppIcon name="heart" :size="64" color="#8B8FA3" />
 				<text class="empty-text">还没有收藏任何物品</text>
 				<text class="empty-sub">遇到喜欢的就收藏起来吧~</text>
 			</view>
@@ -134,7 +134,7 @@ export default {
 
 .fav-card { display: flex; align-items: center; padding: 20rpx 24rpx; }
 .fav-image {
-	width: 140rpx; height: 140rpx; border-radius: 12rpx; flex-shrink: 0;
+	width: 140rpx; height: 140rpx; border-radius: 16rpx; flex-shrink: 0;
 	margin-right: 20rpx;
 	display: flex; align-items: center; justify-content: center;
 	overflow: hidden;
@@ -145,12 +145,12 @@ export default {
 .fav-meta-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10rpx; }
 .fav-price { font-size: 32rpx; font-weight: 700; color: #FF6B3D; }
 .fav-price.free { color: #22C55E; }
-.fav-collect-time { font-size: 22rpx; color: #B0B4C0; }
+.fav-collect-time { font-size: 22rpx; color: #6B6F80; }
 .fav-seller { display: flex; align-items: center; gap: 6rpx; }
 .fav-seller-name { font-size: 22rpx; color: #8B8FA3; max-width: 160rpx; }
 .fav-campus { font-size: 22rpx; color: #8B8FA3; max-width: 140rpx; margin-left: 4rpx; }
 .fav-action { padding: 10rpx; flex-shrink: 0; }
-.longpress-tip { display: block; text-align: center; font-size: 22rpx; color: #B0B4C0; margin-top: 8rpx; }
+.longpress-tip { display: block; text-align: center; font-size: 22rpx; color: #6B6F80; margin-top: 8rpx; }
 
-.empty-sub { font-size: 24rpx; color: #B0B4C0; margin-top: 8rpx; }
+.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; }
 </style>

@@ -2,7 +2,7 @@
 	<view class="chat-page">
 		<!-- 顶部关联物品卡片 -->
 		<view v-if="relatedItem" class="item-ref" @click="goItemDetail">
-			<view class="item-ref__image" :style="{ background: relatedItem.imageBg || '#F3F4F8' }">
+			<view class="item-ref__image" :style="{ background: relatedItem.imageBg || '#F2F3F8' }">
 				<image v-if="relatedItem.images && relatedItem.images.length > 0" :src="relatedItem.images[0]" class="item-ref__img" mode="aspectFill" />
 				<AppIcon v-else name="image" :size="28" color="#D0D3E0" />
 			</view>
@@ -13,6 +13,9 @@
 			<view class="item-ref__price">
 				<text v-if="relatedItem.price === 0" class="price-free">免费</text>
 				<text v-else class="price-num">¥{{ relatedItem.price }}</text>
+			</view>
+			<view class="item-ref__arrow">
+				<AppIcon name="arrow-right" :size="28" color="#8B8FA3" />
 			</view>
 		</view>
 
@@ -30,6 +33,12 @@
 				<text class="load-more-text">查看更早的消息</text>
 			</view>
 
+			<!-- 空状态 -->
+			<view v-if="messages.length === 0" class="chat-empty">
+				<AppIcon name="chat-bubble" :size="72" color="#8B8FA3" />
+				<text class="chat-empty-text">打个招呼，开始聊聊吧</text>
+			</view>
+
 			<view v-for="msg in messages" :key="msg.id" :id="'msg-' + msg.id">
 				<!-- 时间标签 -->
 				<view v-if="msg.showTime" class="time-label-wrap">
@@ -37,8 +46,8 @@
 				</view>
 
 				<!-- 消息行：对方 -->
-				<view v-if="msg.from !== 'me'" class="msg-bubble-row msg-other">
-					<view class="msg-avatar" :style="{ background: otherUser.avatarBg || '#E0E0E0' }">
+				<view v-if="msg.from !== 'me'" class="msg-bubble-row msg-other anim-in">
+					<view class="msg-avatar" :style="{ background: otherUser.avatarBg || '#8FA1F8' }">
 						<text class="avatar-text">{{ otherInitial }}</text>
 					</view>
 					<view class="msg-bubble bubble-other">
@@ -47,12 +56,26 @@
 				</view>
 
 				<!-- 消息行：自己 -->
-				<view v-else class="msg-bubble-row msg-mine">
+				<view v-else class="msg-bubble-row msg-mine anim-in">
 					<view class="msg-bubble bubble-mine">
 						<text class="bubble-text">{{ msg.text }}</text>
 					</view>
 					<view class="msg-avatar msg-avatar--self">
 						<text class="avatar-text--self">{{ myInitial }}</text>
+					</view>
+				</view>
+			</view>
+
+			<!-- 对方正在输入 -->
+			<view v-if="isTyping" id="msg-typing" class="msg-bubble-row msg-other anim-in">
+				<view class="msg-avatar" :style="{ background: otherUser.avatarBg || '#8FA1F8' }">
+					<text class="avatar-text">{{ otherInitial }}</text>
+				</view>
+				<view class="msg-bubble bubble-other typing-bubble">
+					<view class="typing-dots">
+						<view class="typing-dot"></view>
+						<view class="typing-dot"></view>
+						<view class="typing-dot"></view>
 					</view>
 				</view>
 			</view>
@@ -97,7 +120,7 @@
 					:class="['input-bar__send', { disabled: !inputText.trim() }]"
 					@click="sendMessage"
 				>
-					<AppIcon name="send" :size="36" :color="inputText.trim() ? '#FFFFFF' : '#B0B4C0'" />
+					<AppIcon name="send" :size="36" :color="inputText.trim() ? '#FFFFFF' : '#6B6F80'" />
 				</view>
 			</view>
 		</view>
@@ -115,7 +138,7 @@ export default {
 		return {
 			conversationId: '',
 			exchangeId: '',
-			otherUser: { nickname: '', avatarBg: '#E0E0E0' },
+			otherUser: { nickname: '', avatarBg: '#8FA1F8' },
 			relatedItem: null,
 			messages: [],
 			inputText: '',
@@ -123,6 +146,7 @@ export default {
 			hasMore: true,
 			page: 1,
 			showEmoji: false,
+			isTyping: false,
 			emojiList: [
 				'😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊',
 				'😇', '🙂', '😉', '😌', '😍', '🥰', '😘', '😗',
@@ -237,10 +261,15 @@ export default {
 				// mock 模式
 			}
 
-			// 模拟对方回复
+			// 模拟对方正在输入，随后自动回复
 			setTimeout(() => {
-				this.simulateReply(text);
-			}, 2000 + Math.random() * 2000);
+				this.isTyping = true;
+				this.$nextTick(() => this.scrollToBottom());
+				setTimeout(() => {
+					this.simulateReply(text);
+					this.isTyping = false;
+				}, 1600 + Math.random() * 1200);
+			}, 600);
 		},
 
 		simulateReply(myText) {
@@ -277,7 +306,7 @@ export default {
 		scrollToBottom() {
 			if (this.messages.length > 0) {
 				const last = this.messages[this.messages.length - 1];
-				this.scrollToId = 'msg-' + last.id;
+				this.scrollToId = this.isTyping ? 'msg-typing' : 'msg-' + last.id;
 			}
 		},
 
@@ -313,14 +342,18 @@ export default {
 	background: #FFFFFF;
 	padding: 16rpx 28rpx;
 	margin: 16rpx 24rpx;
-	border-radius: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+	border-radius: 20rpx;
+	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
+}
+
+.item-ref:active {
+	background: #F8F9FC;
 }
 
 .item-ref__image {
 	width: 72rpx;
 	height: 72rpx;
-	border-radius: 12rpx;
+	border-radius: 16rpx;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -342,8 +375,8 @@ export default {
 }
 
 .item-ref__label {
-	font-size: 20rpx;
-	color: #B0B4C0;
+	font-size: 22rpx;
+	color: #6B6F80;
 	margin-bottom: 2rpx;
 }
 
@@ -356,6 +389,12 @@ export default {
 .item-ref__price {
 	flex-shrink: 0;
 	margin-left: 16rpx;
+}
+
+.item-ref__arrow {
+	margin-left: 12rpx;
+	flex-shrink: 0;
+	display: flex;
 }
 
 .price-num {
@@ -402,10 +441,24 @@ export default {
 
 .time-label {
 	font-size: 22rpx;
-	color: #B0B4C0;
+	color: #6B6F80;
 	padding: 6rpx 20rpx;
 	border-radius: 20rpx;
-	background: rgba(0, 0, 0, 0.05);
+	background: #EEF0F5;
+}
+
+/* ========== 空状态 ========== */
+.chat-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16rpx;
+	padding: 140rpx 0 120rpx;
+}
+
+.chat-empty-text {
+	font-size: 24rpx;
+	color: #8B8FA3;
 }
 
 /* ========== 消息气泡行 ========== */
@@ -438,7 +491,7 @@ export default {
 }
 
 .msg-avatar--self {
-	background: linear-gradient(135deg, #4F6EF7, #6366F1) !important;
+	background: linear-gradient(135deg, #4F6EF7, #3D56D4) !important;
 	margin-left: 12rpx;
 }
 
@@ -463,11 +516,11 @@ export default {
 	position: relative;
 }
 
-/* 自己：蓝色气泡，在左侧 */
+/* 自己：深蓝气泡，靠右，小尾巴在右上角 */
 .bubble-mine {
-	background: #4F6EF7;
-	border-top-right-radius: 20rpx;
-	border-top-left-radius: 6rpx;
+	background: #3D56D4;
+	border-top-right-radius: 6rpx;
+	border-top-left-radius: 20rpx;
 	margin-right: 0;
 }
 
@@ -477,18 +530,45 @@ export default {
 	line-height: 1.55;
 }
 
-/* 对方：白色气泡，在右侧 */
+/* 对方：白色气泡，靠左，小尾巴在左上角 */
 .bubble-other {
 	background: #FFFFFF;
 	border-top-left-radius: 6rpx;
 	margin-left: 12rpx;
-	box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.04);
+	box-shadow: 0 1rpx 6rpx rgba(31, 41, 88, 0.06);
 }
 
 .bubble-other .bubble-text {
 	font-size: 28rpx;
 	color: #1A1D28;
 	line-height: 1.55;
+}
+
+/* ========== 正在输入 ========== */
+.typing-bubble {
+	padding: 24rpx 28rpx;
+}
+
+.typing-dots {
+	display: flex;
+	align-items: center;
+	gap: 10rpx;
+}
+
+.typing-dot {
+	width: 12rpx;
+	height: 12rpx;
+	border-radius: 50%;
+	background: #B0B4C0;
+	animation: typing-bounce 1.2s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes typing-bounce {
+	0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+	30% { transform: translateY(-8rpx); opacity: 1; }
 }
 
 /* ========== 表情面板 ========== */
@@ -519,7 +599,7 @@ export default {
 }
 
 .emoji-item:active {
-	background: #F3F4F8;
+	background: #F2F3F8;
 }
 
 .emoji-char {
@@ -553,7 +633,7 @@ export default {
 }
 
 .input-bar__emoji-btn:active {
-	background: #F3F4F8;
+	background: #F2F3F8;
 	transform: scale(0.95);
 }
 
@@ -562,20 +642,20 @@ export default {
 	height: 72rpx;
 	padding: 0 24rpx;
 	border-radius: 36rpx;
-	background: #F3F4F8;
+	background: #F2F3F8;
 	font-size: 28rpx;
 	color: #1A1D28;
 }
 
 .input-bar__field::placeholder {
-	color: #B0B4C0;
+	color: #6B6F80;
 }
 
 .input-bar__send {
 	width: 72rpx;
 	height: 72rpx;
 	border-radius: 50%;
-	background: #4F6EF7;
+	background: #3D56D4;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -589,5 +669,12 @@ export default {
 
 .input-bar__send.disabled {
 	background: #E8EAF0;
+}
+
+/* 减少动态效果偏好 */
+@media (prefers-reduced-motion: reduce) {
+	.typing-dot {
+		animation: none;
+	}
 }
 </style>
