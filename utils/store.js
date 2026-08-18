@@ -13,6 +13,18 @@
 import Vue from 'vue';
 import { getRandomTitle } from '@/utils/title.js';
 
+/**
+ * 是否展示演示工具（重置数据 / 注入演示数据）
+ * 答辩演示时置 true，正式发布前置 false。
+ */
+export const SHOW_DEMO_TOOLS = true;
+
+/**
+ * 是否在“我的”页展示后台管理入口
+ * 演示环境置 true；正式发布按用户角色权限控制。
+ */
+export const SHOW_ADMIN_ENTRY = true;
+
 // 从本地存储恢复登录态
 let savedToken = '';
 let savedUserInfo = null;

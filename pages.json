@@ -39,6 +39,7 @@
 		{
 			"path": "pages/publish/index",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "发布",
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "black"
@@ -47,6 +48,7 @@
 		{
 			"path": "pages/search/index",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "搜索",
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "black"
@@ -93,6 +95,7 @@
 		{
 			"path": "pages/mine/messages/index",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "消息中心",
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "black"
@@ -149,6 +152,7 @@
 		{
 			"path": "pages/mine/edit-profile/index",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "编辑资料",
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "black"
@@ -191,11 +195,11 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "拾闲小栈",
 		"navigationBarBackgroundColor": "#FFFFFF",
-		"backgroundColor": "#F5F5F5"
+		"backgroundColor": "#F2F3F8"
 	},
 	"tabBar": {
 		"custom": true,
-		"color": "#999999",
+		"color": "#6B6F80",
 		"selectedColor": "#4F6EF7",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "white",

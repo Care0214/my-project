@@ -32,12 +32,12 @@ export default {
 <style>
 /* ========== 全局基础样式 ========== */
 page {
-	background: #F5F5F5;
+	background: #F2F3F8;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 		'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB',
 		'Microsoft YaHei', sans-serif;
 	font-size: 28rpx;
-	color: #333333;
+	color: #1A1D28;
 	-webkit-font-smoothing: antialiased;
 }
 
