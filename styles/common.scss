@@ -1,8 +1,8 @@
 /**
- * 拾闲小栈 - 公共样式库（整合版）
+ * 拾闲小栈 - 公共样式库（整合版 · v3 校园蓝主题）
  *
- * Taste-skill 审计后整理：颜色 / 圆角 / 阴影统一走 uni.scss 的 token。
- * 圆角规则：卡片 20rpx、图片与输入框 16rpx、标签 8rpx、按钮与搜索框全圆角。
+ * 颜色 / 圆角 / 阴影统一走 uni.scss 的 token。
+ * 圆角规则：卡片 / 按钮 16rpx、图片与输入框 16rpx、标签 8rpx、搜索框与悬浮按钮全圆角。
  *
  * 引用方式：在各页面 style 中: @import '@/styles/common.scss';
  */
@@ -10,14 +10,14 @@
 /* ========== 页面容器 ========== */
 .page-container {
 	min-height: 100vh;
-	background: $uni-bg-color-page;
+	background: #F7F9FC;
 	padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
 }
 
 /* 无底部 tab 的页面 */
 .page-container--clean {
 	min-height: 100vh;
-	background: $uni-bg-color-page;
+	background: #F7F9FC;
 	padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -29,20 +29,20 @@
 
 /* ========== 页面标题 ========== */
 .page-title {
-	font-size: $uni-font-size-title;
+	font-size: 36rpx;
 	font-weight: bold;
-	color: $uni-text-color;
+	color: #1A1D28;
 	display: block;
 	margin-bottom: 0;
 }
 
 /* ========== 文字层级（统一字号与字重） ========== */
-.text-display { font-size: $uni-font-size-display; font-weight: $uni-font-weight-bold; line-height: 1.3; }
-.text-title   { font-size: $uni-font-size-title; font-weight: $uni-font-weight-semibold; line-height: 1.4; }
-.text-lg      { font-size: $uni-font-size-lg; font-weight: $uni-font-weight-semibold; line-height: 1.4; }
-.text-body    { font-size: $uni-font-size-md; line-height: 1.6; }
-.text-base    { font-size: $uni-font-size-base; line-height: 1.5; }
-.text-caption { font-size: $uni-font-size-sm; line-height: 1.5; color: $uni-text-color-secondary; }
+.text-display { font-size: 52rpx; font-weight: 700; line-height: 1.3; }
+.text-title   { font-size: 36rpx; font-weight: 600; line-height: 1.4; }
+.text-lg      { font-size: 32rpx; font-weight: 600; line-height: 1.4; }
+.text-body    { font-size: 30rpx; line-height: 1.6; }
+.text-base    { font-size: 28rpx; line-height: 1.5; }
+.text-caption { font-size: 26rpx; line-height: 1.5; color: #5B6675; }
 
 /* ========== 列表进入动画 ========== */
 @keyframes fade-in-up {
@@ -66,7 +66,7 @@
 
 /* ========== 骨架屏 ========== */
 .skeleton-block {
-	background: linear-gradient(90deg, #EEF0F5 25%, #E3E6EE 37%, #EEF0F5 63%);
+	background: linear-gradient(90deg, #F0F3F9 25%, #E4EAF5 37%, #F0F3F9 63%);
 	background-size: 400% 100%;
 	animation: skeleton-shimmer 1.4s ease infinite;
 }
@@ -76,29 +76,30 @@
 	100% { background-position: 0 50%; }
 }
 
-/* ========== 通用卡片（圆角 20rpx，统一靛蓝灰投影） ========== */
+/* ========== 通用卡片（圆角 20rpx，统一浅蓝投影） ========== */
 .card {
-	background: $uni-bg-color;
-	border-radius: $uni-border-radius-lg;
-	padding: $uni-spacing-lg;
-	margin-bottom: $uni-spacing-md;
-	box-shadow: $uni-shadow-card;
+	background: #FFFFFF;
+	border-radius: 16rpx;
+	padding: 24rpx;
+	margin-bottom: 20rpx;
+	border: 1rpx solid #DDE8F2;
+	box-shadow: 0 4rpx 16rpx rgba(56, 108, 148, 0.06);
 }
 
 /* ========== 搜索栏（浅灰底 + 描边的全圆角胶囊，与页面背景明确区分） ========== */
 .search-bar {
 	display: flex;
 	align-items: center;
-	background: $uni-bg-color-page;
-	border-radius: $uni-border-radius-round;
-	border: 2rpx solid $uni-border-color;
+	background: #F7F9FC;
+	border-radius: 9999rpx;
+	border: 2rpx solid #DDE8F2;
 	padding: 18rpx 28rpx;
-	margin-bottom: $uni-spacing-lg;
+	margin-bottom: 24rpx;
 }
 
 .search-placeholder {
-	color: $uni-text-color-secondary;
-	font-size: $uni-font-size-md;
+	color: #5B6675;
+	font-size: 30rpx;
 	margin-left: 14rpx;
 	flex: 1;
 }
@@ -110,8 +111,8 @@
 	align-items: center;
 	justify-content: center;
 	padding: 80rpx 40rpx;
-	color: $uni-text-color-grey;
-	font-size: $uni-font-size-md;
+	color: #667384;
+	font-size: 30rpx;
 }
 
 .empty-state .empty-icon { margin-bottom: 20rpx; opacity: 0.4; }
@@ -123,44 +124,44 @@
 	align-items: center;
 	justify-content: center;
 	padding: 80rpx 40rpx;
-	color: $uni-text-color-grey;
-	font-size: $uni-font-size-md;
+	color: #667384;
+	font-size: 30rpx;
 }
 
 .error-state .error-icon { margin-bottom: 20rpx; font-size: 64rpx; }
 
 .error-state .error-text {
-	font-size: $uni-font-size-base;
-	color: $uni-text-color-secondary;
+	font-size: 28rpx;
+	color: #5B6675;
 	margin-bottom: 28rpx;
 }
 
 .retry-btn {
 	padding: 14rpx 48rpx;
-	border-radius: $uni-border-radius-round;
-	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
-	color: $uni-text-color-inverse;
-	font-size: $uni-font-size-base;
-	font-weight: $uni-font-weight-medium;
-	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
+	border-radius: 16rpx;
+	background: linear-gradient(135deg, #4F91C5 0%, #77C9F1 100%);
+	color: #FFFFFF;
+	font-size: 28rpx;
+	font-weight: 500;
+	box-shadow: 0 6rpx 16rpx rgba(56, 108, 148, 0.16);
 }
 
 .retry-btn:active { transform: scale(0.96); }
 
-/* ========== 标签（圆角 8rpx） ========== */
+/* ========== 标签（圆角 8rpx，统一样式） ========== */
 .tag {
 	display: inline-block;
 	padding: 4rpx 14rpx;
-	border-radius: $uni-border-radius-sm;
-	font-size: $uni-font-size-sm;
-	background: $uni-color-primary-light;
-	color: $uni-color-primary;
+	border-radius: 8rpx;
+	font-size: 26rpx;
+	background: #C9EBF7;
+	color: #4F91C5;
 }
 
-.tag-hot    { background: #FFF0EB; color: #FF6B3D; }
+.tag-hot    { background: #FFF0EB; color: #FF5A36; }
 .tag-new    { background: #E8F8EE; color: #22C55E; }
 .tag-lease  { background: #FFF3E0; color: #F59E0B; }
-.tag-barter { background: #EDF0FE; color: #4F6EF7; }
+.tag-barter { background: #C9EBF7; color: #4F91C5; }
 
 /* ========== 徽章 ========== */
 .badge {
@@ -171,24 +172,24 @@
 	height: 32rpx;
 	padding: 0 8rpx;
 	border-radius: 16rpx;
-	font-size: $uni-font-size-xs;
-	color: $uni-text-color-inverse;
+	font-size: 22rpx;
+	color: #FFFFFF;
 	background: #FF4D4F;
 	line-height: 1;
 }
 
-/* ========== 按钮（全圆角） ========== */
+/* ========== 按钮（大圆角 20rpx） ========== */
 .btn-primary {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	padding: 16rpx 40rpx;
-	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
-	color: $uni-text-color-inverse;
-	border-radius: $uni-border-radius-round;
-	font-size: $uni-font-size-md;
-	font-weight: $uni-font-weight-medium;
-	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
+	background: linear-gradient(135deg, #4F91C5 0%, #77C9F1 100%);
+	color: #FFFFFF;
+	border-radius: 16rpx;
+	font-size: 30rpx;
+	font-weight: 500;
+	box-shadow: 0 6rpx 16rpx rgba(56, 108, 148, 0.16);
 	transition: transform 0.15s;
 }
 
@@ -199,34 +200,55 @@
 	align-items: center;
 	justify-content: center;
 	padding: 14rpx 36rpx;
-	border: 2rpx solid #4F6EF7;
-	color: #4F6EF7;
-	border-radius: $uni-border-radius-round;
-	font-size: $uni-font-size-base;
-	background: $uni-bg-color;
+	border: 2rpx solid #4F91C5;
+	color: #4F91C5;
+	border-radius: 16rpx;
+	font-size: 28rpx;
+	background: #FFFFFF;
+	transition: transform 0.15s, background-color 0.15s;
 }
+
+.btn-outline:active { transform: scale(0.96); background: #F7FBFF; }
 
 .btn-ghost {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	padding: 12rpx 28rpx;
-	color: $uni-text-color-secondary;
-	border-radius: $uni-border-radius-round;
+	color: #5B6675;
+	border-radius: 16rpx;
 	font-size: 24rpx;
-	background: $uni-bg-color-page;
+	background: #F7F9FC;
+	transition: transform 0.15s, background-color 0.15s;
 }
+
+.btn-ghost:active { transform: scale(0.96); background: #EDF3F9; }
 
 /* ========== 头像占位（品牌渐变） ========== */
 .avatar-placeholder {
-	background: linear-gradient(135deg, #8FA1F8, #6B82F5);
+	background: linear-gradient(135deg, #4F91C5, #77C9F1);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: $uni-text-color-inverse;
-	font-size: $uni-font-size-md;
+	color: #FFFFFF;
+	font-size: 30rpx;
 	font-weight: bold;
+}
+
+/* ========== 文字截断 ========== */
+.text-ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.text-ellipsis-2 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 }
 
 /* ========== 横向滚动 ========== */
@@ -263,11 +285,14 @@
 /* ========== 安全区域 ========== */
 .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
 
+/* ========== 底部间距 ========== */
+.spacer-bottom { height: 40rpx; }
+
 /* ========== 分割线 ========== */
 .divider {
 	width: 100%;
 	height: 1px;
-	background: $uni-divider-color;
+	background: #E8EEF4;
 	margin: 16rpx 0;
 }
 
