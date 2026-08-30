@@ -4,88 +4,95 @@
 
 <script>
 /**
- * AppIcon - 纯文本图标组件
+ * AppIcon - 纯文本图标组件（加大加粗版）
  *
- * 使用 Unicode 字符 / Emoji 渲染图标，兼容微信小程序（不支持 SVG v-html）。
- * 纯文本符号响应 CSS color，Emoji 保持原色。
+ * Unicode 符号渲染，线条类图标使用粗体 + 加大字号确保清晰可见。
  *
  * Props:
  *   name  - 图标名称
- *   size  - 图标尺寸（rpx），默认 40
- *   color - 图标颜色（仅纯文本符号响应），默认 #1A1D28
+ *   size  - 图标尺寸（rpx），默认 44
+ *   color - 图标颜色，默认 #1A1D28
  */
 
 const ICON_MAP = {
-	// ========== 导航 / TabBar（纯文本符号，响应 color） ==========
-	home:        '⌂',   // ⌂
-	exchange:    '⇄',   // ⇄
-	lease:       '☰',   // ☰
-	mine:        '⚇',   // ⚇
-	plus:        '+',
-	publish:     '+',
+	// ========== 导航 / TabBar ==========
+	home:        '⌂',
+	exchange:    '⇄',
+	lease:       '☰',
+	mine:        '⚇',
+	plus:        '＋',  // 全角加号，更粗
+	publish:     '＋',
 
-	// ========== 搜索与操作 ==========
-	search:      '⌕',   // ⌕
-	'arrow-right': '›', // ›
-	back:        '‹',   // ‹
-	close:       '✕',   // ✕
-	check:       '✓',   // ✓
-	filter:      '⫸',   // ⫸
+	// ========== 搜索与操作（线条类，用粗体符号） ==========
+	search:      '🔍',
+	'arrow-right': '❯',  // 粗箭头
+	back:        '❮',    // 粗箭头
+	close:       '✕',
+	check:       '✔',    // 粗勾
+	filter:      '⫸',
+	'back-top':  '↑',    // 回到顶部
 
 	// ========== 位置 ==========
-	location:    '⌖',   // ⌖
+	location:    '📍',
 
 	// ========== 消息与社交 ==========
-	message:     '✉',   // ✉
-	chat:        '✉',   // ✉
-	'chat-bubble': '💬', // 💬
-	share:       '↗',   // ↗
-	send:        '➤',   // ➤
+	message:     '✉',
+	chat:        '✉',
+	'chat-bubble': '💬',
+	share:       '↗',
+	send:        '➤',
 
 	// ========== 用户 ==========
-	user:        '👤', // 👤
-	edit:        '✎',   // ✎
+	user:        '👤',
+	edit:        '✎',
 
 	// ========== 交易 ==========
-	cart:        '🛒', // 🛒
-	heart:       '♡',   // ♡
-	'heart-fill': '❤',  // ❤
-	order:       '📋', // 📋
-	wallet:      '💰', // 💰
+	cart:        '🛒',
+	heart:       '♡',    // 空心爱心，未收藏
+	'heart-fill': '❤',
+	star:        '☆',    // 空心五角星，未收藏
+	'star-fill': '★',    // 实心五角星，已收藏
+	order:       '📋',
+	wallet:      '💰',
 
 	// ========== 分类 ==========
-	book:        '📖', // 📖
-	device:      '💻', // 💻
-	digital:     '💻', // 💻
-	daily:       '📦', // 📦
-	sport:       '⚽',   // ⚽
-	sports:      '⚽',   // ⚽
-	fashion:     '👕', // 👕
-	shirt:       '👕', // 👕
-	gift:        '🎁', // 🎁
-	category:    '⊞',   // ⊞
-	other:       '⋯',   // ⋯
+	book:        '📖',
+	device:      '💻',
+	digital:     '💻',
+	daily:       '📦',
+	sport:       '⚽',
+	sports:      '⚽',
+	fashion:     '👕',
+	shirt:       '👕',
+	gift:        '🎁',
+	category:    '⊞',
+	other:       '⋯',
 
 	// ========== 状态 / 功能 ==========
-	clock:       '🕐', // 🕐
-	shield:      '🛡', // 🛡
-	image:       '🖼', // 🖼
-	tag:         '🏷', // 🏷
+	clock:       '🕐',
+	shield:      '🛡',
+	image:       '🖼',
+	tag:         '🏷',
 
 	// ========== 特殊功能 ==========
-	ai:          '✦',   // ✦
-	price:       '￥',   // ¥ (fullwidth)
-	camera:      '📷', // 📷
-	star:        '★',   // ★
-	delete:      '🗑', // 🗑
-	block:       '⊘',   // ⊘
-	eye:         '👁', // 👁
-	phone:       '📞', // 📞
-	school:      '🏫', // 🏫
-	verify:      '✔',   // ✔
-	wechat:      '💚', // 💚
-	emoji:       '😊', // 😊
+	ai:          '✦',
+	price:       '￥',
+	camera:      '📷',
+	delete:      '🗑',
+	block:       '⊘',
+	eye:         '👁',
+	phone:       '📞',
+	school:      '🏫',
+	verify:      '✔',
+	wechat:      '💚',
+	emoji:       '😊',
 };
+
+// 线条类图标需要加粗（这些图标不用 emoji，用文字符号）
+const BOLD_ICONS = new Set([
+	'arrow-right', 'back', 'close', 'check', 'plus', 'publish',
+	'share', 'send', 'edit', 'verify', 'block', 'star', 'star-fill', 'back-top',
+]);
 
 export default {
 	name: 'AppIcon',
@@ -96,7 +103,7 @@ export default {
 		},
 		size: {
 			type: [Number, String],
-			default: 40,
+			default: 44,
 		},
 		color: {
 			type: String,
@@ -108,11 +115,14 @@ export default {
 			return ICON_MAP[this.name] || '?';
 		},
 		iconStyle() {
-			const size = this.size + 'rpx';
+			const s = Number(this.size);
+			const size = s + 'rpx';
+			const isBold = BOLD_ICONS.has(this.name);
 			return {
 				fontSize: size,
 				lineHeight: size,
 				color: this.color,
+				fontWeight: isBold ? 'bold' : 'normal',
 				display: 'inline-block',
 				flexShrink: '0',
 				textAlign: 'center',

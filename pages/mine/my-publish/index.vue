@@ -34,11 +34,11 @@
 
 					<view class="post-stats">
 						<view class="stat-item">
-							<AppIcon name="eye" :size="26" color="#6B6F80" />
+							<AppIcon name="eye" :size="44" color="#6B6F80" />
 							<text class="stat-text">{{ item.viewCount }}</text>
 						</view>
 						<view class="stat-item">
-							<AppIcon name="heart" :size="26" color="#6B6F80" />
+							<AppIcon name="star" :size="44" color="#6B6F80" />
 							<text class="stat-text">{{ item.favCount }}</text>
 						</view>
 					</view>
@@ -96,7 +96,7 @@ export default {
 		},
 		statusInfo(status) {
 			const map = {
-				active: { label: '出售中', color: '#4F6EF7', bg: '#EDF0FE' },
+				active: { label: '出售中', color: '#77C9F1', bg: '#EAF1FE' },
 				sold: { label: '已售出', color: '#22C55E', bg: '#E8F8EE' },
 				offline: { label: '已下架', color: '#6B6F80', bg: '#F2F3F8' },
 			};
@@ -138,15 +138,15 @@ export default {
 	text-align: center;
 	padding: 14rpx 0;
 	border-radius: 12rpx;
-	font-size: 26rpx;
+	font-size: 28rpx;
 	color: #6B6F80;
 	transition: all 0.2s;
 }
 .filter-tab.active {
-	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
+	background: linear-gradient(135deg, #77C9F1, #77C9F1);
 	color: #FFF;
 	font-weight: 600;
-	box-shadow: 0 4rpx 12rpx rgba(79, 110, 247, 0.3);
+	box-shadow: 0 4rpx 12rpx rgba(119, 201, 241, 0.3);
 }
 
 .post-card { padding: 24rpx; }
@@ -157,22 +157,22 @@ export default {
 	flex-shrink: 0;
 	padding: 4rpx 14rpx;
 	border-radius: 8rpx;
-	font-size: 22rpx;
+	font-size: 26rpx;
 }
-.post-desc { font-size: 24rpx; color: #8B8FA3; line-height: 1.5; display: block; margin-bottom: 14rpx; }
+.post-desc { font-size: 28rpx; color: #8B8FA3; line-height: 1.5; display: block; margin-bottom: 14rpx; }
 .post-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16rpx; }
 .post-price { font-size: 32rpx; font-weight: 700; color: #FF6B3D; }
-.post-time { font-size: 22rpx; color: #6B6F80; }
+.post-time { font-size: 26rpx; color: #6B6F80; }
 .post-stats { display: flex; align-items: center; gap: 28rpx; padding-top: 16rpx; border-top: 1px solid #F2F3F8; }
 .stat-item { display: flex; align-items: center; gap: 6rpx; }
-.stat-text { font-size: 22rpx; color: #6B6F80; }
+.stat-text { font-size: 26rpx; color: #6B6F80; }
 
-.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; margin-bottom: 32rpx; }
+.empty-sub { font-size: 28rpx; color: #6B6F80; margin-top: 8rpx; margin-bottom: 32rpx; }
 .empty-action {
 	padding: 16rpx 48rpx;
 	border-radius: 40rpx;
-	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
-	box-shadow: 0 6rpx 20rpx rgba(79, 110, 247, 0.25);
+	background: linear-gradient(135deg, #77C9F1, #77C9F1);
+	box-shadow: 0 6rpx 20rpx rgba(119, 201, 241, 0.25);
 }
 .empty-action:active { transform: scale(0.95); }
 .empty-action text { font-size: 28rpx; font-weight: 600; color: #FFF; }

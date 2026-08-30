@@ -5,7 +5,7 @@
 			<view class="header-status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
 			<view class="profile-header" :style="navStyle">
 				<view class="back-btn" @click="goBack">
-					<AppIcon name="back" :size="40" color="#1A1D28" />
+					<AppIcon name="back" :size="44" color="#1A1D28" />
 				</view>
 				<text class="header-title">编辑资料</text>
 				<view class="save-btn" @click="saveProfile"><text>保存</text></view>
@@ -15,8 +15,9 @@
 			<view class="card avatar-card">
 				<text class="section-label">头像颜色</text>
 				<view class="avatar-row">
-					<view class="avatar-preview" :style="{ background: form.avatarColor }">
-						<text class="avatar-text">{{ initial }}</text>
+					<view class="avatar-preview" :style="form.avatar ? '' : { background: form.avatarColor }">
+						<image v-if="form.avatar" :src="form.avatar" class="avatar-img" mode="aspectFill" />
+						<text v-else class="avatar-text">{{ initial }}</text>
 					</view>
 					<view class="color-picker">
 						<view
@@ -26,7 +27,7 @@
 							:style="{ background: c }"
 							@click="form.avatarColor = c"
 						>
-							<AppIcon v-if="form.avatarColor === c" name="check" :size="28" color="#FFF" />
+							<AppIcon v-if="form.avatarColor === c" name="check" :size="44" color="#FFF" />
 						</view>
 					</view>
 				</view>
@@ -61,7 +62,7 @@
 				</view>
 			</view>
 
-			<view style="height: 40rpx;"></view>
+			<view class="spacer-bottom"></view>
 		</view>
 	</view>
 </template>
@@ -72,12 +73,12 @@ import { get } from '@/utils/request.js';
 import { getMenuRightPadding } from '@/utils/nav.js';
 
 const DEFAULT_AVATAR_COLORS = [
-	'linear-gradient(135deg, #4F6EF7, #3D56D4)',
+	'linear-gradient(135deg, #77C9F1, #77C9F1)',
 	'linear-gradient(135deg, #FF6B3D, #FF9F43)',
 	'linear-gradient(135deg, #22C55E, #4ADE80)',
 	'linear-gradient(135deg, #F59E0B, #FBBF24)',
 	'linear-gradient(135deg, #EF4444, #F87171)',
-	'linear-gradient(135deg, #6366F1, #A78BFA)',
+	'linear-gradient(135deg, #77C9F1, #A78BFA)',
 	'linear-gradient(135deg, #EC4899, #F472B6)',
 	'linear-gradient(135deg, #06B6D4, #22D3EE)',
 ];
@@ -87,8 +88,10 @@ const DEFAULT_CAMPUSES = ['长清湖校区', '千佛山校区'];
 export default {
 	components: { AppIcon },
 	data() {
+		// 提前获取状态栏高度，避免页面闪烁
+		const systemInfo = uni.getSystemInfoSync();
 		return {
-			statusBarHeight: 44,
+			statusBarHeight: systemInfo.statusBarHeight || 44,
 			menuRight: 0,
 			avatarColors: DEFAULT_AVATAR_COLORS,
 			campuses: [...DEFAULT_CAMPUSES],
@@ -97,6 +100,7 @@ export default {
 				bio: '',
 				school: '',
 				campus: '',
+				avatar: '',
 				avatarColor: DEFAULT_AVATAR_COLORS[0],
 			},
 		};
@@ -111,14 +115,13 @@ export default {
 		},
 	},
 	onLoad() {
-		const systemInfo = uni.getSystemInfoSync();
-		this.statusBarHeight = systemInfo.statusBarHeight || 44;
 		this.menuRight = getMenuRightPadding();
 		const info = (this.$store && this.$store.userInfo) || {};
 		this.form.nickname = info.nickname || '';
 		this.form.bio = info.bio || '';
 		this.form.school = info.school || '';
 		this.form.campus = info.campus || '';
+		this.form.avatar = info.avatar || '';
 		this.form.avatarColor = info.avatarColor || DEFAULT_AVATAR_COLORS[0];
 		this.loadCampuses();
 	},
@@ -149,6 +152,7 @@ export default {
 					bio: this.form.bio.trim(),
 					school: this.form.school.trim(),
 					campus: this.form.campus,
+					avatar: this.form.avatar,
 					avatarColor: this.form.avatarColor,
 				});
 			}
@@ -172,9 +176,9 @@ export default {
 .header-title { font-size: 36rpx; font-weight: bold; color: #1A1D28; }
 .save-btn {
 	padding: 12rpx 36rpx;
-	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
+	background: linear-gradient(135deg, #77C9F1, #77C9F1);
 	color: #FFF; border-radius: 30rpx; font-size: 28rpx; font-weight: 500;
-	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
+	box-shadow: 0 4rpx 16rpx rgba(119, 201, 241, 0.3);
 }
 .save-btn:active { transform: scale(0.96); }
 
@@ -186,6 +190,7 @@ export default {
 	display: flex; align-items: center; justify-content: center;
 	box-shadow: 0 4rpx 16rpx rgba(31, 41, 88, 0.12);
 }
+.avatar-img { width: 100%; height: 100%; border-radius: 50%; }
 .avatar-text { font-size: 44rpx; font-weight: bold; color: #FFF; }
 
 .color-picker { flex: 1; display: flex; flex-wrap: wrap; gap: 18rpx; }
@@ -194,7 +199,7 @@ export default {
 	display: flex; align-items: center; justify-content: center;
 	border: 4rpx solid transparent; transition: all 0.2s;
 }
-.color-swatch.active { border-color: #FFF; box-shadow: 0 0 0 4rpx #4F6EF7; }
+.color-swatch.active { border-color: #FFF; box-shadow: 0 0 0 4rpx #77C9F1; }
 
 .form-card { margin-bottom: 24rpx; }
 .form-item { padding: 26rpx 0; border-bottom: 1px solid #F2F3F8; }
@@ -210,7 +215,7 @@ export default {
 	transition: all 0.2s;
 }
 .campus-chip.active {
-	background: #3D56D4; color: #FFF;
-	box-shadow: 0 4rpx 12rpx rgba(79, 110, 247, 0.3);
+	background: #77C9F1; color: #FFF;
+	box-shadow: 0 4rpx 12rpx rgba(119, 201, 241, 0.3);
 }
 </style>

@@ -2,32 +2,32 @@
 	<view class="tabbar">
 		<!-- 首页 -->
 		<view class="tabbar-item" @click="switchTab('/pages/home/index')">
-			<image src="/static/tabbar/home_active.png" mode=""></image>
+			<image class="tabbar-icon" :src="current === 0 ? '/static/tabbar/home_active.png' : '/static/tabbar/home.png'" mode="aspectFit"></image>
 			<text :class="['tabbar-text', { active: current === 0 }]">首页</text>
 		</view>
 
 		<!-- 互助 -->
 		<view class="tabbar-item" @click="switchTab('/pages/exchange/index')">
-			<image src="/static/tabbar/exchange_active.png" mode=""></image>
+			<image class="tabbar-icon" :src="current === 1 ? '/static/tabbar/exchange_active.png' : '/static/tabbar/exchange.png'" mode="aspectFit"></image>
 			<text :class="['tabbar-text', { active: current === 1 }]">互助</text>
 		</view>
 
 		<!-- 中间凸起发布按钮 -->
 		<view class="tabbar-publish" @click="navigateTo('/pages/publish/index')">
 			<view class="publish-btn">
-				<AppIcon name="plus" :size="48" color="#FFFFFF" />
+				<text class="publish-plus">+</text>
 			</view>
 		</view>
 
 		<!-- 租借 -->
 		<view class="tabbar-item" @click="switchTab('/pages/lease/index')">
-			<image src="/static/tabbar/lease.png" mode=""></image>
+			<image class="tabbar-icon" :src="current === 2 ? '/static/tabbar/lease_active.png' : '/static/tabbar/lease.png'" mode="aspectFit"></image>
 			<text :class="['tabbar-text', { active: current === 2 }]">租借</text>
 		</view>
 
 		<!-- 我的 -->
 		<view class="tabbar-item" @click="switchTab('/pages/mine/index')">
-			<image src="/static/tabbar/mine_active.png" mode=""></image>
+			<image class="tabbar-icon" :src="current === 3 ? '/static/tabbar/mine_active.png' : '/static/tabbar/mine.png'" mode="aspectFit"></image>
 			<text :class="['tabbar-text', { active: current === 3 }]">我的</text>
 		</view>
 	</view>
@@ -47,7 +47,7 @@ export default {
 	},
 	data() {
 		return {
-			activeColor: '#4F6EF7',
+			activeColor: '#77C9F1',
 			inactiveColor: '#6B6F80',
 		};
 	},
@@ -68,9 +68,16 @@ export default {
 </script>
 
 <style scoped>
-image{
-	width: 50rpx;
-	height: 50rpx;
+.tabbar-icon{
+	width: 52rpx;
+	height: 52rpx;
+}
+.publish-plus {
+	font-size: 56rpx;
+	color: #FFFFFF;
+	font-weight: 300;
+	line-height: 1;
+	margin-top: -4rpx;
 }
 .tabbar {
 	position: fixed;
@@ -83,7 +90,7 @@ image{
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	box-shadow: 0 -2rpx 16rpx rgba(31, 41, 88, 0.08);
+	box-shadow: 0 -2rpx 16rpx rgba(119, 201, 241, 0.10);
 	z-index: 999;
 }
 
@@ -98,13 +105,13 @@ image{
 }
 
 .tabbar-text {
-	font-size: 20rpx;
-	color: #6B6F80;
+	font-size: 24rpx;
+	color: #7A8294;
 	transition: color 0.2s;
 }
 
 .tabbar-text.active {
-	color: #4F6EF7;
+	color: #77C9F1;
 	font-weight: 500;
 }
 
@@ -118,18 +125,18 @@ image{
 .publish-btn {
 	width: 100rpx;
 	height: 100rpx;
-	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
+	background: linear-gradient(135deg, #77C9F1, #77C9F1);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	transform: translateY(-16rpx);
-	box-shadow: 0 8rpx 24rpx rgba(79, 110, 247, 0.35);
+	box-shadow: 0 8rpx 24rpx rgba(119, 201, 241, 0.40);
 	transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .publish-btn:active {
 	transform: translateY(-16rpx) scale(0.92);
-	box-shadow: 0 4rpx 12rpx rgba(79, 110, 247, 0.3);
+	box-shadow: 0 4rpx 12rpx rgba(119, 201, 241, 0.35);
 }
 </style>

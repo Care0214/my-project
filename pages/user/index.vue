@@ -3,14 +3,14 @@
 		<view class="page-body">
 			<!-- 用户信息头部 -->
 			<view class="user-hero">
-				<view class="hero-avatar" :style="{ background: user.avatarBg || 'linear-gradient(135deg, #4F6EF7, #3D56D4)' }">
+				<view class="hero-avatar" :style="{ background: user.avatarBg || 'linear-gradient(135deg, #77C9F1, #77C9F1)' }">
 					<text class="hero-avatar-text">{{ initial }}</text>
 				</view>
 				<view class="hero-info">
 					<view class="hero-name-row">
 						<text class="hero-name">{{ user.nickname || '匿名用户' }}</text>
 						<view class="verify-badge">
-							<AppIcon name="verify" :size="24" color="#22C55E" />
+							<AppIcon name="verify" :size="44" color="#22C55E" />
 							<text class="verify-text">学生认证</text>
 						</view>
 					</view>
@@ -105,7 +105,7 @@
 					</view>
 				</view>
 				<view v-else class="empty-state">
-					<AppIcon name="daily" :size="64" color="#8B8FA3" />
+					<AppIcon name="daily" :size="44" color="#8B8FA3" />
 					<text>暂无在售物品</text>
 				</view>
 			</view>
@@ -118,7 +118,7 @@
 							<view class="lease-img">
 								<image v-if="item.images && item.images.length > 0" :src="item.images[0]" class="lease-img__img" mode="aspectFill" lazy-load />
 								<view v-else class="lease-img-placeholder">
-									<AppIcon name="lease" :size="40" color="#8B8FA3" />
+									<AppIcon name="lease" :size="44" color="#8B8FA3" />
 								</view>
 							</view>
 							<view class="lease-info">
@@ -133,7 +133,7 @@
 					</view>
 				</view>
 				<view v-else class="empty-state">
-					<AppIcon name="lease" :size="64" color="#8B8FA3" />
+					<AppIcon name="lease" :size="44" color="#8B8FA3" />
 					<text>暂无出租物品</text>
 				</view>
 			</view>
@@ -150,7 +150,7 @@
 					</view>
 				</view>
 				<view v-else class="empty-state">
-					<AppIcon name="exchange" :size="64" color="#8B8FA3" />
+					<AppIcon name="exchange" :size="44" color="#8B8FA3" />
 					<text>暂无互助帖子</text>
 				</view>
 			</view>
@@ -246,10 +246,10 @@ export default {
 .hero-name-row { display: flex; align-items: center; gap: 12rpx; }
 .hero-name { font-size: 34rpx; font-weight: 700; color: #1A1D28; }
 .verify-badge { display: flex; align-items: center; gap: 4rpx; background: #E8F8EE; padding: 4rpx 12rpx; border-radius: 20rpx; }
-.verify-text { font-size: 22rpx; color: #22C55E; font-weight: 500; }
+.verify-text { font-size: 26rpx; color: #22C55E; font-weight: 500; }
 .hero-tags { display: flex; gap: 10rpx; margin-top: 10rpx; }
-.hero-tag { padding: 4rpx 14rpx; background: #F2F3F8; border-radius: 8rpx; font-size: 22rpx; color: #6B6F80; }
-.hero-bio { display: block; font-size: 22rpx; color: #8B8FA3; margin-top: 10rpx; }
+.hero-tag { padding: 4rpx 14rpx; background: #F2F3F8; border-radius: 8rpx; font-size: 26rpx; color: #6B6F80; }
+.hero-bio { display: block; font-size: 26rpx; color: #8B8FA3; margin-top: 10rpx; }
 
 .stats-card {
 	display: flex; background: #FFF; border-radius: 20rpx; padding: 30rpx 20rpx;
@@ -265,7 +265,7 @@ export default {
 	margin-bottom: 20rpx; box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
 }
 .tab-item { flex: 1; text-align: center; padding: 14rpx 0; border-radius: 9999rpx; font-size: 26rpx; color: #6B6F80; }
-.tab-item.active { background: linear-gradient(135deg, #4F6EF7, #3D56D4); color: #FFF; font-weight: 600; }
+.tab-item.active { background: linear-gradient(135deg, #77C9F1, #77C9F1); color: #FFF; font-weight: 600; }
 
 .item-grid { display: flex; gap: 16rpx; align-items: flex-start; }
 .item-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16rpx; }
@@ -300,6 +300,6 @@ export default {
 .post-card { padding: 22rpx 24rpx; }
 .post-top { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; }
 .post-title { font-size: 28rpx; font-weight: 600; color: #1A1D28; flex: 1; min-width: 0; }
-.post-tag { flex-shrink: 0; padding: 4rpx 14rpx; background: #EDF0FE; color: #4F6EF7; font-size: 22rpx; border-radius: 8rpx; }
+.post-tag { flex-shrink: 0; padding: 4rpx 14rpx; background: #EAF1FE; color: #77C9F1; font-size: 22rpx; border-radius: 8rpx; }
 .post-desc { display: block; font-size: 24rpx; color: #8B8FA3; line-height: 1.5; margin-top: 10rpx; }
 </style>

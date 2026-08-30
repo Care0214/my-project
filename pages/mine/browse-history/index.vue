@@ -10,7 +10,8 @@
 				<view class="card history-card" v-for="item in list" :key="item.id" @click="goDetail(item)">
 					<view class="history-row">
 						<view class="history-icon">
-							<AppIcon :name="item.type === 'lease' ? 'lease' : 'cart'" :size="40" color="#4F6EF7" />
+							<image v-if="item.type !== 'lease'" class="history-cart-icon" :src="cartIcon" mode="aspectFit" />
+							<AppIcon v-else name="lease" :size="44" color="#77C9F1" />
 						</view>
 						<view class="history-info">
 							<text class="history-title text-ellipsis">{{ item.title }}</text>
@@ -22,7 +23,7 @@
 								<text class="history-time">{{ formatTime(item.time) }}</text>
 							</view>
 						</view>
-						<AppIcon name="arrow-right" :size="28" color="#8B8FA3" />
+						<AppIcon name="arrow-right" :size="44" color="#8B8FA3" />
 					</view>
 				</view>
 
@@ -32,9 +33,9 @@
 			</view>
 
 			<view v-else class="empty-state">
-				<AppIcon name="clock" :size="80" color="#8B8FA3" />
+				<image class="empty-clock-icon" :src="clockIcon" mode="aspectFit" />
 				<text>暂无浏览记录</text>
-				<text class="mt-8" style="font-size:24rpx;color:#8B8FA3;">去首页逛逛吧~</text>
+				<text class="mt-8 empty-sub-text">去首页逛逛吧~</text>
 			</view>
 		</view>
 	</view>
@@ -46,7 +47,13 @@ import { get, del } from '@/utils/request.js';
 
 export default {
 	components: { AppIcon },
-	data() { return { list: [] }; },
+	data() {
+		return {
+			list: [],
+			cartIcon: require('@/imgs/cart.png'),
+			clockIcon: require('@/imgs/clock.png'),
+		};
+	},
 	onShow() { this.loadList(); },
 	methods: {
 		async loadList() {
@@ -94,23 +101,26 @@ export default {
 
 .list-header { margin-bottom: 24rpx; }
 .header-title-sm { font-size: 36rpx; font-weight: bold; color: #1A1D28; display: block; }
-.header-desc { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; display: block; }
+.header-desc { font-size: 28rpx; color: #6B6F80; margin-top: 8rpx; display: block; }
 
 .history-card { padding: 20rpx 24rpx; }
 .history-row { display: flex; align-items: center; gap: 16rpx; }
 .history-icon {
-	width: 64rpx; height: 64rpx; border-radius: 50%; background: #EDF0FE;
+	width: 64rpx; height: 64rpx; border-radius: 50%; background: #EAF1FE;
 	display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
+.history-cart-icon { width: 44rpx; height: 44rpx; }
+.empty-clock-icon { width: 64rpx; height: 64rpx; }
 .history-info { flex: 1; min-width: 0; }
 .history-title { font-size: 28rpx; color: #1A1D28; font-weight: 500; display: block; margin-bottom: 8rpx; }
 .history-meta { display: flex; align-items: center; gap: 12rpx; }
-.type-tag { padding: 2rpx 12rpx; border-radius: 8rpx; font-size: 22rpx; }
-.tag-sell { background: #EDF0FE; color: #4F6EF7; }
+.type-tag { padding: 2rpx 12rpx; border-radius: 8rpx; font-size: 26rpx; }
+.tag-sell { background: #EAF1FE; color: #77C9F1; }
 .tag-lease { background: #FFF3E0; color: #F59E0B; }
-.history-price { font-size: 24rpx; color: #FF6B3D; font-weight: 500; }
-.history-time { font-size: 22rpx; color: #8B8FA3; }
+.history-price { font-size: 28rpx; color: #FF6B3D; font-weight: 500; }
+.history-time { font-size: 26rpx; color: #8B8FA3; }
 
 .clear-all { display: flex; justify-content: center; padding: 30rpx 0; }
-.clear-all-text { font-size: 26rpx; color: #FF4D4F; }
+.clear-all-text { font-size: 28rpx; color: #FF4D4F; }
+.empty-sub-text { font-size: 28rpx; color: #8B8FA3; }
 </style>

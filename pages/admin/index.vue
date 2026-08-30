@@ -38,7 +38,7 @@
 				<view class="card review-item" v-for="item in reviewList" :key="item.id">
 					<view class="review-top">
 						<view class="review-img">
-							<AppIcon name="image" :size="36" color="#D0D3E0" />
+							<AppIcon name="image" :size="44" color="#D0D3E0" />
 						</view>
 						<view class="review-info">
 							<text class="review-title text-ellipsis">{{ item.title }}</text>
@@ -55,7 +55,7 @@
 				</view>
 			</view>
 			<view v-else class="empty-state">
-				<AppIcon name="check" :size="80" color="#8B8FA3" />
+				<AppIcon name="check" :size="44" color="#8B8FA3" />
 				<text>暂无待审核内容</text>
 			</view>
 		</scroll-view>
@@ -81,7 +81,7 @@
 				</view>
 			</view>
 			<view v-else class="empty-state">
-				<AppIcon name="user" :size="80" color="#8B8FA3" />
+				<AppIcon name="user" :size="44" color="#8B8FA3" />
 				<text>暂无用户</text>
 			</view>
 		</scroll-view>
@@ -105,7 +105,7 @@
 				</view>
 			</view>
 			<view v-else class="empty-state">
-				<AppIcon name="shield" :size="80" color="#8B8FA3" />
+				<AppIcon name="shield" :size="44" color="#8B8FA3" />
 				<text>暂无举报</text>
 			</view>
 		</scroll-view>
@@ -235,7 +235,7 @@ export default {
 	margin-bottom: 16rpx;
 }
 .stat-card { flex: 1; text-align: center; }
-.stat-value { font-size: 40rpx; font-weight: 700; color: #4F6EF7; display: block; }
+.stat-value { font-size: 40rpx; font-weight: 700; color: #77C9F1; display: block; }
 .stat-label { font-size: 22rpx; color: #6B6F80; margin-top: 6rpx; display: block; }
 
 .admin-tabs {
@@ -246,11 +246,11 @@ export default {
 	flex: 1; text-align: center; padding: 24rpx 0;
 	font-size: 28rpx; color: #6B6F80; position: relative;
 }
-.admin-tab.active { color: #4F6EF7; font-weight: 700; }
+.admin-tab.active { color: #77C9F1; font-weight: 700; }
 .admin-tab.active::after {
 	content: ''; position: absolute; bottom: 0; left: 50%;
 	transform: translateX(-50%); width: 40rpx; height: 6rpx;
-	background: #3D56D4; border-radius: 3rpx;
+	background: #77C9F1; border-radius: 3rpx;
 }
 
 .admin-scroll { padding: 20rpx 24rpx; }
@@ -283,7 +283,7 @@ export default {
 .user-top { display: flex; align-items: center; gap: 16rpx; }
 .user-avatar {
 	width: 76rpx; height: 76rpx; border-radius: 50%; flex-shrink: 0;
-	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
+	background: linear-gradient(135deg, #77C9F1, #77C9F1);
 	display: flex; align-items: center; justify-content: center;
 }
 .user-avatar text { font-size: 30rpx; font-weight: bold; color: #FFF; }

@@ -3,19 +3,20 @@
 		<!-- 顶部搜索栏（自定义导航，状态栏占位） -->
 		<view class="header-status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
 		<view class="search-header" :style="navStyle">
-			<view class="search-bar">
-				<AppIcon name="search" :size="36" color="#6B6F80" />
+			<view class="search-bar" @click="focusInput">
+				<image class="search-icon-img" src="/static/imgs/1.png" mode="aspectFit" />
 				<input
 					class="search-input"
 					v-model="keyword"
 					placeholder="搜索物品、关键词..."
-					focus
 					confirm-type="search"
 					@confirm="doSearch"
 					@input="onInput"
+					:focus="inputFocused"
+					@blur="inputFocused = false"
 				/>
-				<view v-if="keyword" class="search-clear" @click="clearInput">
-					<AppIcon name="close" :size="28" color="#FFFFFF" />
+				<view v-if="keyword" class="search-clear" @click.stop="clearInput">
+					<AppIcon name="close" :size="44" color="#FFFFFF" />
 				</view>
 			</view>
 			<text class="search-cancel" @click="goBack">取消</text>
@@ -28,7 +29,7 @@
 				<view class="section-header">
 					<text class="section-title">搜索历史</text>
 					<view class="section-action" @click="clearHistory">
-						<AppIcon name="delete" :size="28" color="#6B6F80" />
+						<AppIcon name="delete" :size="44" color="#6B6F80" />
 					</view>
 				</view>
 				<view class="tag-group">
@@ -83,7 +84,7 @@
 							mode="aspectFill"
 							lazy-load
 						/>
-						<AppIcon v-else name="image" :size="36" color="#D0D3E0" />
+						<AppIcon v-else name="image" :size="44" color="#D0D3E0" />
 						<view class="result-price-tag">
 							<text v-if="item.price === 0" class="r-free">免费</text>
 							<text v-else class="r-price">¥{{ item.price }}</text>
@@ -109,7 +110,7 @@
 
 			<!-- 空结果 -->
 			<view v-else-if="!loading" class="empty-state">
-				<AppIcon name="search" :size="72" color="#8B8FA3" />
+				<image class="empty-search-icon" src="/static/imgs/1.png" mode="aspectFit" />
 				<text class="empty-text">没有找到「{{ lastKeyword }}」相关物品</text>
 				<text class="empty-sub">换个关键词试试吧~</text>
 			</view>
@@ -119,11 +120,13 @@
 				<text class="loading-text">搜索中...</text>
 			</view>
 		</view>
+		<BackTop :visible="showBackTop" />
 	</view>
 </template>
 
 <script>
 import AppIcon from '@/components/AppIcon.vue';
+import BackTop from '@/components/BackTop.vue';
 import { get } from '@/utils/request.js';
 import { getMenuRightPadding } from '@/utils/nav.js';
 
@@ -131,11 +134,14 @@ const STORAGE_KEY = 'search_history';
 const MAX_HISTORY = 10;
 
 export default {
-	components: { AppIcon },
+	components: { AppIcon, BackTop },
 	data() {
+		// 提前获取状态栏高度，避免页面闪烁
+		const systemInfo = uni.getSystemInfoSync();
 		return {
-			statusBarHeight: 44,
+			statusBarHeight: systemInfo.statusBarHeight || 44,
 			menuRight: 0,
+			showBackTop: false,
 			keyword: '',
 			lastKeyword: '',
 			hasSearched: false,
@@ -143,6 +149,7 @@ export default {
 			loading: false,
 			searchError: false,
 			categoryId: '',
+			inputFocused: false,
 			history: [],
 			hotSearches: [
 				'iPad',
@@ -157,14 +164,23 @@ export default {
 		};
 	},
 	onLoad(options) {
-		const systemInfo = uni.getSystemInfoSync();
-		this.statusBarHeight = systemInfo.statusBarHeight || 44;
 		this.menuRight = getMenuRightPadding();
-		this.loadHistory();
-		if (options && options.category) {
-			this.categoryId = options.category;
-			this.doSearch();
-		}
+		// 使用 nextTick 确保页面已经渲染完成
+		this.$nextTick(() => {
+			this.loadHistory();
+			if (options && options.category) {
+				this.categoryId = options.category;
+				this.doSearch();
+			}
+		});
+	},
+	onUnload() {
+		// 页面卸载时清理数据，减少内存占用
+		this.results = [];
+		this.history = [];
+	},
+	onPageScroll(e) {
+		this.showBackTop = e.scrollTop > 400;
 	},
 	computed: {
 		navStyle() {
@@ -202,7 +218,7 @@ export default {
 						uni.removeStorageSync(STORAGE_KEY);
 						uni.showToast({ title: '已清除', icon: 'success' });
 					}
-				},
+				}
 			});
 		},
 
@@ -279,11 +295,17 @@ export default {
 
 		// ========== 导航 ==========
 		goDetail(item) {
-			uni.navigateTo({ url: '/pages/goods-detail/index?id=' + item.id });
+			uni.navigateTo({
+				url: '/pages/goods-detail/index?id=' + item.id
+			});
 		},
 
 		goBack() {
 			uni.navigateBack();
+		},
+
+		focusInput() {
+			this.inputFocused = true;
 		},
 	},
 };
@@ -292,9 +314,15 @@ export default {
 <style scoped>
 .search-page {
 	min-height: 100vh;
-	background: #F2F3F8;
+	background: #F7F9FC;
 	display: flex;
 	flex-direction: column;
+}
+
+/* 搜索栏区域背景色 */
+.search-before,
+.search-results {
+	background: #F2F3F8;
 }
 
 /* ========== 搜索栏 ========== */
@@ -302,22 +330,24 @@ export default {
 	display: flex;
 	align-items: center;
 	padding: 16rpx 20rpx;
-	background: #FFFFFF;
+	background: #C9EBF7;
 	gap: 16rpx;
 }
 
-.header-status-bar { width: 100%; background: #FFFFFF; }
+.header-status-bar { width: 100%; background: #C9EBF7; }
 
 .search-bar {
 	flex: 1;
 	display: flex;
 	align-items: center;
 	height: 72rpx;
-	padding: 0 20rpx;
-	border-radius: 36rpx;
-	background: #F2F3F8;
+	padding: 0 24rpx;
+	border-radius: 48rpx;
+	background: #FFFFFF;
+	border: 1rpx solid #DDE8F2;
 	gap: 12rpx;
 }
+.search-icon-img { width: 44rpx; height: 44rpx; flex-shrink: 0; }
 
 .search-input {
 	flex: 1;
@@ -339,7 +369,8 @@ export default {
 
 .search-cancel {
 	font-size: 28rpx;
-	color: #4F6EF7;
+	color: #4F91C5;
+	font-weight: 500;
 	flex-shrink: 0;
 }
 
@@ -379,7 +410,7 @@ export default {
 .history-tag {
 	padding: 12rpx 28rpx;
 	border-radius: 28rpx;
-	font-size: 26rpx;
+	font-size: 28rpx;
 	color: #6B6F80;
 	background: #FFFFFF;
 	transition: all 0.15s;
@@ -392,7 +423,7 @@ export default {
 .hot-tag {
 	padding: 12rpx 28rpx;
 	border-radius: 28rpx;
-	font-size: 26rpx;
+	font-size: 28rpx;
 	color: #6B6F80;
 	background: #FFFFFF;
 	display: flex;
@@ -412,7 +443,7 @@ export default {
 }
 
 .hot-rank {
-	font-size: 22rpx;
+	font-size: 26rpx;
 	font-weight: 700;
 	font-style: italic;
 }
@@ -425,17 +456,17 @@ export default {
 
 .result-count {
 	margin-bottom: 16rpx;
-	font-size: 24rpx;
+	font-size: 28rpx;
 	color: #6B6F80;
 }
 
 .result-card {
 	display: flex;
 	background: #FFFFFF;
-	border-radius: 20rpx;
+	border-radius: 16rpx;
 	padding: 20rpx;
 	margin-bottom: 16rpx;
-	box-shadow: 0 2rpx 12rpx rgba(31, 41, 88, 0.06);
+	box-shadow: 0 4rpx 16rpx rgba(56, 108, 148, 0.06);
 	transition: all 0.15s;
 }
 .search-results .result-card:nth-child(2) { animation-delay: 60ms; }
@@ -468,8 +499,8 @@ export default {
 	background: rgba(0, 0, 0, 0.55);
 }
 
-.r-price { font-size: 22rpx; color: #FF6B3D; font-weight: 700; }
-.r-free { font-size: 22rpx; color: #22C55E; font-weight: 600; }
+.r-price { font-size: 26rpx; color: #FF6B3D; font-weight: 700; }
+.r-free { font-size: 26rpx; color: #22C55E; font-weight: 600; }
 
 .result-info {
 	flex: 1;
@@ -487,7 +518,7 @@ export default {
 }
 
 .result-desc {
-	font-size: 24rpx;
+	font-size: 28rpx;
 	color: #8B8FA3;
 	line-height: 1.5;
 	display: block;
@@ -501,12 +532,12 @@ export default {
 }
 
 .result-seller {
-	font-size: 22rpx;
+	font-size: 26rpx;
 	color: #6B6F80;
 }
 
 .result-time {
-	font-size: 22rpx;
+	font-size: 26rpx;
 	color: #6B6F80;
 }
 
@@ -518,12 +549,13 @@ export default {
 }
 
 .loading-text {
-	font-size: 26rpx;
+	font-size: 28rpx;
 	color: #6B6F80;
 }
+.empty-search-icon { width: 72rpx; height: 72rpx; opacity: 0.55; }
 
 .empty-sub {
-	font-size: 24rpx;
+	font-size: 28rpx;
 	color: #6B6F80;
 	margin-top: 8rpx;
 }

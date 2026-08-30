@@ -29,7 +29,7 @@
 					<text class="detail-free" v-else>免费</text>
 					<view class="detail-actions">
 						<view class="detail-action-btn" @click="toggleFavorite">
-							<AppIcon :name="isFavorited ? 'heart-fill' : 'heart'" :size="36" :color="isFavorited ? '#FF4D4F' : '#8B8FA3'" />
+							<AppIcon :name="isFavorited ? 'star-fill' : 'star'" :size="44" :color="isFavorited ? '#F59E0B' : '#8B8FA3'" />
 						</view>
 					</view>
 				</view>
@@ -40,7 +40,7 @@
 			<!-- 卖家信息 -->
 			<view class="card seller-card">
 				<view class="seller-row" @click="goUser(item.seller)">
-					<view class="seller-avatar" :style="{ background: item.seller ? item.seller.avatarBg || '#8FA1F8' : '#8FA1F8' }">
+					<view class="seller-avatar" :style="{ background: item.seller ? item.seller.avatarBg || '#77C9F1' : '#77C9F1' }">
 						<text class="seller-avatar-text">{{ item.seller ? item.seller.nickname.charAt(0) : '?' }}</text>
 					</view>
 					<view class="seller-info">
@@ -72,14 +72,16 @@
 				</view>
 			</view>
 
+			<view class="detail-spacer"></view>
+
 			<!-- 底部操作 -->
 			<view class="detail-bottom">
 				<view class="detail-bottom-btn btn-fav" @click="toggleFavorite">
-					<AppIcon :name="isFavorited ? 'heart-fill' : 'heart'" :size="40" :color="isFavorited ? '#FF4D4F' : '#6B6F80'" />
+					<image class="fav-icon" :class="{ collected: isFavorited }" :src="isFavorited ? collectFillIcon : collectIcon" mode="aspectFit" />
 					<text>收藏</text>
 				</view>
 				<view class="detail-bottom-btn btn-chat" @click="goChat">
-					<AppIcon name="chat" :size="40" color="#FFF" />
+					<image class="chat-icon" :src="chatIcon" mode="aspectFit" />
 					<text>私聊</text>
 				</view>
 			</view>
@@ -99,6 +101,9 @@ export default {
 			item: {},
 			isFavorited: false,
 			categories: [],
+			collectIcon: require('@/imgs/收藏.png'),
+			collectFillIcon: require('@/imgs/收藏-fill.png'),
+			chatIcon: require('@/imgs/私信-white.png'),
 		};
 	},
 	computed: {
@@ -160,7 +165,10 @@ export default {
 				uni.reLaunch({ url: '/pages/login/index' });
 				return;
 			}
-			uni.navigateTo({ url: '/pages/chat/index?id=conv1' });
+			// 根据物品ID和卖家ID生成唯一会话ID
+			const sellerId = this.item.seller ? this.item.seller.id : 'unknown';
+			const conversationId = 'item_' + this.item.id + '_' + sellerId;
+			uni.navigateTo({ url: '/pages/chat/index?id=' + conversationId + '&itemId=' + this.item.id });
 		},
 		goUser(user) {
 			if (!user || !user.id || user.anonymous) return;
@@ -182,7 +190,7 @@ export default {
 }
 .detail-type-tag {
 	position: absolute; top: 20rpx; right: 20rpx; padding: 8rpx 20rpx;
-	background: rgba(0, 0, 0, 0.55); color: #FFF; font-size: 24rpx; border-radius: 20rpx;
+	background: rgba(0, 0, 0, 0.55); color: #FFF; font-size: 28rpx; border-radius: 20rpx;
 }
 
 .detail-price-row { display: flex; align-items: center; justify-content: space-between; }
@@ -201,27 +209,31 @@ export default {
 .seller-info { flex: 1; }
 .seller-name { font-size: 30rpx; font-weight: 600; color: #1A1D28; display: block; }
 .seller-name-row { display: flex; align-items: center; gap: 8rpx; }
-.seller-anon-tag { padding: 2rpx 10rpx; background: #EDF0FE; color: #6366F1; font-size: 18rpx; border-radius: 8rpx; }
-.seller-campus { font-size: 24rpx; color: #6B6F80; margin-top: 4rpx; }
+.seller-anon-tag { padding: 2rpx 10rpx; background: #C9EBF7; color: #4F91C5; font-size: 22rpx; border-radius: 8rpx; }
+.seller-campus { font-size: 28rpx; color: #6B6F80; margin-top: 4rpx; }
 .seller-chat-btn {
-	padding: 14rpx 28rpx; background: #EDF0FE; border-radius: 30rpx;
-	font-size: 26rpx; color: #4F6EF7; font-weight: 500;
+	padding: 14rpx 28rpx; background: #C9EBF7; border-radius: 30rpx;
+	font-size: 26rpx; color: #4F91C5; font-weight: 500;
 }
 
 .info-row { display: flex; justify-content: space-between; padding: 20rpx 0; }
 .info-row + .info-row { border-top: 1px solid #F2F3F8; }
-.info-label { font-size: 26rpx; color: #6B6F80; }
-.info-value { font-size: 26rpx; color: #1A1D28; }
+.info-label { font-size: 28rpx; color: #6B6F80; }
+.info-value { font-size: 28rpx; color: #1A1D28; }
 
 .detail-bottom {
 	position: fixed; left: 0; right: 0; bottom: 0; padding: 16rpx 30rpx calc(16rpx + env(safe-area-inset-bottom));
 	background: #FFF; display: flex; gap: 20rpx; box-shadow: 0 -2rpx 16rpx rgba(31, 41, 88, 0.08);
 	z-index: 100;
 }
+.detail-spacer { height: calc(140rpx + env(safe-area-inset-bottom)); }
 .detail-bottom-btn {
 	flex: 1; height: 88rpx; border-radius: 44rpx; display: flex;
 	align-items: center; justify-content: center; gap: 10rpx; font-size: 28rpx; font-weight: 500;
 }
 .btn-fav { background: #F2F3F8; color: #6B6F80; }
-.btn-chat { background: linear-gradient(135deg, #4F6EF7, #3D56D4); color: #FFF; }
+.btn-chat { background: linear-gradient(135deg, #4F91C5 0%, #77C9F1 100%); color: #FFF; }
+.fav-icon { width: 32rpx; height: 32rpx; flex-shrink: 0; opacity: 0.4; transition: opacity 0.2s; }
+.fav-icon.collected { opacity: 1; }
+.chat-icon { width: 32rpx; height: 32rpx; flex-shrink: 0; }
 </style>

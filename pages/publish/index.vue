@@ -5,7 +5,7 @@
 			<view class="header-status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
 			<view class="publish-header" :style="navStyle">
 				<view class="back-btn" @click="goBack">
-					<AppIcon name="back" :size="40" color="#1A1D28" />
+					<AppIcon name="back" :size="44" color="#1A1D28" />
 				</view>
 				<text class="header-title">发布</text>
 				<view class="submit-btn" @click="submitPublish"><text>{{ priceBlocked ? '价格异常，请修改' : '发布' }}</text></view>
@@ -24,7 +24,7 @@
 						<text class="type-label">{{ t.label }}</text>
 						<text class="type-desc">{{ t.desc }}</text>
 						<view class="type-check" v-if="formData.type === t.value">
-							<AppIcon name="check" :size="28" color="#FFF" />
+							<AppIcon name="check" :size="44" color="#FFF" />
 						</view>
 					</view>
 				</view>
@@ -38,11 +38,11 @@
 						<view v-for="(img, i) in formData.images" :key="i" class="upload-item">
 							<image :src="img" class="upload-image" mode="aspectFill" @click="previewImage(i)" />
 							<view class="upload-delete" @click="removeImage(i)">
-								<AppIcon name="close" :size="28" color="#FFF" />
+								<AppIcon name="close" :size="44" color="#FFF" />
 							</view>
 						</view>
 						<view class="upload-add" @click="chooseImage" v-if="formData.images.length < 6">
-							<AppIcon name="plus" :size="48" color="#8B8FA3" />
+							<AppIcon name="plus" :size="44" color="#8B8FA3" />
 							<text class="upload-add-text">添加图片</text>
 						</view>
 					</view>
@@ -50,7 +50,7 @@
 					<!-- AI识别结果 -->
 					<view class="ai-card" v-if="formData.images.length > 0 && aiResult">
 						<view class="ai-card-header">
-							<AppIcon name="ai" :size="32" color="#4F6EF7" />
+							<image class="ai-icon" src="/static/logo/ai-recognize.png" mode="aspectFit" />
 							<text class="ai-card-title">AI智能识别结果</text>
 						</view>
 						<view class="ai-card-body">
@@ -72,7 +72,18 @@
 								:class="['fix-chip', { active: formData.category === cat.id }]"
 								@click="selectCategory(cat.id)"
 							>
-								<AppIcon :name="cat.icon" :size="24" :color="formData.category === cat.id ? '#FFF' : '#6B6F80'" />
+								<image
+									v-if="getCategoryImage(cat)"
+									:class="['category-icon-img', { active: formData.category === cat.id }]"
+									:src="getCategoryImage(cat)"
+									mode="aspectFit"
+								/>
+								<AppIcon
+									v-else
+									:name="cat.icon"
+									:size="44"
+									:color="formData.category === cat.id ? '#FFF' : '#6B6F80'"
+								/>
 								<text class="fix-chip-text">{{ cat.name }}</text>
 							</view>
 						</view>
@@ -131,12 +142,12 @@
 					<!-- AI 估价参考 -->
 					<view class="estimate-wrap" v-if="estimate">
 						<view class="estimate-head">
-							<AppIcon name="ai" :size="28" color="#4F6EF7" />
+							<AppIcon name="ai" :size="44" color="#77C9F1" />
 							<text class="estimate-label">AI 估价参考</text>
 							<text class="estimate-range">¥{{ estimate.min }} ~ ¥{{ estimate.max }}</text>
 						</view>
 						<view class="estimate-foot">
-							<text class="estimate-avg">市场均价约 ¥{{ estimate.avg }} · {{ estimate.count }} 件同校区成交</text>
+							<text class="estimate-avg">市场均价约 ¥{{ estimate.avg }} · {{ estimate.count }} 条平台参考记录</text>
 							<text v-if="priceCheckStatus === 'ok'" class="estimate-status ok">价格合理 ✓</text>
 							<text v-else-if="priceCheckStatus === 'warn'" class="estimate-status warn">价格超出建议范围</text>
 							<text v-else-if="priceCheckStatus === 'block'" class="estimate-status block">价格异常，无法发布</text>
@@ -182,7 +193,7 @@
 					<picker :range="campusNames" @change="onCampusChange">
 						<view class="form-picker">
 							<text :class="{ placeholder: !formData.campus }">{{ formData.campus || '请选择校区' }}</text>
-							<AppIcon name="arrow-right" :size="28" color="#6B6F80" />
+							<AppIcon name="arrow-right" :size="44" color="#6B6F80" />
 						</view>
 					</picker>
 				</view>
@@ -215,25 +226,25 @@
 							<text class="anon-title">匿名发布</text>
 							<text class="anon-desc">使用随机称号「{{ anonymousTitle }}」代替昵称，保护隐私</text>
 						</view>
-						<switch :checked="anonymous" color="#4F6EF7" @change="onAnonymousChange" />
+						<switch :checked="anonymous" color="#4F91C5" @change="onAnonymousChange" />
 					</view>
 				</view>
 			</view>
 
 			<!-- 发布须知 -->
 			<view class="publish-notice">
-				<AppIcon name="shield" :size="32" color="#F59E0B" />
+				<image class="notice-icon" src="/static/logo/safety-notice.png" mode="aspectFit" />
 				<text class="notice-text">发布即代表同意平台规则。请保证信息真实准确，共同维护校园交易环境。</text>
 			</view>
 
-			<view style="height: 40rpx;"></view>
+			<view class="spacer-bottom"></view>
 		</view>
 	</view>
 </template>
 
 <script>
 import AppIcon from '@/components/AppIcon.vue';
-import { get, post } from '@/utils/request.js';
+import { get, post, uploadFiles } from '@/utils/request.js';
 import store from '@/utils/store.js';
 import { recognizeImage } from '@/utils/ai-vision.js';
 import { getMenuRightPadding } from '@/utils/nav.js';
@@ -241,8 +252,10 @@ import { getMenuRightPadding } from '@/utils/nav.js';
 export default {
 	components: { AppIcon },
 	data() {
+		// 提前获取状态栏高度，避免页面闪烁
+		const systemInfo = uni.getSystemInfoSync();
 		return {
-			statusBarHeight: 44,
+			statusBarHeight: systemInfo.statusBarHeight || 44,
 			menuRight: 0,
 			publishTypes: [
 				{ label: '闲置出售', value: 'sell', desc: '发布闲置物品，设置价格出售' },
@@ -291,8 +304,6 @@ export default {
 		},
 	},
 	onLoad(options) {
-		const systemInfo = uni.getSystemInfoSync();
-		this.statusBarHeight = systemInfo.statusBarHeight || 44;
 		this.menuRight = getMenuRightPadding();
 		if (!store.isLoggedIn) {
 			uni.reLaunch({ url: '/pages/login/index' });
@@ -311,17 +322,28 @@ export default {
 		}
 	},
 	methods: {
+		getCategoryImage(cat) {
+			const map = {
+				c1: '/static/imgs/3.png',
+				c2: '/static/imgs/4.png',
+				c3: '/static/imgs/5.png',
+				c4: '/static/imgs/6.png',
+				c5: '/static/imgs/7.png',
+				c6: '/static/imgs/9.png',
+			};
+			return map[cat.id] || map[cat.key] || '';
+		},
 		async loadCategories() {
 			try {
 				this.categories = await get('/api/categories');
 			} catch (e) {
 				this.categories = [
-					{ id: 'c1', name: '教材教辅', icon: 'book', color: '#4F6EF7' },
-					{ id: 'c2', name: '数码电子', icon: 'digital', color: '#6366F1' },
+					{ id: 'c1', name: '教材教辅', icon: 'book', color: '#77C9F1' },
+					{ id: 'c2', name: '数码电子', icon: 'digital', color: '#77C9F1' },
 					{ id: 'c3', name: '生活用品', icon: 'daily', color: '#FF6B3D' },
 					{ id: 'c4', name: '运动户外', icon: 'sports', color: '#22C55E' },
 					{ id: 'c5', name: '服饰箱包', icon: 'fashion', color: '#F59E0B' },
-					{ id: 'c6', name: '其他', icon: 'other', color: '#6366F1' },
+					{ id: 'c6', name: '免费赠送', icon: 'gift', color: '#EF4444', key: 'free' },
 				];
 			}
 		},
@@ -400,41 +422,36 @@ export default {
 			try {
 				const real = await recognizeImage(lastImage);
 				if (real) {
-					const idMap = { book: 'c1', digital: 'c2', daily: 'c3', sports: 'c4', fashion: 'c5', other: 'c6' };
+					const idMap = { book: 'c1', digital: 'c2', daily: 'c3', sports: 'c4', fashion: 'c5' };
 					this.aiResult = {
-						category: idMap[real.category] || 'c6',
+						category: idMap[real.category] || '',
 						name: real.name,
 						confidence: real.confidence,
 						tags: real.tags,
 					};
-					this.formData.category = this.aiResult.category;
-					this.loadEstimate();
-					uni.hideLoading();
-					return;
+					if (this.aiResult.category) {
+						this.formData.category = this.aiResult.category;
+						this.loadEstimate();
+					} else {
+						uni.showToast({ title: 'AI无法确定分类，请手动选择', icon: 'none' });
+					}
+				} else {
+					this.aiResult = null;
 				}
-			} catch (e) { /* 回退 mock */ }
-			uni.hideLoading();
-			this.simulateAiRecognition();
-		},
-		simulateAiRecognition() {
-			// 模拟AI识别
-			const results = [
-				{ category: 'c1', name: '教材书籍', confidence: 0.94, tags: ['教材', '考研', '二手书'] },
-				{ category: 'c2', name: '数码产品', confidence: 0.91, tags: ['电子', '手机', '配件'] },
-				{ category: 'c3', name: '生活用品', confidence: 0.87, tags: ['日常', '家居', '宿舍'] },
-				{ category: 'c4', name: '文体工具', confidence: 0.89, tags: ['运动', '器材', '户外'] },
-				{ category: 'c5', name: '服饰箱包', confidence: 0.85, tags: ['衣物', '穿搭', '箱包'] },
-			];
-			this.aiResult = results[Math.floor(Math.random() * results.length)];
-			this.formData.category = this.aiResult.category;
-			this.loadEstimate();
+			} catch (e) {
+				console.error('[发布页] AI识图失败', e);
+				uni.showToast({ title: getAiErrorTitle(e), icon: 'none', duration: 3000 });
+				this.aiResult = null;
+			} finally {
+				uni.hideLoading();
+			}
 		},
 		selectCategory(catId) {
 			this.formData.category = catId;
 			this.loadEstimate();
 		},
 		async loadEstimate() {
-			const keyMap = { c1: 'book', c2: 'digital', c3: 'daily', c4: 'sports', c5: 'fashion', c6: 'other' };
+			const keyMap = { c1: 'book', c2: 'digital', c3: 'daily', c4: 'sports', c5: 'fashion', c6: 'free' };
 			const categoryKey = keyMap[this.formData.category];
 			if (!categoryKey || this.estimating) return;
 			this.estimating = true;
@@ -483,21 +500,32 @@ export default {
 			uni.showLoading({ title: '发布中…', mask: true });
 			try {
 				const apiUrl = (this.formData.type === 'exchange' || this.formData.type === 'wish')
-					? '/api/exchange-posts' : '/api/items';
-				await post(apiUrl, {
+					? '/api/exchange-posts'
+					: this.formData.type === 'lease' ? '/api/lease-items' : '/api/items';
+				const uploadedImages = await uploadFiles(this.formData.images);
+				const categoryKeyMap = { c1: 'book', c2: 'digital', c3: 'daily', c4: 'sports', c5: 'fashion', c6: 'free' };
+				const payload = {
 					title: this.formData.title.trim(),
-					description: this.formData.desc.trim(),
 					category: this.formData.category,
 					price: parseFloat(this.formData.price) || parseFloat(this.formData.leasePrice) || 0,
-					type: this.formData.type,
-					images: this.formData.images,
+					images: uploadedImages,
 					anonymous: this.anonymous,
 					anonymousTitle: this.anonymous ? this.anonymousTitle : '',
 					campus: this.formData.campus,
 					minDays: Number(this.formData.minDays) || 1,
 					tags: this.formData.tags,
 					wishType: this.formData.wishType,
-				});
+				};
+				if (this.formData.type === 'lease') {
+					payload.type = 'lease';
+					payload.desc = this.formData.desc.trim();
+					payload.deposit = parseFloat(this.formData.deposit) || 0;
+					payload.category = categoryKeyMap[this.formData.category] || 'other';
+				} else {
+					payload.type = this.formData.type;
+					payload.description = this.formData.desc.trim();
+				}
+				await post(apiUrl, payload);
 				uni.hideLoading();
 				uni.showToast({ title: '发布成功！', icon: 'success' });
 				setTimeout(() => { uni.switchTab({ url: '/pages/home/index' }); }, 800);
@@ -508,6 +536,17 @@ export default {
 		},
 	},
 };
+
+function getAiErrorTitle(error) {
+	const message = error && error.message ? error.message : '';
+	if (message.indexOf('url not in domain list') > -1) return '请关闭域名校验或配置云空间域名';
+	if (message.indexOf('请求云函数超时') > -1 || message.indexOf('timeout') > -1) return '云函数执行超时，请检查 Base URL 和函数超时配置';
+	if (message.indexOf('DASHSCOPE_API_KEY') > -1) return '云函数未配置百炼 Key';
+	if (message.indexOf('401') > -1) return '百炼 Key 无效或已失效';
+	if (message.indexOf('未找到') > -1 || message.indexOf('不存在') > -1) return '云函数未部署或名称不一致';
+	if (message.indexOf('uniCloud') > -1 || message.indexOf('服务空间') > -1) return '当前运行包未关联云服务空间';
+	return 'AI识别失败，请查看控制台日志';
+}
 </script>
 
 <style scoped>
@@ -518,26 +557,26 @@ export default {
 .back-btn { padding: 8rpx; }
 .header-title { font-size: 36rpx; font-weight: bold; color: #1A1D28; }
 .submit-btn {
-	padding: 12rpx 36rpx; background: linear-gradient(135deg, #4F6EF7, #3D56D4);
+	padding: 12rpx 36rpx; background: linear-gradient(135deg, #4F91C5 0%, #77C9F1 100%);
 	color: #FFF; border-radius: 30rpx; font-size: 28rpx; font-weight: 500;
-	box-shadow: 0 4rpx 16rpx rgba(79, 110, 247, 0.3);
+	box-shadow: 0 4rpx 16rpx rgba(56, 108, 148, 0.18);
 }
 
 .type-section { margin-bottom: 24rpx; }
 .section-label { font-size: 28rpx; font-weight: 600; color: #1A1D28; display: block; margin-bottom: 16rpx; }
-.hint-text { font-size: 24rpx; color: #8B8FA3; font-weight: 400; }
+.hint-text { font-size: 28rpx; color: #8B8FA3; font-weight: 400; }
 .type-row { display: flex; gap: 14rpx; flex-wrap: wrap; }
 .type-card {
 	flex: 1; min-width: calc(50% - 14rpx); padding: 20rpx 16rpx;
 	background: #FFF; border-radius: 16rpx; border: 2rpx solid transparent;
 	position: relative; transition: all 0.2s;
 }
-.type-card.active { border-color: #4F6EF7; background: #EDF0FE; }
+.type-card.active { border-color: #4F91C5; background: #C9EBF7; }
 .type-label { font-size: 28rpx; font-weight: 600; color: #1A1D28; display: block; margin-bottom: 6rpx; }
-.type-desc { font-size: 22rpx; color: #6B6F80; line-height: 1.4; display: block; }
+.type-desc { font-size: 26rpx; color: #6B6F80; line-height: 1.4; display: block; }
 .type-check {
 	position: absolute; top: 8rpx; right: 8rpx; width: 36rpx; height: 36rpx;
-	background: #3D56D4; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+	background: #4F91C5; border-radius: 50%; display: flex; align-items: center; justify-content: center;
 }
 
 .upload-area { display: flex; flex-wrap: wrap; gap: 16rpx; margin-bottom: 16rpx; }
@@ -548,7 +587,7 @@ export default {
 	border: 2rpx dashed #DDD; display: flex; flex-direction: column;
 	align-items: center; justify-content: center; gap: 6rpx;
 }
-.upload-hint { font-size: 22rpx; color: #6B6F80; }
+.upload-hint { font-size: 26rpx; color: #6B6F80; }
 .upload-delete {
 	position: absolute; top: -8rpx; right: -8rpx; width: 40rpx; height: 40rpx;
 	background: #FF4D4F; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -558,32 +597,35 @@ export default {
 	border: 2rpx dashed #DDD; display: flex; flex-direction: column;
 	align-items: center; justify-content: center; gap: 6rpx;
 }
-.upload-add-text { font-size: 22rpx; color: #6B6F80; }
+.upload-add-text { font-size: 26rpx; color: #6B6F80; }
 
 .ai-card {
-	padding: 20rpx; background: linear-gradient(135deg, #EDF0FE, #F5F8FF);
+	padding: 20rpx; background: linear-gradient(135deg, #EAF1FE, #F5F8FF);
 	border-radius: 16rpx; border: 1px solid #D6E4FF; margin-bottom: 16rpx;
 }
 .ai-card-header { display: flex; align-items: center; gap: 10rpx; margin-bottom: 14rpx; }
-.ai-card-title { font-size: 26rpx; color: #4F6EF7; font-weight: 600; }
+.ai-icon { width: 44rpx; height: 44rpx; flex-shrink: 0; }
+.ai-card-title { font-size: 26rpx; color: #4F91C5; font-weight: 600; }
 .ai-card-body { display: flex; align-items: center; gap: 10rpx; margin-bottom: 12rpx; }
-.ai-result-label { font-size: 24rpx; color: #6B6F80; }
-.ai-result-value { font-size: 28rpx; color: #4F6EF7; font-weight: 600; }
+.ai-result-label { font-size: 28rpx; color: #6B6F80; }
+.ai-result-value { font-size: 28rpx; color: #4F91C5; font-weight: 600; }
 .ai-tags { display: flex; flex-wrap: wrap; gap: 10rpx; }
 .ai-tag {
-	font-size: 22rpx; color: #4F6EF7; background: rgba(79, 110, 247, 0.1);
+	font-size: 26rpx; color: #4F91C5; background: rgba(79, 145, 197, 0.1);
 	padding: 4rpx 14rpx; border-radius: 8rpx;
 }
 
 .category-fix { margin-top: 8rpx; }
-.fix-label { font-size: 24rpx; color: #6B6F80; display: block; margin-bottom: 12rpx; }
+.fix-label { font-size: 28rpx; color: #6B6F80; display: block; margin-bottom: 12rpx; }
 .fix-chips { display: flex; flex-wrap: wrap; gap: 12rpx; }
 .fix-chip {
 	display: flex; align-items: center; gap: 6rpx; padding: 10rpx 20rpx;
 	background: #F2F3F8; border-radius: 30rpx; transition: all 0.2s;
 }
-.fix-chip.active { background: #3D56D4; }
-.fix-chip-text { font-size: 24rpx; color: #6B6F80; }
+.fix-chip.active { background: #4F91C5; }
+.category-icon-img { width: 44rpx; height: 44rpx; flex-shrink: 0; }
+.category-icon-img.active { filter: brightness(0) invert(1); }
+.fix-chip-text { font-size: 28rpx; color: #6B6F80; }
 .fix-chip.active .fix-chip-text { color: #FFF; }
 
 .form-card {
@@ -597,7 +639,7 @@ export default {
 .form-input { font-size: 28rpx; color: #1A1D28; width: 100%; }
 .form-input-row { display: flex; align-items: center; gap: 8rpx; }
 .input-prefix { font-size: 32rpx; color: #1A1D28; font-weight: bold; }
-.input-suffix { font-size: 24rpx; color: #6B6F80; }
+.input-suffix { font-size: 28rpx; color: #6B6F80; }
 .form-textarea { font-size: 28rpx; color: #1A1D28; width: 100%; min-height: 140rpx; }
 .form-picker {
 	display: flex; align-items: center; justify-content: space-between;
@@ -611,47 +653,47 @@ export default {
 	flex: 1; text-align: center; padding: 16rpx 0;
 	background: #F2F3F8; border-radius: 16rpx; font-size: 26rpx; color: #6B6F80;
 }
-.wish-type.active { background: #EDF0FE; color: #4F6EF7; font-weight: 600; }
+.wish-type.active { background: #C9EBF7; color: #4F91C5; font-weight: 600; }
 
 .tag-input-row { display: flex; align-items: center; gap: 12rpx; }
 .tag-add-btn {
 	padding: 12rpx 28rpx; border-radius: 30rpx;
-	background: #EDF0FE; color: #4F6EF7; font-size: 24rpx; font-weight: 500;
+	background: #C9EBF7; color: #4F91C5; font-size: 28rpx; font-weight: 500;
 	flex-shrink: 0;
 }
 .tag-list { display: flex; flex-wrap: wrap; gap: 12rpx; margin-top: 14rpx; }
 .tag-chip {
 	display: flex; align-items: center; gap: 8rpx;
 	padding: 8rpx 18rpx; background: #F2F3F8; border-radius: 30rpx;
-	font-size: 22rpx; color: #6B6F80;
+	font-size: 26rpx; color: #6B6F80;
 }
-.tag-close { color: #BBB; font-size: 22rpx; }
+.tag-close { color: #BBB; font-size: 26rpx; }
 
 .anon-row { display: flex; align-items: center; justify-content: space-between; }
 .anon-info { display: flex; flex-direction: column; gap: 6rpx; }
 .anon-title { font-size: 28rpx; color: #1A1D28; font-weight: 500; }
-.anon-desc { font-size: 22rpx; color: #6B6F80; }
+.anon-desc { font-size: 26rpx; color: #6B6F80; }
 
 .cond-row { margin-top: 16rpx; }
-.cond-label { font-size: 24rpx; color: #6B6F80; display: block; margin-bottom: 12rpx; }
+.cond-label { font-size: 28rpx; color: #6B6F80; display: block; margin-bottom: 12rpx; }
 .cond-chips { display: flex; flex-wrap: wrap; gap: 12rpx; }
 .cond-chip {
 	padding: 8rpx 24rpx; border-radius: 30rpx; background: #F2F3F8;
-	font-size: 24rpx; color: #6B6F80;
+	font-size: 28rpx; color: #6B6F80;
 }
-.cond-chip.active { background: #3D56D4; color: #FFF; font-weight: 500; }
+.cond-chip.active { background: #4F91C5; color: #FFF; font-weight: 500; }
 
 .estimate-wrap {
 	margin-top: 16rpx; padding: 18rpx;
-	background: linear-gradient(135deg, #EDF0FE, #F5F8FF);
+	background: linear-gradient(135deg, #EAF1FE, #F5F8FF);
 	border-radius: 16rpx; border: 1px solid #D6E4FF;
 }
 .estimate-head { display: flex; align-items: center; gap: 10rpx; }
-.estimate-label { font-size: 24rpx; color: #4F6EF7; font-weight: 600; }
+.estimate-label { font-size: 28rpx; color: #4F91C5; font-weight: 600; }
 .estimate-range { margin-left: auto; font-size: 30rpx; font-weight: bold; color: #FF6B3D; }
 .estimate-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12rpx; }
-.estimate-avg { font-size: 22rpx; color: #6B6F80; }
-.estimate-status { font-size: 22rpx; font-weight: 500; }
+.estimate-avg { font-size: 26rpx; color: #6B6F80; }
+.estimate-status { font-size: 26rpx; font-weight: 500; }
 .estimate-status.ok { color: #22C55E; }
 .estimate-status.warn { color: #F59E0B; }
 .estimate-status.block { color: #FF4D4F; }
@@ -660,5 +702,6 @@ export default {
 	display: flex; align-items: flex-start; gap: 12rpx; padding: 20rpx;
 	background: #FFF8E1; border-radius: 16rpx;
 }
-.notice-text { flex: 1; font-size: 24rpx; color: #6B6F80; line-height: 1.6; }
+.notice-icon { width: 44rpx; height: 44rpx; flex-shrink: 0; }
+.notice-text { flex: 1; font-size: 28rpx; color: #6B6F80; line-height: 1.6; }
 </style>

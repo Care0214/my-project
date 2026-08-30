@@ -4,28 +4,31 @@
 			<!-- 搜索栏 -->
 			<view class="search-barbox">
 				<view class="search-bar" @click="goSearch">
-					<AppIcon name="search" :size="36" color="#6B6F80" />
+					<image class="search-icon-img" src="/static/imgs/1.png" mode="aspectFit" />
 					<text class="search-placeholder">搜索可租借物品（相机、自行车…）</text>
+					<view class="search-filter">
+						<image class="camera-icon-img" src="/static/imgs/camera.png" mode="aspectFit" />
+					</view>
 				</view>
-				<!-- 筛选栏 -->
-				<div class="box-3">
-					<view class="filter-row">
-						<view class="flex-row">
-							<view class="filter-chip" @click="showCampusPicker = true">
-								<AppIcon name="location" :size="28" color="#4F6EF7" />
-								<text class="filter-chip-text">{{ currentCampus }}</text>
-							</view>
-						</view>
-						<view class="scroll-x filter-sorts">
-							<text
-								v-for="s in sortOptions"
-								:key="s.value"
-								:class="['sort-item', { active: currentSort === s.value }]"
-								@click="applySort(s.value)"
-							>{{ s.label }}</text>
+			</view>
+			<!-- 筛选栏 -->
+			<view class="box-3">
+				<view class="filter-row">
+					<view class="flex-row">
+						<view class="filter-chip" @click="showCampusPicker = true">
+							<image class="campus-filter-icon" src="/static/imgs/8.png" mode="aspectFit" />
+							<text class="filter-chip-text">{{ currentCampus }}</text>
 						</view>
 					</view>
-				</div>
+					<view class="scroll-x filter-sorts">
+						<text
+							v-for="s in sortOptions"
+							:key="s.value"
+							:class="['sort-item', { active: currentSort === s.value }]"
+							@click="applySort(s.value)"
+						>{{ s.label }}</text>
+					</view>
+				</view>
 			</view>
 
 			
@@ -35,7 +38,7 @@
 				<view class="card lease-card" v-for="i in 4" :key="'sk' + i">
 					<view class="lease-row">
 						<view class="skeleton-block" style="width:180rpx;height:180rpx;border-radius:16rpx;flex-shrink:0;"></view>
-						<view class="lease-info" style="gap:12rpx;">
+						<view class="lease-info lease-info-tight">
 							<view class="skeleton-block" style="width:70%;height:32rpx;border-radius:8rpx;"></view>
 							<view class="skeleton-block" style="width:100%;height:24rpx;border-radius:8rpx;"></view>
 							<view class="skeleton-block" style="width:50%;height:24rpx;border-radius:8rpx;"></view>
@@ -62,7 +65,13 @@
 								lazy-load
 							/>
 							<view v-else class="lease-img-placeholder">
-								<AppIcon :name="item.category === 'digital' ? 'digital' : item.category === 'sports' ? 'sports' : 'daily'" :size="56" color="#8B8FA3" />
+								<image
+									v-if="getCategoryImage(item.category)"
+									class="lease-category-icon"
+									:src="getCategoryImage(item.category)"
+									mode="aspectFit"
+								/>
+								<AppIcon v-else name="daily" :size="56" color="#9AA3B5" />
 							</view>
 							<view class="tag tag-lease">可租</view>
 						</view>
@@ -91,7 +100,7 @@
 								</view>
 								<view class="lease-meta">
 									<view class="lease-campus">
-										<AppIcon name="location" :size="22" color="#6B6F80" />
+										<image class="lease-campus-icon" src="/static/imgs/8.png" mode="aspectFit" />
 										<text class="meta-text">{{ item.campus }}</text>
 									</view>
 									<text class="meta-text">{{ timeAgo(item.publishTime) }}</text>
@@ -107,17 +116,12 @@
 					<view class="retry-btn" @click="loadLeaseItems"><text>重新加载</text></view>
 				</view>
 				<view class="empty-state" v-else-if="leaseItems.length === 0">
-					<view class="empty-icon"><AppIcon name="lease" :size="80" color="#8B8FA3" /></view>
+					<view class="empty-icon"><AppIcon name="lease" :size="72" color="#9AA3B5" /></view>
 					<text>暂无可租物品</text>
-					<text class="mt-8" style="font-size:24rpx;color:#8B8FA3;">快发布你的闲置物品来出租吧~</text>
+					<text class="mt-8 empty-sub-text">快发布你的闲置物品来出租吧~</text>
 				</view>
 			</view>
 
-			<!-- 发布出租悬浮按钮 -->
-			<view class="lease-publish-btn" @click="goPublishLease">
-				<AppIcon name="plus" :size="40" color="#FFF" />
-				<text class="lease-publish-text">发布出租</text>
-			</view>
 		</view>
 
 		<!-- 校区选择弹窗 -->
@@ -131,24 +135,25 @@
 					@click="selectCampus(c)"
 				>
 					<text>{{ c.name }}</text>
-					<AppIcon v-if="currentCampus === c.name" name="check" :size="36" color="#4F6EF7" />
+					<AppIcon v-if="currentCampus === c.name" name="check" :size="44" color="#77C9F1" />
 				</view>
 				<view class="picker-cancel btn-primary" @click="showCampusPicker = false">确定</view>
 			</view>
 		</view>
 
 		<CustomTabBar :current="2" />
+		<BackTop :visible="showBackTop" />
 	</view>
 </template>
 
 <script>
 import CustomTabBar from '@/components/CustomTabBar.vue';
 import AppIcon from '@/components/AppIcon.vue';
+import BackTop from '@/components/BackTop.vue';
 import { get } from '@/utils/request.js';
-import store from '@/utils/store.js';
 
 export default {
-	components: { CustomTabBar, AppIcon },
+	components: { CustomTabBar, AppIcon, BackTop },
 	data() {
 		return {
 			sortOptions: [
@@ -163,13 +168,34 @@ export default {
 			leaseItems: [],
 			loadError: false,
 			loading: false,
+			showBackTop: false,
 		};
 	},
 	onLoad() {
 		this.loadCampuses();
 		this.loadLeaseItems();
 	},
+	onPullDownRefresh() {
+		this.loadLeaseItems().then(() => {
+			uni.stopPullDownRefresh();
+		});
+	},
+	onPageScroll(e) {
+		this.showBackTop = e.scrollTop > 400;
+	},
 	methods: {
+		getCategoryImage(category) {
+			const map = {
+				book: '/static/imgs/3.png',
+				digital: '/static/imgs/4.png',
+				daily: '/static/imgs/5.png',
+				sports: '/static/imgs/6.png',
+				fashion: '/static/imgs/7.png',
+				free: '/static/imgs/9.png',
+				gift: '/static/imgs/9.png',
+			};
+			return map[category] || '';
+		},
 		async loadCampuses() {
 			const school = (this.$store && this.$store.userInfo && this.$store.userInfo.school) || '';
 			try {
@@ -213,25 +239,23 @@ export default {
 			}
 		},
 		goSearch() {
-			uni.navigateTo({ url: '/pages/search/index' });
+			uni.navigateTo({
+				url: '/pages/search/index',
+				
+			});
 		},
 		goDetail(item) {
 			uni.navigateTo({ url: '/pages/lease-detail/index?id=' + item.id });
 		},
 		selectCampus(c) {
-			this.currentCampus = c.name;
+			// 再次点击已选中的校区则取消筛选，回到「全部校区」
+			this.currentCampus = (this.currentCampus === c.name) ? '全部校区' : c.name;
 			this.loadLeaseItems();
 		},
 		applySort(value) {
-			this.currentSort = value;
+			// 再次点击已选中的排序则取消筛选，回到默认「最新发布」
+			this.currentSort = (this.currentSort === value) ? 'newest' : value;
 			this.loadLeaseItems();
-		},
-		goPublishLease() {
-			if (!store.isLoggedIn) {
-				uni.reLaunch({ url: '/pages/login/index' });
-				return;
-			}
-			uni.navigateTo({ url: '/pages/publish/index?mode=lease' });
 		},
 	},
 };
@@ -240,24 +264,42 @@ export default {
 <style scoped>
 @import '@/styles/common.scss';
 .search-barbox{
-	position: sticky;
-	background-color: #FFF;
-	z-index: 10000;
-	top: 0%;
+	position: sticky; top: 0; z-index: 20;
+	margin: 0 -20rpx 20rpx;
+	background: linear-gradient(180deg, #4F91C5 0%, #77C9F1 100%);
+	padding: 24rpx 24rpx 28rpx;
+	border-radius: 0 0 32rpx 32rpx;
 }
+.search-barbox .search-bar{
+	background: #FFFFFF;
+	border: none;
+	box-shadow: 0 6rpx 18rpx rgba(56, 108, 148, 0.12);
+	border-radius: 48rpx;
+	padding: 20rpx 28rpx;
+}
+.search-filter {
+	width: 56rpx; height: 56rpx; border-radius: 50%;
+	background: #EAF1FE; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.search-icon-img { width: 44rpx; height: 44rpx; flex-shrink: 0; }
+.camera-icon-img { width: 38rpx; height: 38rpx; }
 
+.box-3{
+	background-color: transparent;
+}
 .filter-row { display: flex; align-items: center; padding: 0 0 20rpx; gap: 16rpx; }
 .filter-chip {
 	display: flex; align-items: center; padding: 10rpx 20rpx;
-	background: #FFF; border-radius: 30rpx; gap: 6rpx; border: 1px solid #E8EAF0; flex-shrink: 0;
+	background: #FFF; border-radius: 30rpx; gap: 6rpx; border: 1px solid #EAF0F8; flex-shrink: 0;
 }
-.filter-chip-text { font-size: 24rpx; color: #4F6EF7; }
+.filter-chip-text { font-size: 28rpx; color: #4F91C5; }
+.campus-filter-icon { width: 44rpx; height: 44rpx; flex-shrink: 0; }
 .filter-sorts { flex: 1; }
 .sort-item {
-	flex-shrink: 0; padding: 10rpx 24rpx; border-radius: 30rpx; font-size: 24rpx;
-	color: #6B6F80; background: #FFF; white-space: nowrap;
+	flex-shrink: 0; padding: 10rpx 24rpx; border-radius: 30rpx; font-size: 28rpx;
+	color: #5B6675; background: #FFF; white-space: nowrap;
 }
-.sort-item.active { color: #FFF; background: #3D56D4; font-weight: 500; }
+.sort-item.active { color: #FFF; background: #4F91C5; font-weight: 500; }
 
 .lease-card { padding: 20rpx; }
 .lease-list .lease-card:nth-child(2) { animation-delay: 60ms; }
@@ -266,37 +308,31 @@ export default {
 .lease-img { width: 180rpx; height: 180rpx; position: relative; flex-shrink: 0; }
 .lease-img__img { width: 100%; height: 100%; border-radius: 16rpx; }
 .lease-img-placeholder {
-	width: 100%; height: 100%; background: #F2F3F8; border-radius: 16rpx;
+	width: 100%; height: 100%; background: #F0F3F9; border-radius: 16rpx;
 	display: flex; align-items: center; justify-content: center;
 }
+.lease-category-icon { width: 84rpx; height: 84rpx; }
 .lease-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 .lease-title { font-size: 30rpx; font-weight: 600; color: #1A1D28; }
-.lease-desc { font-size: 24rpx; color: #6B6F80; margin-top: 6rpx; }
+.lease-desc { font-size: 28rpx; color: #5B6675; margin-top: 6rpx; }
 .lease-price-row { display: flex; align-items: center; gap: 20rpx; margin-top: 10rpx; }
 .lease-price { display: flex; align-items: baseline; gap: 4rpx; }
-.price-num { font-size: 36rpx; font-weight: bold; color: #FF6B3D; }
-.price-unit { font-size: 22rpx; color: #FF6B3D; }
+.price-num { font-size: 36rpx; font-weight: bold; color: #FF5A36; }
+.price-unit { font-size: 26rpx; color: #FF5A36; }
 .lease-deposit {
 	display: flex; align-items: center; gap: 4rpx;
 	padding: 2rpx 12rpx; background: #FFF3E0; border-radius: 8rpx;
 }
-.deposit-label, .deposit-num { font-size: 22rpx; color: #F59E0B; }
+.deposit-label, .deposit-num { font-size: 26rpx; color: #F59E0B; }
 .deposit-num { font-weight: 500; }
 .lease-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12rpx; }
 .lease-user { display: flex; align-items: center; gap: 10rpx; }
-.user-avatar-lease { width: 40rpx; height: 40rpx; font-size: 22rpx; }
-.lease-nickname { font-size: 22rpx; color: #6B6F80; }
+.user-avatar-lease { width: 40rpx; height: 40rpx; font-size: 26rpx; }
+.lease-nickname { font-size: 26rpx; color: #5B6675; }
 .lease-meta { display: flex; align-items: center; gap: 12rpx; }
 .lease-campus { display: flex; align-items: center; gap: 4rpx; }
-.meta-text { font-size: 22rpx; color: #6B6F80; }
-
-.lease-publish-btn {
-	position: fixed; right: 30rpx; bottom: calc(180rpx + env(safe-area-inset-bottom));
-	display: flex; align-items: center; gap: 8rpx; padding: 16rpx 28rpx;
-	background: linear-gradient(135deg, #4F6EF7, #3D56D4); color: #FFF;
-	border-radius: 9999rpx; box-shadow: 0 8rpx 24rpx rgba(79, 110, 247, 0.35); z-index: 100;
-}
-.lease-publish-text { font-size: 26rpx; font-weight: 500; }
+.lease-campus-icon { width: 28rpx; height: 28rpx; flex-shrink: 0; }
+.meta-text { font-size: 26rpx; color: #5B6675; }
 
 .picker-mask {
 	position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -309,8 +345,10 @@ export default {
 .picker-title { font-size: 34rpx; font-weight: bold; color: #1A1D28; display: block; text-align: center; margin-bottom: 30rpx; }
 .picker-item {
 	display: flex; justify-content: space-between; align-items: center;
-	padding: 28rpx 16rpx; font-size: 30rpx; color: #1A1D28; border-bottom: 1px solid #F2F3F8;
+	padding: 28rpx 16rpx; font-size: 32rpx; color: #1A1D28; border-bottom: 1px solid #F0F3F9;
 }
-.picker-item.active { color: #4F6EF7; font-weight: 500; }
+.picker-item.active { color: #4F91C5; font-weight: 500; }
 .picker-cancel { margin-top: 30rpx; text-align: center; }
+.empty-sub-text { font-size: 28rpx; color: #667384; }
+.lease-info-tight { gap: 12rpx; }
 </style>

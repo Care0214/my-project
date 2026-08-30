@@ -25,7 +25,7 @@
 			<!-- 信用说明 -->
 			<view class="card credit-tip">
 				<view class="tip-row">
-					<AppIcon name="shield" :size="32" color="#4F6EF7" />
+					<AppIcon name="shield" :size="44" color="#77C9F1" />
 					<text class="tip-text">信用分根据交易评价、履约记录、认证信息等综合计算，良好的信用能获得更多展示机会。</text>
 				</view>
 			</view>
@@ -53,7 +53,7 @@
 				<view v-if="history.length > 0" class="history-list">
 					<view v-for="h in history" :key="h.id" class="history-item">
 						<view class="history-icon">
-							<AppIcon :name="h.type === 'init' ? 'gift' : 'check'" :size="30" color="#22C55E" />
+							<AppIcon :name="h.type === 'init' ? 'gift' : 'check'" :size="44" color="#22C55E" />
 						</view>
 						<view class="history-info">
 							<text class="history-title">{{ h.title }}</text>
@@ -64,7 +64,7 @@
 					</view>
 				</view>
 				<view v-else class="empty-state">
-					<AppIcon name="shield" :size="64" color="#8B8FA3" />
+					<AppIcon name="shield" :size="44" color="#8B8FA3" />
 					<text>暂无信用记录</text>
 				</view>
 			</view>
@@ -153,25 +153,25 @@ export default {
 @import '@/styles/common.scss';
 
 .credit-hero {
-	background: linear-gradient(135deg, #4F6EF7 0%, #6366F1 60%, #7C6CF0 100%);
+	background: linear-gradient(135deg, #77C9F1 0%, #77C9F1 60%, #77C9F1 100%);
 	border-radius: 24rpx;
 	padding: 36rpx 32rpx 30rpx;
 	margin-bottom: 24rpx;
-	box-shadow: 0 8rpx 30rpx rgba(79, 110, 247, 0.25);
+	box-shadow: 0 8rpx 30rpx rgba(119, 201, 241, 0.25);
 }
 .hero-top { display: flex; align-items: center; justify-content: space-between; }
 .hero-label { font-size: 28rpx; color: rgba(255, 255, 255, 0.9); font-weight: 600; display: block; }
-.hero-desc { font-size: 22rpx; color: rgba(255, 255, 255, 0.6); margin-top: 6rpx; display: block; }
+.hero-desc { font-size: 26rpx; color: rgba(255, 255, 255, 0.6); margin-top: 6rpx; display: block; }
 .hero-score-wrap { display: flex; align-items: baseline; }
 .hero-score { font-size: 72rpx; font-weight: bold; color: #FFF; line-height: 1; }
 .hero-score-unit { font-size: 26rpx; color: rgba(255, 255, 255, 0.7); margin-left: 8rpx; }
 .hero-level-row { display: flex; align-items: center; gap: 14rpx; margin-top: 24rpx; }
-.level-badge { padding: 6rpx 20rpx; border-radius: 24rpx; font-size: 24rpx; font-weight: 600; }
+.level-badge { padding: 6rpx 20rpx; border-radius: 24rpx; font-size: 28rpx; font-weight: 600; }
 .level-warn { background: #FFF3E0; color: #F59E0B; }
 .level-good { background: #E8F8EE; color: #22C55E; }
-.level-great { background: #EDF0FE; color: #4F6EF7; }
+.level-great { background: #EAF1FE; color: #77C9F1; }
 .level-max { background: #FFF0EB; color: #FF6B3D; }
-.hero-tip { font-size: 22rpx; color: rgba(255, 255, 255, 0.75); }
+.hero-tip { font-size: 26rpx; color: rgba(255, 255, 255, 0.75); }
 .progress-track {
 	height: 12rpx; border-radius: 6rpx; background: rgba(255, 255, 255, 0.25);
 	margin-top: 20rpx; overflow: hidden;
@@ -180,13 +180,13 @@ export default {
 
 .credit-tip { padding: 20rpx 24rpx; }
 .tip-row { display: flex; align-items: flex-start; gap: 14rpx; }
-.tip-text { flex: 1; font-size: 24rpx; color: #6B6F80; line-height: 1.6; }
+.tip-text { flex: 1; font-size: 28rpx; color: #6B6F80; line-height: 1.6; }
 
 .section-title { font-size: 28rpx; font-weight: 600; color: #1A1D28; display: block; margin-bottom: 20rpx; }
 .tip-item { display: flex; align-items: center; gap: 16rpx; padding: 14rpx 0; }
 .tip-dot {
-	width: 36rpx; height: 36rpx; border-radius: 50%; background: #EDF0FE;
-	color: #4F6EF7; font-size: 22rpx; font-weight: 600;
+	width: 36rpx; height: 36rpx; border-radius: 50%; background: #EAF1FE;
+	color: #77C9F1; font-size: 26rpx; font-weight: 600;
 	display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .tip-item-text { font-size: 26rpx; color: #1A1D28; }
@@ -200,7 +200,7 @@ export default {
 }
 .history-info { flex: 1; min-width: 0; }
 .history-title { font-size: 27rpx; font-weight: 500; color: #1A1D28; display: block; }
-.history-desc { font-size: 22rpx; color: #8B8FA3; display: block; margin-top: 6rpx; line-height: 1.4; }
-.history-time { font-size: 22rpx; color: #8B8FA3; display: block; margin-top: 6rpx; }
+.history-desc { font-size: 26rpx; color: #8B8FA3; display: block; margin-top: 6rpx; line-height: 1.4; }
+.history-time { font-size: 26rpx; color: #8B8FA3; display: block; margin-top: 6rpx; }
 .history-score { font-size: 30rpx; font-weight: 700; color: #22C55E; flex-shrink: 0; }
 </style>

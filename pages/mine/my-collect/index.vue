@@ -18,7 +18,7 @@
 							mode="aspectFill"
 							lazy-load
 						/>
-						<AppIcon v-else name="image" :size="40" color="#D0D3E0" />
+						<AppIcon v-else name="image" :size="44" color="#D0D3E0" />
 					</view>
 					<view class="fav-info">
 						<text class="fav-title text-ellipsis">{{ item.title }}</text>
@@ -28,17 +28,17 @@
 							<text class="fav-collect-time" v-if="collectTime(item)">{{ formatTime(collectTime(item)) }}</text>
 						</view>
 						<view class="fav-seller">
-							<AppIcon name="user" :size="24" color="#6B6F80" />
+							<AppIcon name="user" :size="44" color="#6B6F80" />
 							<text class="fav-seller-name text-ellipsis">{{ sellerName(item) }}</text>
-							<AppIcon name="location" :size="24" color="#6B6F80" />
+							<image class="fav-location-icon" src="/static/imgs/8.png" mode="aspectFit" />
 							<text class="fav-campus text-ellipsis">{{ item.campus || '未知校区' }}</text>
 						</view>
 					</view>
 					<view class="fav-action" @click.stop="removeFav(item)">
-						<AppIcon name="heart-fill" :size="36" color="#EF4444" />
+						<AppIcon name="star-fill" :size="44" color="#F59E0B" />
 					</view>
 				</view>
-				<text class="longpress-tip">长按卡片或点击红心可取消收藏</text>
+				<text class="longpress-tip">长按卡片或点击星标可取消收藏</text>
 			</view>
 
 			<!-- 加载失败 -->
@@ -50,7 +50,7 @@
 
 			<!-- 空状态 -->
 			<view v-else class="empty-state">
-				<AppIcon name="heart" :size="64" color="#8B8FA3" />
+				<AppIcon name="star" :size="44" color="#8B8FA3" />
 				<text class="empty-text">还没有收藏任何物品</text>
 				<text class="empty-sub">遇到喜欢的就收藏起来吧~</text>
 			</view>
@@ -145,12 +145,13 @@ export default {
 .fav-meta-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10rpx; }
 .fav-price { font-size: 32rpx; font-weight: 700; color: #FF6B3D; }
 .fav-price.free { color: #22C55E; }
-.fav-collect-time { font-size: 22rpx; color: #6B6F80; }
+.fav-collect-time { font-size: 26rpx; color: #6B6F80; }
 .fav-seller { display: flex; align-items: center; gap: 6rpx; }
-.fav-seller-name { font-size: 22rpx; color: #8B8FA3; max-width: 160rpx; }
-.fav-campus { font-size: 22rpx; color: #8B8FA3; max-width: 140rpx; margin-left: 4rpx; }
+.fav-location-icon { width: 28rpx; height: 28rpx; flex-shrink: 0; }
+.fav-seller-name { font-size: 26rpx; color: #8B8FA3; max-width: 160rpx; }
+.fav-campus { font-size: 26rpx; color: #8B8FA3; max-width: 140rpx; margin-left: 4rpx; }
 .fav-action { padding: 10rpx; flex-shrink: 0; }
-.longpress-tip { display: block; text-align: center; font-size: 22rpx; color: #6B6F80; margin-top: 8rpx; }
+.longpress-tip { display: block; text-align: center; font-size: 26rpx; color: #6B6F80; margin-top: 8rpx; }
 
-.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; }
+.empty-sub { font-size: 28rpx; color: #6B6F80; margin-top: 8rpx; }
 </style>

@@ -5,12 +5,12 @@
 			<view class="header-status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
 			<view class="msg-header" :style="navStyle">
 				<view class="back-btn" @click="goBack">
-					<AppIcon name="back" :size="40" color="#1A1D28" />
+					<AppIcon name="back" :size="44" color="#1A1D28" />
 				</view>
 				<text class="header-title">消息中心</text>
 				<view class="header-actions">
 					<view class="header-action-btn" @click="showSearch = !showSearch">
-						<AppIcon name="search" :size="36" color="#6B6F80" />
+						<image class="header-search-icon" src="/static/imgs/1.png" mode="aspectFit" />
 					</view>
 				</view>
 			</view>
@@ -33,7 +33,7 @@
 						@longpress="showActionSheet(conv)"
 					>
 						<view class="msg-avatar-wrap">
-							<view class="msg-avatar" :style="{ background: conv.user.avatarBg || '#8FA1F8' }">
+							<view class="msg-avatar" :style="{ background: conv.user.avatarBg || '#77C9F1' }">
 								<text class="msg-avatar-text">{{ conv.user.nickname ? conv.user.nickname.charAt(0) : '?' }}</text>
 							</view>
 							<view v-if="conv.user.online" class="online-dot"></view>
@@ -69,7 +69,7 @@
 
 			<!-- 空状态 -->
 			<view v-else class="empty-state">
-				<view class="empty-illustration"><AppIcon name="chat-bubble" :size="100" color="#8B8FA3" /></view>
+				<view class="empty-illustration"><image class="empty-message-icon" :src="messageIcon" mode="aspectFit" /></view>
 				<text class="empty-text">暂无消息</text>
 				<text class="empty-sub">去首页逛逛，和同学们打个招呼吧~</text>
 				<view class="empty-action" @click="goHome"><text>去首页看看</text></view>
@@ -80,16 +80,19 @@
 
 <script>
 import AppIcon from '@/components/AppIcon.vue';
-import { get } from '@/utils/request.js';
+import { get, post } from '@/utils/request.js';
 import { getMenuRightPadding } from '@/utils/nav.js';
 import store from '@/utils/store.js';
 
 export default {
 	components: { AppIcon },
 	data() {
+		// 提前获取状态栏高度，避免页面闪烁
+		const systemInfo = uni.getSystemInfoSync();
 		return {
-			statusBarHeight: 44,
+			statusBarHeight: systemInfo.statusBarHeight || 44,
 			menuRight: 0,
+			messageIcon: require('@/imgs/消息.png'),
 			conversations: [],
 			searchText: '',
 			showSearch: false,
@@ -97,8 +100,6 @@ export default {
 		};
 	},
 	onLoad() {
-		const systemInfo = uni.getSystemInfoSync();
-		this.statusBarHeight = systemInfo.statusBarHeight || 44;
 		this.menuRight = getMenuRightPadding();
 	},
 	computed: {
@@ -159,6 +160,14 @@ export default {
 			}
 		},
 		goChat(conv) {
+			// 点击进入会话即视为已读，清除未读红点
+			if (conv.unreadCount > 0) {
+				conv.unreadCount = 0;
+				store.setUnreadCount(
+					this.conversations.reduce((sum, c) => sum + (c.unreadCount || 0), 0)
+				);
+				post('/api/conversations/' + conv.id + '/read').catch(() => {});
+			}
 			uni.navigateTo({ url: '/pages/chat/index?id=' + conv.id });
 		},
 		goHome() {
@@ -173,6 +182,7 @@ export default {
 						store.setUnreadCount(
 							this.conversations.reduce((sum, c) => sum + (c.unreadCount || 0), 0)
 						);
+						post('/api/conversations/' + conv.id + '/read').catch(() => {});
 						uni.showToast({ title: '已标为已读', icon: 'success' });
 					} else if (res.tapIndex === 1) {
 						uni.showModal({
@@ -209,17 +219,18 @@ export default {
 	display: flex; align-items: center; justify-content: center;
 	box-shadow: 0 2rpx 8rpx rgba(31, 41, 88, 0.06);
 }
+.header-search-icon { width: 40rpx; height: 40rpx; }
 .header-action-btn:active { background: #F2F3F8; transform: scale(0.95); }
 
 .search-row { margin-bottom: 20rpx; }
 .search-input {
 	width: 100%; height: 72rpx; padding: 0 28rpx; border-radius: 36rpx;
-	background: #FFF; font-size: 26rpx; color: #1A1D28;
+	background: #FFF; font-size: 28rpx; color: #1A1D28;
 	box-shadow: 0 2rpx 8rpx rgba(31, 41, 88, 0.06);
 }
 
 .group-label { padding: 16rpx 0 12rpx 8rpx; }
-.group-label text { font-size: 24rpx; font-weight: 600; color: #8B8FA3; }
+.group-label text { font-size: 28rpx; font-weight: 600; color: #8B8FA3; }
 
 .msg-card {
 	display: flex; align-items: center; background: #FFF; border-radius: 20rpx;
@@ -247,24 +258,25 @@ export default {
 	display: inline-flex; align-self: flex-start; max-width: 280rpx;
 	padding: 2rpx 12rpx; border-radius: 8rpx; background: #F8F9FC;
 }
-.msg-item-tag-text { font-size: 22rpx; color: #8B8FA3; }
-.msg-time { font-size: 22rpx; color: #6B6F80; flex-shrink: 0; margin-left: 12rpx; margin-top: 4rpx; }
+.msg-item-tag-text { font-size: 26rpx; color: #8B8FA3; }
+.msg-time { font-size: 26rpx; color: #6B6F80; flex-shrink: 0; margin-left: 12rpx; margin-top: 4rpx; }
 .msg-bottom { display: flex; justify-content: space-between; align-items: center; }
-.msg-preview { font-size: 24rpx; color: #8B8FA3; flex: 1; min-width: 0; line-height: 1.4; }
+.msg-preview { font-size: 28rpx; color: #8B8FA3; flex: 1; min-width: 0; line-height: 1.4; }
 .msg-badge {
 	min-width: 36rpx; height: 36rpx; padding: 0 10rpx; border-radius: 18rpx;
 	background: #EF4444; display: flex; align-items: center; justify-content: center;
-	font-size: 22rpx; color: #FFF; font-weight: 600; margin-left: 12rpx; flex-shrink: 0;
+	font-size: 26rpx; color: #FFF; font-weight: 600; margin-left: 12rpx; flex-shrink: 0;
 	box-shadow: 0 2rpx 8rpx rgba(239, 68, 68, 0.3);
 }
 
 .empty-illustration { margin-bottom: 24rpx; }
+.empty-message-icon { width: 80rpx; height: 80rpx; }
 .empty-illustration-icon { font-size: 100rpx; }
-.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; margin-bottom: 32rpx; }
+.empty-sub { font-size: 28rpx; color: #6B6F80; margin-top: 8rpx; margin-bottom: 32rpx; }
 .empty-action {
 	padding: 16rpx 48rpx; border-radius: 40rpx;
-	background: linear-gradient(135deg, #4F6EF7, #3D56D4);
-	box-shadow: 0 6rpx 20rpx rgba(79, 110, 247, 0.25);
+	background: linear-gradient(135deg, #77C9F1, #77C9F1);
+	box-shadow: 0 6rpx 20rpx rgba(119, 201, 241, 0.25);
 }
 .empty-action:active { transform: scale(0.95); }
 .empty-action text { font-size: 28rpx; font-weight: 600; color: #FFF; }

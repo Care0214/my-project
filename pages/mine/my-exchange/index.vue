@@ -23,13 +23,13 @@
 					<view class="ex-meta">
 						<view class="ex-meta-left">
 							<view v-if="item.reward" class="reward-tag">
-								<AppIcon name="price" :size="24" color="#F59E0B" />
+								<image class="reward-price-icon" :src="priceIcon" mode="aspectFit" />
 								<text class="reward-text">¥{{ item.reward }}</text>
 							</view>
 							<text v-if="item.campus" class="ex-campus">{{ item.campus }}</text>
 						</view>
 						<view class="ex-replies">
-							<AppIcon name="chat-bubble" :size="26" color="#6B6F80" />
+							<image class="reply-icon" :src="messageIcon" mode="aspectFit" />
 							<text class="reply-text">{{ item.replyCount || 0 }} 回复</text>
 						</view>
 					</view>
@@ -38,7 +38,7 @@
 
 			<!-- 空状态 -->
 			<view v-else class="empty-state">
-				<AppIcon name="exchange" :size="64" color="#8B8FA3" />
+				<AppIcon name="exchange" :size="44" color="#8B8FA3" />
 				<text class="empty-text">暂无互助记录</text>
 				<text class="empty-sub">去互助广场看看同学们的需求吧~</text>
 			</view>
@@ -53,7 +53,11 @@ import { get } from '@/utils/request.js';
 export default {
 	components: { AppIcon },
 	data() {
-		return { list: [] };
+		return {
+			list: [],
+			priceIcon: require('@/imgs/price-orange.png'),
+			messageIcon: require('@/imgs/消息.png'),
+		};
 	},
 	onShow() {
 		this.loadData();
@@ -68,14 +72,14 @@ export default {
 		},
 		roleInfo(role) {
 			const map = {
-				publish: { label: '我发布的', color: '#4F6EF7', bg: '#EDF0FE' },
+				publish: { label: '我发布的', color: '#77C9F1', bg: '#EAF1FE' },
 				join: { label: '我参与的', color: '#F59E0B', bg: '#FFF3E0' },
 			};
 			return map[role] || { label: '参与', color: '#6B6F80', bg: '#F2F3F8' };
 		},
 		statusInfo(status) {
 			const map = {
-				active: { label: '进行中', color: '#4F6EF7', bg: '#EDF0FE' },
+				active: { label: '进行中', color: '#77C9F1', bg: '#EAF1FE' },
 				done: { label: '已完成', color: '#22C55E', bg: '#E8F8EE' },
 				closed: { label: '已关闭', color: '#6B6F80', bg: '#F2F3F8' },
 				offline: { label: '已关闭', color: '#6B6F80', bg: '#F2F3F8' },
@@ -106,13 +110,13 @@ export default {
 .ex-top { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-bottom: 14rpx; }
 .ex-badges { display: flex; align-items: center; gap: 10rpx; flex-wrap: wrap; }
 .role-badge, .status-badge, .tab-badge {
-	padding: 4rpx 14rpx; border-radius: 8rpx; font-size: 22rpx;
+	padding: 4rpx 14rpx; border-radius: 8rpx; font-size: 26rpx;
 }
 .tab-badge { background: #F2F3F8; color: #6B6F80; }
-.ex-time { font-size: 22rpx; color: #6B6F80; flex-shrink: 0; }
+.ex-time { font-size: 26rpx; color: #6B6F80; flex-shrink: 0; }
 
 .ex-title { font-size: 30rpx; font-weight: 600; color: #1A1D28; display: block; line-height: 1.4; }
-.ex-desc { font-size: 24rpx; color: #8B8FA3; line-height: 1.5; display: block; margin-top: 10rpx; }
+.ex-desc { font-size: 28rpx; color: #8B8FA3; line-height: 1.5; display: block; margin-top: 10rpx; }
 
 .ex-meta {
 	display: flex; align-items: center; justify-content: space-between;
@@ -123,10 +127,12 @@ export default {
 	display: flex; align-items: center; gap: 4rpx;
 	padding: 4rpx 12rpx; border-radius: 8rpx; background: #FFF3E0;
 }
-.reward-text { font-size: 22rpx; color: #F59E0B; font-weight: 600; }
-.ex-campus { font-size: 22rpx; color: #8B8FA3; }
+.reward-text { font-size: 26rpx; color: #F59E0B; font-weight: 600; }
+.reward-price-icon { width: 30rpx; height: 30rpx; }
+.ex-campus { font-size: 26rpx; color: #8B8FA3; }
 .ex-replies { display: flex; align-items: center; gap: 6rpx; }
-.reply-text { font-size: 22rpx; color: #6B6F80; }
+.reply-icon { width: 30rpx; height: 30rpx; }
+.reply-text { font-size: 26rpx; color: #6B6F80; }
 
-.empty-sub { font-size: 24rpx; color: #6B6F80; margin-top: 8rpx; }
+.empty-sub { font-size: 28rpx; color: #6B6F80; margin-top: 8rpx; }
 </style>

@@ -2,9 +2,9 @@
 	<view class="page-container--clean">
 		<view class="page-body">
 			<view class="detail-image">
-				<image v-if="item.images && item.images.length > 0" :src="item.images[0]" class="detail-image__img" mode="aspectFill" />
+				<image v-if="item.images && item.images.length > 0" :src="item.images[0]" class="detail-image__img" mode="aspectFill" lazy-load />
 				<view v-else class="detail-image-placeholder">
-					<AppIcon name="lease" :size="80" color="#8B8FA3" />
+					<AppIcon name="lease" :size="44" color="#8B8FA3" />
 				</view>
 				<view class="tag tag-lease detail-tag">可租</view>
 			</view>
@@ -45,13 +45,15 @@
 				<view class="info-row"><text class="info-label">押金</text><text class="info-value">¥{{ item.deposit }}</text></view>
 			</view>
 
+			<view class="detail-spacer"></view>
+
 			<view class="detail-bottom">
 				<view class="detail-bottom-btn btn-fav" @click="toggleFav">
-					<AppIcon :name="liked ? 'heart-fill' : 'heart'" :size="40" :color="liked ? '#FF4D4F' : '#6B6F80'" />
+					<AppIcon :name="liked ? 'star-fill' : 'star'" :size="44" :color="liked ? '#F59E0B' : '#6B6F80'" />
 					<text>收藏</text>
 				</view>
 				<view class="detail-bottom-btn btn-chat" @click="goChat">
-					<AppIcon name="chat" :size="40" color="#FFF" />
+					<AppIcon name="chat" :size="44" color="#FFF" />
 					<text>联系出租方</text>
 				</view>
 			</view>
@@ -79,7 +81,10 @@ export default {
 		toggleFav() { this.liked = !this.liked; uni.showToast({ title: this.liked ? '已收藏' : '已取消', icon: 'success' }); },
 		goChat() {
 			if (!store.isLoggedIn) { uni.reLaunch({ url: '/pages/login/index' }); return; }
-			uni.navigateTo({ url: '/pages/chat/index?id=conv1' });
+			// 根据物品ID和卖家ID生成唯一会话ID
+			const sellerId = this.item.user ? this.item.user.id : 'unknown';
+			const conversationId = 'lease_' + this.item.id + '_' + sellerId;
+			uni.navigateTo({ url: '/pages/chat/index?id=' + conversationId + '&itemId=' + this.item.id });
 		},
 		goUser(user) {
 			if (!user || !user.id || user.anonymous) return;
@@ -95,33 +100,34 @@ export default {
 .detail-image { width: 100%; height: 450rpx; position: relative; overflow: hidden; }
 .detail-image__img { width: 100%; height: 100%; }
 .detail-image-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, #F2F3F8, #E8EAF0); display: flex; align-items: center; justify-content: center; }
-.detail-tag { position: absolute; top: 20rpx; right: 20rpx; padding: 8rpx 20rpx; font-size: 24rpx; border-radius: 20rpx; }
+.detail-tag { position: absolute; top: 20rpx; right: 20rpx; padding: 8rpx 20rpx; font-size: 28rpx; border-radius: 20rpx; }
 
 .detail-price-row { display: flex; align-items: center; justify-content: space-between; }
 .lease-price-main { display: flex; align-items: baseline; gap: 4rpx; }
 .price-num { font-size: 52rpx; font-weight: bold; color: #FF6B3D; }
 .price-unit { font-size: 26rpx; color: #FF6B3D; }
 .deposit-badge { padding: 10rpx 20rpx; background: #FFF3E0; border-radius: 8rpx; }
-.deposit-label { font-size: 24rpx; color: #F59E0B; font-weight: 500; }
+.deposit-label { font-size: 28rpx; color: #F59E0B; font-weight: 500; }
 .detail-title { font-size: 34rpx; font-weight: 600; color: #1A1D28; display: block; margin-top: 16rpx; }
 .detail-desc { font-size: 28rpx; color: #6B6F80; line-height: 1.6; display: block; margin-top: 16rpx; }
 
 .seller-card { padding: 24rpx; }
 .seller-row { display: flex; align-items: center; gap: 16rpx; }
-.seller-avatar { width: 80rpx; height: 80rpx; border-radius: 50%; background: linear-gradient(135deg, #8FA1F8, #6B82F5); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.seller-avatar { width: 80rpx; height: 80rpx; border-radius: 50%; background: linear-gradient(135deg, #4F91C5, #77C9F1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .seller-avatar-text { font-size: 32rpx; font-weight: bold; color: #FFF; }
 .seller-info { flex: 1; }
 .seller-name { font-size: 30rpx; font-weight: 600; color: #1A1D28; display: block; }
-.seller-campus { font-size: 24rpx; color: #6B6F80; margin-top: 4rpx; }
-.seller-chat-btn { padding: 14rpx 28rpx; background: #EDF0FE; border-radius: 30rpx; font-size: 26rpx; color: #4F6EF7; font-weight: 500; }
+.seller-campus { font-size: 28rpx; color: #6B6F80; margin-top: 4rpx; }
+.seller-chat-btn { padding: 14rpx 28rpx; background: #C9EBF7; border-radius: 30rpx; font-size: 26rpx; color: #4F91C5; font-weight: 500; }
 
 .info-row { display: flex; justify-content: space-between; padding: 20rpx 0; }
 .info-row + .info-row { border-top: 1px solid #F2F3F8; }
 .info-label { font-size: 26rpx; color: #6B6F80; }
 .info-value { font-size: 26rpx; color: #1A1D28; }
 
+.detail-spacer { height: calc(140rpx + env(safe-area-inset-bottom)); }
 .detail-bottom { position: fixed; left: 0; right: 0; bottom: 0; padding: 16rpx 30rpx calc(16rpx + env(safe-area-inset-bottom)); background: #FFF; display: flex; gap: 20rpx; box-shadow: 0 -2rpx 16rpx rgba(31, 41, 88, 0.08); z-index: 100; }
 .detail-bottom-btn { flex: 1; height: 88rpx; border-radius: 44rpx; display: flex; align-items: center; justify-content: center; gap: 10rpx; font-size: 28rpx; font-weight: 500; }
 .btn-fav { background: #F2F3F8; color: #6B6F80; }
-.btn-chat { background: linear-gradient(135deg, #4F6EF7, #3D56D4); color: #FFF; }
+.btn-chat { background: linear-gradient(135deg, #4F91C5 0%, #77C9F1 100%); color: #FFF; }
 </style>
