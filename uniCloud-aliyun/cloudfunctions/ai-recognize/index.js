@@ -13,6 +13,7 @@
  *  2. 在云服务空间控制台为 ai-recognize 配置环境变量：
  *       DASHSCOPE_API_KEY=你的Key
  *       VISION_MODEL=qwen3.7-plus
+ *       DASHSCOPE_BASE_URL=业务空间的 OpenAI Compatible 地址（sk-ws- Key 必填）
  *  3. 右键 ai-recognize → 上传部署；
  *  4. 前端通过 uniCloud.callFunction({ name: 'ai-recognize', data: { imageBase64 } }) 调用。
  */
@@ -59,7 +60,8 @@ function callVision(imageDataUrl) {
 			res.on('end', () => {
 				if (res.statusCode >= 400) return reject(new Error('API ' + res.statusCode + ': ' + body.slice(0, 200)));
 				try {
-					resolve(JSON.parse(body).choices[0].message.content);
+					const content = JSON.parse(body).choices[0].message.content;
+					resolve(Array.isArray(content) ? content.map((part) => part.text || '').join('') : content);
 				} catch (e) {
 					reject(new Error('解析响应失败'));
 				}
@@ -73,7 +75,7 @@ function callVision(imageDataUrl) {
 }
 
 function parseResult(content) {
-	const text = String(content || '').trim();
+	const text = typeof content === 'string' ? content.trim() : JSON.stringify(content || '');
 	const start = text.indexOf('{');
 	const end = text.lastIndexOf('}');
 	if (start < 0 || end <= start) return null;
@@ -101,6 +103,9 @@ exports.main = async (event = {}) => {
 	}
 	if (!API_KEY) {
 		return { code: -1, msg: '云函数未配置 DASHSCOPE_API_KEY 环境变量' };
+	}
+	if (API_KEY.indexOf('sk-ws-') === 0 && !process.env.DASHSCOPE_BASE_URL) {
+		return { code: -1, msg: 'sk-ws- Key 必须配置 DASHSCOPE_BASE_URL 业务空间地址' };
 	}
 
 	try {

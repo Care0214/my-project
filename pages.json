@@ -3,8 +3,8 @@
 		{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarBackgroundColor": "#FFFFFF",
-				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#4F91C5",
+				"navigationBarTextStyle": "white",
 				"enablePullDownRefresh": true
 			}
 		},
@@ -12,8 +12,8 @@
 			"path": "pages/exchange/index",
 			"style": {
 				"navigationBarTitleText": "互助广场",
-				"navigationBarBackgroundColor": "#FFFFFF",
-				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#4F91C5",
+				"navigationBarTextStyle": "white",
 				"enablePullDownRefresh": true
 			}
 		},
@@ -21,8 +21,8 @@
 			"path": "pages/lease/index",
 			"style": {
 				"navigationBarTitleText": "校园租借",
-				"navigationBarBackgroundColor": "#FFFFFF",
-				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#4F91C5",
+				"navigationBarTextStyle": "white",
 				"enablePullDownRefresh": true
 			}
 		},
@@ -30,7 +30,7 @@
 			"path": "pages/mine/index",
 			"style": {
 				"navigationBarTitleText": "我的",
-				"navigationBarBackgroundColor": "#4F6EF7",
+				"navigationBarBackgroundColor": "#4F91C5",
 				"navigationBarTextStyle": "white",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
@@ -50,8 +50,11 @@
 			"style": {
 				"navigationStyle": "custom",
 				"navigationBarTitleText": "搜索",
-				"navigationBarBackgroundColor": "#FFFFFF",
-				"navigationBarTextStyle": "black"
+				"navigationBarBackgroundColor": "#4F91C5",
+				"navigationBarTextStyle": "white",
+				"backgroundColor": "#4F91C5",
+				"backgroundColorTop": "#4F91C5",
+				"backgroundColorBottom": "#4F91C5"
 			}
 		},
 		{
@@ -59,7 +62,7 @@
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"navigationBarBackgroundColor": "#4F6EF7"
+				"navigationBarBackgroundColor": "#4F91C5"
 			}
 		},
 		{
@@ -200,7 +203,7 @@
 	"tabBar": {
 		"custom": true,
 		"color": "#6B6F80",
-		"selectedColor": "#4F6EF7",
+		"selectedColor": "#4F91C5",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "white",
 		"list": [

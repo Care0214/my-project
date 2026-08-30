@@ -1,59 +1,65 @@
 /**
  * uni-app 全局样式变量
  *
- * 拾闲小栈 - 设计规范（Taste-skill 审计后整理）
- * 品牌色：靛蓝 #4F6EF7（全项目唯一主色）
- * 强调色：珊瑚橙 #FF6B3D（仅用于价格 / 重点数字）
+ * 拾闲小栈 - 设计规范（v3 校园蓝主题）
+ * 品牌色：深校园蓝 #4F91C5（全项目唯一主色）
+ * 强调色：橘红 #FF5A36（仅用于价格 / 重点数字）
  * 功能色：成功 #22C55E / 警告 #F59E0B / 错误 #EF4444
- * 中性色：文字 #1A1D28 / #6B6F80 / #8B8FA3，页面背景 #F2F3F8
+ * 中性色：文字 #1A1D28 / #5B6675 / #667384，页面背景 #F7F9FC
  */
 
 /* ========================================
    品牌色（主色）
    ======================================== */
-$uni-color-primary: #4F6EF7;
-$uni-color-primary-dark: #3D56D4;
-$uni-color-primary-light: #EDF0FE;
+$uni-color-primary: #4F91C5;
+$uni-color-primary-dark: #3A7AA3;
+$uni-color-primary-light: #C9EBF7;
+
+/* ========================================
+   渐变（主色蓝）
+   ======================================== */
+$uni-gradient-primary: linear-gradient(135deg, #4F91C5 0%, #77C9F1 100%);  /* 按钮 / CTA */
+$uni-gradient-header: linear-gradient(180deg, #4F91C5 0%, #77C9F1 100%);  /* 页面顶部头部 */
 
 /* ========================================
    功能色
    ======================================== */
-$uni-color-accent: #FF6B3D;          /* 强调色：仅价格 / 重点数字 */
+$uni-color-accent: #FF5A36;          /* 强调色：价格 / 重点数字（橘红） */
 $uni-color-success: #22C55E;
 $uni-color-warning: #F59E0B;
 $uni-color-error: #EF4444;
 
 /* ========================================
-   文字颜色（白底上均满足 WCAG AA 对比度）
+   文字颜色
    ======================================== */
 $uni-text-color: #1A1D28;            /* 主文字 */
-$uni-text-color-secondary: #6B6F80;  /* 辅助文字 / 占位符（≥4.5:1） */
-$uni-text-color-grey: #8B8FA3;       /* 弱化文字（≥3:1，仅大字号或装饰） */
+$uni-text-color-secondary: #5B6675;  /* 辅助文字 / 占位符 */
+$uni-text-color-grey: #667384;       /* 弱化文字 */
 $uni-text-color-inverse: #FFFFFF;    /* 反色文字 */
 
 /* ========================================
    背景颜色
    ======================================== */
-$uni-bg-color-page: #F2F3F8;         /* 页面背景（统一色，勿再引入其他背景灰） */
+$uni-bg-color-page: #F7F9FC;         /* 页面背景（浅蓝灰） */
 $uni-bg-color-grey: $uni-bg-color-page; /* 兼容旧名 */
 $uni-bg-color: #FFFFFF;              /* 卡片/组件背景 */
-$uni-bg-color-hover: #F8F9FC;        /* 点击态 */
+$uni-bg-color-hover: #F3F7FE;        /* 点击态 */
 $uni-bg-color-mask: rgba(0, 0, 0, 0.45);
 
 /* ========================================
    边框
    ======================================== */
-$uni-border-color: #E8EAF0;
-$uni-divider-color: #EEF0F5;         /* 分割线 */
+$uni-border-color: #DDE8F2;
+$uni-divider-color: #E8EEF4;         /* 分割线 */
 
 /* ========================================
-   圆角体系（规则：卡片 20 / 图片与输入框 16 / 标签 8 / 弹层顶部 28 / 按钮全圆角）
+   圆角体系（规则：卡片 / 按钮 16，图片与输入框 16，标签 8，弹层顶部 28，搜索框与悬浮按钮全圆角）
    ======================================== */
 $uni-border-radius-sm: 8rpx;         /* 标签、小徽章 */
 $uni-border-radius-base: 16rpx;      /* 图片、输入框、状态条 */
-$uni-border-radius-lg: 20rpx;        /* 卡片、面板 */
+$uni-border-radius-lg: 16rpx;        /* 卡片、按钮 */
 $uni-border-radius-xl: 28rpx;        /* 底部弹层顶部 */
-$uni-border-radius-round: 9999rpx;   /* 按钮、搜索框、筛选胶囊 */
+$uni-border-radius-round: 9999rpx;   /* 搜索框、筛选胶囊、悬浮按钮 */
 
 /* ========================================
    间距
@@ -67,24 +73,24 @@ $uni-spacing-xl: 32rpx;
 $uni-spacing-2xl: 40rpx;
 
 /* ========================================
-   阴影（统一靛蓝灰底色投影，避免纯黑）
+   阴影（统一浅蓝投影，白色卡片配微弱浅蓝阴影）
    ======================================== */
-$uni-shadow-sm: 0 2rpx 8rpx rgba(31, 41, 88, 0.04);
-$uni-shadow-card: 0 2rpx 16rpx rgba(31, 41, 88, 0.06);
-$uni-shadow-base: 0 4rpx 24rpx rgba(31, 41, 88, 0.08);
-$uni-shadow-lg: 0 8rpx 32rpx rgba(31, 41, 88, 0.1);
+$uni-shadow-sm: 0 2rpx 8rpx rgba(56, 108, 148, 0.04);
+$uni-shadow-card: 0 4rpx 16rpx rgba(56, 108, 148, 0.06);
+$uni-shadow-base: 0 8rpx 24rpx rgba(56, 108, 148, 0.08);
+$uni-shadow-lg: 0 12rpx 36rpx rgba(56, 108, 148, 0.10);
 
 /* ========================================
-   文字尺寸（层级：display 48 / title 36 / lg 30 / md 28 / base 26 / sm 22）
+   文字尺寸（层级：display 52 / title 38 / lg 32 / md 30 / base 28 / sm 26）
    ======================================== */
-$uni-font-size-xs: 20rpx;
-$uni-font-size-sm: 22rpx;
-$uni-font-size-base: 26rpx;
-$uni-font-size-md: 28rpx;
-$uni-font-size-lg: 30rpx;
-$uni-font-size-xl: 32rpx;
-$uni-font-size-title: 36rpx;
-$uni-font-size-display: 48rpx;
+$uni-font-size-xs: 22rpx;
+$uni-font-size-sm: 26rpx;
+$uni-font-size-base: 28rpx;
+$uni-font-size-md: 30rpx;
+$uni-font-size-lg: 32rpx;
+$uni-font-size-xl: 34rpx;
+$uni-font-size-title: 38rpx;
+$uni-font-size-display: 52rpx;
 
 /* ========================================
    字体粗细
@@ -111,7 +117,7 @@ $uni-opacity-disabled: 0.35;
    ======================================== */
 $uni-color-title: #1A1D28;
 $uni-font-size-title: 36rpx;
-$uni-color-subtitle: #6B6F80;
+$uni-color-subtitle: #5B6675;
 $uni-font-size-subtitle: 28rpx;
 $uni-color-paragraph: #1A1D28;
 $uni-font-size-paragraph: 28rpx;

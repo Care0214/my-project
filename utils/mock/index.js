@@ -29,10 +29,14 @@ const CONDITION_MULTIPLIER = { '全新': 1.2, '9成新': 1, '7成新': 0.75, '�
 /* 初始数据快照（用于演示数据一键重置） */
 const initialItems = items.slice();
 const initialLeaseItems = leaseItems.slice();
-const initialExchangePosts = exchangePosts.slice();
+const initialExchangePosts = exchangePosts.map((p) => ({ ...p, replies: (p.replies || []).map((r) => ({ ...r })) }));
 const initialFavorites = favorites.slice();
 const initialBrowseHistory = browseHistory.slice();
 const initialBlacklist = blacklist.slice();
+
+function cloneExchangePosts(list) {
+	return list.map((p) => ({ ...p, replies: (p.replies || []).map((r) => ({ ...r })) }));
+}
 
 function resetMockData() {
 	items.length = 0;
@@ -40,7 +44,7 @@ function resetMockData() {
 	leaseItems.length = 0;
 	leaseItems.push(...initialLeaseItems);
 	exchangePosts.length = 0;
-	exchangePosts.push(...initialExchangePosts);
+	exchangePosts.push(...cloneExchangePosts(initialExchangePosts));
 	favorites.length = 0;
 	favorites.push(...initialFavorites);
 	browseHistory.length = 0;
@@ -48,24 +52,25 @@ function resetMockData() {
 	blacklist.length = 0;
 	blacklist.push(...initialBlacklist);
 	currentUser = null;
+	seeded = false;
 }
 
 /* 注入更多演示数据（仅一次） */
 const SEED_ITEMS = [
 	{ title: '考研英语词汇书《恋练有词》', description: '去年备考用的，词汇标注很全，附赠网课笔记', type: 'sell', price: 18, categoryId: 'c1', category: 'book', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/book.jpg'], imageBg: '#EEF4FF', viewCount: 156, favoriteCount: 12, isHot: false, isNew: true, seller: users[0] },
-	{ title: '华为 FreeBuds 4E 无线耳机', description: '用过两三次，几乎全新，充电盒无划痕', type: 'sell', price: 129, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/earbuds.jpg'], imageBg: '#F5F0FF', viewCount: 233, favoriteCount: 21, isHot: false, isNew: true, seller: users[1] },
+	{ title: '华为 FreeBuds 4E 无线耳机', description: '用过两三次，几乎全新，充电盒无划痕', type: 'sell', price: 129, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/earbuds.jpg'], imageBg: '#EEF4FF', viewCount: 233, favoriteCount: 21, isHot: false, isNew: true, seller: users[1] },
 	{ title: '宜家工作台灯 白色', description: '宿舍换灯闲置，三档色温可调，很护眼', type: 'sell', price: 35, categoryId: 'c3', category: 'daily', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/lamp.jpg'], imageBg: '#FFF5EE', viewCount: 89, favoriteCount: 6, isHot: false, isNew: false, seller: users[2] },
 	{ title: '尤克里里 23寸 桃花芯', description: '入门琴，音色不错，送调音器和琴包', type: 'sell', price: 99, categoryId: 'c4', category: 'sports', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/guitar.jpg'], imageBg: '#F0FFF0', viewCount: 178, favoriteCount: 14, isHot: false, isNew: true, seller: users[4] },
 	{ title: '户外冲锋衣 男款 L码', description: '防风防水，就穿过一次，尺码不合适出掉', type: 'sell', price: 260, categoryId: 'c5', category: 'fashion', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/jacket.jpg'], imageBg: '#FFF8F0', viewCount: 145, favoriteCount: 11, isHot: false, isNew: false, seller: users[3] },
 	{ title: '考研数学真题大全解', description: '数一数二通用，答案解析很详细，九成新', type: 'sell', price: 25, categoryId: 'c1', category: 'book', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/textbook.jpg'], imageBg: '#EEF4FF', viewCount: 342, favoriteCount: 29, isHot: true, isNew: true, seller: users[0] },
-	{ title: '卡西欧 fx-82ES 科学计算器', description: '大二买的，考试用了一年，功能全部正常', type: 'sell', price: 30, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/calculator.jpg'], imageBg: '#F5F0FF', viewCount: 76, favoriteCount: 5, isHot: false, isNew: false, seller: users[4] },
+	{ title: '卡西欧 fx-82ES 科学计算器', description: '大二买的，考试用了一年，功能全部正常', type: 'sell', price: 30, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/calculator.jpg'], imageBg: '#EEF4FF', viewCount: 76, favoriteCount: 5, isHot: false, isNew: false, seller: users[4] },
 	{ title: 'Kindle 青春版 8GB', description: '背光可调，电池很耐用，送保护套', type: 'sell', price: 260, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/kindle.jpg'], imageBg: '#FAFAFA', viewCount: 415, favoriteCount: 36, isHot: true, isNew: false, seller: users[1] },
 	{ title: '桌面理线收纳盒', description: '整理数据线的神器，全新未用', type: 'sell', price: 12, categoryId: 'c3', category: 'daily', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/organizer.jpg'], imageBg: '#FFF5EE', viewCount: 54, favoriteCount: 3, isHot: false, isNew: true, seller: users[2] },
-	{ title: 'JBL T500BT 头戴蓝牙耳机', description: '低频不错，续航20小时，轻微使用痕迹', type: 'sell', price: 180, categoryId: 'c2', category: 'digital', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/headphones.jpg'], imageBg: '#F5F0FF', viewCount: 267, favoriteCount: 24, isHot: false, isNew: false, seller: users[3] },
-	{ title: '佳能 M50 微单 + 套机镜头', description: '毕业季出摄影器材，快门数不高，成色新', type: 'sell', price: 2200, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/camera.jpg'], imageBg: '#F5F0FF', viewCount: 521, favoriteCount: 48, isHot: true, isNew: false, seller: users[2] },
+	{ title: 'JBL T500BT 头戴蓝牙耳机', description: '低频不错，续航20小时，轻微使用痕迹', type: 'sell', price: 180, categoryId: 'c2', category: 'digital', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/headphones.jpg'], imageBg: '#EEF4FF', viewCount: 267, favoriteCount: 24, isHot: false, isNew: false, seller: users[3] },
+	{ title: '佳能 M50 微单 + 套机镜头', description: '毕业季出摄影器材，快门数不高，成色新', type: 'sell', price: 2200, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/camera.jpg'], imageBg: '#EEF4FF', viewCount: 521, favoriteCount: 48, isHot: true, isNew: false, seller: users[2] },
 	{ title: '捷安特山地车 26寸', description: '大二买的，车况好，刹车灵敏，配锁', type: 'sell', price: 380, categoryId: 'c4', category: 'sports', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/bicycle.jpg'], imageBg: '#F0FFF0', viewCount: 298, favoriteCount: 31, isHot: false, isNew: false, seller: users[4] },
 	{ title: '宿舍小冰吧 6L', description: '夏天放饮料水果，功率小宿舍可用，静音', type: 'sell', price: 65, categoryId: 'c3', category: 'daily', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/fridge.jpg'], imageBg: '#FFF5EE', viewCount: 132, favoriteCount: 9, isHot: false, isNew: true, seller: users[0] },
-	{ title: 'Switch Lite 港版 黄色', description: '掌机成色极好，屏幕无划痕，带收纳包', type: 'sell', price: 950, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/switch.jpg'], imageBg: '#F5F0FF', viewCount: 603, favoriteCount: 55, isHot: true, isNew: false, seller: users[1] },
+	{ title: 'Switch Lite 港版 黄色', description: '掌机成色极好，屏幕无划痕，带收纳包', type: 'sell', price: 950, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/switch.jpg'], imageBg: '#EEF4FF', viewCount: 603, favoriteCount: 55, isHot: true, isNew: false, seller: users[1] },
 	{ title: '双人露营帐篷 三季帐', description: '户外社闲置，防雨防风，含地钉收纳袋', type: 'sell', price: 120, categoryId: 'c4', category: 'sports', campus: '千佛山校区', location: '千佛山校区', images: ['/static/goods/tent.jpg'], imageBg: '#F0FFF0', viewCount: 87, favoriteCount: 7, isHot: false, isNew: false, seller: users[2] },
 	{ title: '拍立得相纸 10张装', description: '白边经典款，还剩两盒，毕业季拍照用', type: 'sell', price: 45, categoryId: 'c2', category: 'digital', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/polaroid.jpg'], imageBg: '#FAFAFA', viewCount: 112, favoriteCount: 8, isHot: false, isNew: true, seller: users[3] },
 	{ title: '折叠午休床 加厚海绵', description: '办公室午休神器，可折叠不占地方', type: 'sell', price: 88, categoryId: 'c3', category: 'daily', campus: '长清湖校区', location: '长清湖校区', images: ['/static/goods/bed.jpg'], imageBg: '#FFF5EE', viewCount: 143, favoriteCount: 13, isHot: false, isNew: false, seller: users[4] },
@@ -130,13 +135,14 @@ async function handle(url, method, data) {
 	}
 
 	if (url === '/api/user/complete-profile' && method === 'POST') {
-		const { nickname, school, campus, studentId } = data;
+		const { nickname, school, campus, studentId, avatar } = data;
 		const user = {
 			...users[0],
 			nickname: nickname || users[0].nickname,
 			school: school || users[0].school,
 			campus: campus || users[0].campus,
 			studentId: studentId || users[0].studentId,
+			avatar: avatar || '',
 		};
 		currentUser = user;
 		return ok({ userInfo: user });
@@ -203,7 +209,7 @@ async function handle(url, method, data) {
 			? {
 				id: 'anon_' + Date.now(),
 				nickname: data.anonymousTitle || '拾闲用户',
-				avatarBg: '#8B5CF6',
+				avatarBg: '#77C9F1',
 				anonymous: true,
 				school: baseUser.school,
 				campus: baseUser.campus,
@@ -229,6 +235,34 @@ async function handle(url, method, data) {
 	}
 
 	// ==================== 租借物品 ====================
+	if (url === '/api/lease-items' && method === 'POST') {
+		const baseUser = currentUser || users[0];
+		const user = data.anonymous
+			? {
+				id: 'anon_' + Date.now(),
+				nickname: data.anonymousTitle || '拾闲用户',
+				avatarBg: '#77C9F1',
+				anonymous: true,
+				school: baseUser.school,
+				campus: baseUser.campus,
+			}
+			: baseUser;
+		const newLease = {
+			id: 'l' + Date.now(),
+			title: data.title,
+			desc: data.desc || data.description || '',
+			price: Number(data.price) || 0,
+			deposit: Number(data.deposit) || 0,
+			category: data.category || 'other',
+			campus: data.campus || baseUser.campus,
+			images: data.images || [],
+			user,
+			publishTime: Date.now(),
+			minDays: Number(data.minDays) || 1,
+		};
+		leaseItems.unshift(newLease);
+		return ok(newLease);
+	}
 
 	if (url === '/api/lease-items' && method === 'GET') {
 		const { page = 1, pageSize = 10, keyword, sort = 'newest', campus } = data || {};
@@ -369,7 +403,34 @@ async function handle(url, method, data) {
 		const id = url.split('/').pop();
 		const post = exchangePosts.find((p) => p.id === id);
 		if (!post) return fail('帖子不存在');
-		return ok(post);
+		return ok({ ...post, replies: (post.replies || []).map((r) => ({ ...r })) });
+	}
+
+	// ==================== 互助帖子回复 ====================
+
+	if (url.match(/^\/api\/exchange-posts\/\w+\/replies$/) && method === 'GET') {
+		const id = url.split('/')[3];
+		const post = exchangePosts.find((p) => p.id === id);
+		if (!post) return fail('帖子不存在');
+		return ok((post.replies || []).map((r) => ({ ...r })));
+	}
+
+	if (url.match(/^\/api\/exchange-posts\/\w+\/replies$/) && method === 'POST') {
+		const id = url.split('/')[3];
+		const post = exchangePosts.find((p) => p.id === id);
+		if (!post) return fail('帖子不存在');
+		const content = ((data && data.content) || '').trim();
+		if (!content) return fail('回复内容不能为空');
+		const reply = {
+			id: 'er' + Date.now(),
+			user: currentUser || users[0],
+			content,
+			time: '刚刚',
+		};
+		post.replies = post.replies || [];
+		post.replies.push(reply);
+		post.replyCount = (post.replyCount || 0) + 1;
+		return ok(reply);
 	}
 
 	if (url === '/api/exchange-posts' && method === 'POST') {
@@ -378,7 +439,7 @@ async function handle(url, method, data) {
 			? {
 				id: 'anon_' + Date.now(),
 				nickname: data.anonymousTitle || '拾闲用户',
-				avatarBg: '#8B5CF6',
+				avatarBg: '#77C9F1',
 				anonymous: true,
 				school: baseUser.school,
 				campus: baseUser.campus,
@@ -407,13 +468,87 @@ async function handle(url, method, data) {
 
 	if (url.match(/^\/api\/conversations\/\w+$/) && method === 'GET') {
 		const id = url.split('/').pop();
-		const conv = conversations.find((c) => c.id === id);
-		if (!conv) return fail('会话不存在');
+		let conv = conversations.find((c) => c.id === id);
+
+		// 如果会话不存在，自动创建新会话（支持动态生成的会话ID）
+		if (!conv) {
+			// 从会话ID中提取信息，生成模拟数据
+			let nickname = '对方用户';
+			let avatarBg = '#77C9F1';
+
+			// 根据会话ID前缀判断类型
+			if (id.startsWith('item_') || id.startsWith('lease_')) {
+				nickname = '卖家';
+				avatarBg = '#FF6B3D';
+			} else if (id.startsWith('exchange_')) {
+				nickname = '交换用户';
+				avatarBg = '#22C55E';
+			}
+
+			conv = {
+				id: id,
+				user: { id: 'mock_user', nickname: nickname, avatarBg: avatarBg },
+				lastMessage: '',
+				lastMessageTime: '刚刚',
+				unreadCount: 0,
+				relatedItem: null,
+				messages: [],
+			};
+			// 添加到会话列表中
+			conversations.push(conv);
+		}
+
 		return ok(conv);
 	}
 
 	if (url.match(/^\/api\/conversations\/\w+\/send$/) && method === 'POST') {
-		return ok({ id: 'm' + Date.now(), from: 'me', text: data.text, time: '刚刚' });
+		const id = url.split('/')[3];
+		let conv = conversations.find((c) => c.id === id);
+
+		// 如果会话不存在，自动创建新会话
+		if (!conv) {
+			let nickname = '对方用户';
+			let avatarBg = '#77C9F1';
+
+			if (id.startsWith('item_') || id.startsWith('lease_')) {
+				nickname = '卖家';
+				avatarBg = '#FF6B3D';
+			} else if (id.startsWith('exchange_')) {
+				nickname = '交换用户';
+				avatarBg = '#22C55E';
+			}
+
+			conv = {
+				id: id,
+				user: { id: 'mock_user', nickname: nickname, avatarBg: avatarBg },
+				lastMessage: '',
+				lastMessageTime: '刚刚',
+				unreadCount: 0,
+				relatedItem: null,
+				messages: [],
+			};
+			conversations.push(conv);
+		}
+
+		const msg = {
+			id: 'm' + Date.now(),
+			from: 'me',
+			text: ((data && data.text) || '').trim(),
+			time: new Date().toISOString(),
+		};
+		conv.messages = conv.messages || [];
+		conv.messages.push(msg);
+		conv.lastMessage = msg.text;
+		conv.lastMessageTime = '刚刚';
+
+		return ok(msg);
+	}
+
+	if (url.match(/^\/api\/conversations\/\w+\/read$/) && method === 'POST') {
+		const id = url.split('/')[3];
+		const conv = conversations.find((c) => c.id === id);
+		if (conv) conv.unreadCount = 0;
+		return ok({ read: true });
 	}
 
 	if (url === '/api/conversations/unread-count' && method === 'GET') {

@@ -1,24 +1,16 @@
 /**
- * 真实 AI 识图模块（演示版）
+ * AI 识图模块
  *
  * 说明：
- *  - 开启后，发布页/估价页优先调用千问多模态接口做真实识别；
- *  - 任何一步失败（无网络、超时、解析失败、未配置 Key）都会返回 null，
- *    调用方自动回退到 mock 识别，保证小程序始终可用；
- *  - 注意：演示用 Key 写在前端，会随小程序包分发。
- *    正式上线请把 Key 移到服务端/云函数（见 uniCloud-aliyun/cloudfunctions/ai-recognize），
- *    并把 AI_CONFIG.enabled 设为 false 或改为请求自己的服务。
+ *  - 前端只调用 uniCloud 云函数，不保存或传递模型 API Key；
+ *  - 云函数未部署、超时或解析失败时抛出可诊断错误，由页面提示用户手动确认；
+ *  - 模型 Key 只配置在 uniCloud 云函数环境变量中。
  */
 
 const AI_CONFIG = {
-	// 是否优先使用真实 AI 识别（失败自动回退 mock）
+	// 是否启用云函数识别
 	enabled: true,
-	// 阿里云百炼 API Key —— 演示用，正式发布前务必移除或替换
-	apiKey: 'sk-ws-H.EEMMYRH.1hZG.MEUCIQDHeDJ-ifGFIfacqhZKnLEDf2mATxfHQoDAirVm77AptAIgXT-kivwimi04DTQlphPwwyS8bwUHGjwlQoiA1II2Wl8',
-	// 模型名（实测可读图）
-	model: 'qwen3.7-plus',
-	// OpenAI 兼容接口地址；部署云函数后可改为自己的服务地址
-	baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+	cloudFunctionName: 'ai-recognize',
 };
 
 const CATEGORY_KEYS = ['book', 'digital', 'daily', 'sports', 'fashion', 'other'];
@@ -35,47 +27,34 @@ const RECOGNIZE_PROMPT = [
  * @returns {Promise<{category:string,name:string,confidence:number,tags:string[]}|null>}
  */
 function recognizeImage(imagePath) {
-	return new Promise((resolve) => {
-		if (!AI_CONFIG.enabled || !AI_CONFIG.apiKey || AI_CONFIG.apiKey.indexOf('sk-') !== 0) {
-			resolve(null);
-			return;
-		}
-		readImageBase64(imagePath)
-			.then(({ base64, mime }) => {
-				uni.request({
-					url: AI_CONFIG.baseUrl + '/chat/completions',
-					method: 'POST',
-					timeout: 30000,
-					header: {
-						'Content-Type': 'application/json',
-						Authorization: 'Bearer ' + AI_CONFIG.apiKey,
-					},
-					data: {
-						model: AI_CONFIG.model,
-						stream: false,
-						max_tokens: 200,
-						messages: [{
-							role: 'user',
-							content: [
-								{ type: 'image_url', image_url: { url: 'data:' + mime + ';base64,' + base64 } },
-								{ type: 'text', text: RECOGNIZE_PROMPT },
-							],
-						}],
-					},
-					success(res) {
-						let content = '';
-						try {
-							content = res.data.choices[0].message.content;
-						} catch (e) { /* ignore */ }
-						resolve(parseResult(content));
-					},
-					fail() {
-						resolve(null);
-					},
-				});
-			})
-			.catch(() => resolve(null));
-	});
+	if (!AI_CONFIG.enabled) {
+		return Promise.reject(new Error('AI识别功能已关闭'));
+	}
+	if (typeof uniCloud === 'undefined' || !uniCloud.callFunction) {
+		return Promise.reject(new Error('当前运行包未加载 uniCloud，请重新关联服务空间并重新运行项目'));
+	}
+
+	return readImageBase64(imagePath)
+		.then(({ base64, mime }) => uniCloud.callFunction({
+			name: AI_CONFIG.cloudFunctionName,
+			data: { imageBase64: base64, imageMime: mime },
+		}))
+		.then((res) => {
+			const result = res && res.result;
+			if (!result) throw new Error('云函数没有返回结果');
+			if (result.code !== 0) throw new Error(result.msg || '云函数返回失败');
+			const parsed = parseResult(result.data);
+			if (!parsed) throw new Error('模型返回内容无法解析');
+			return parsed;
+		})
+		.catch((error) => {
+			console.error('[AI识图] 调用失败', {
+				message: error && error.message ? error.message : String(error),
+				cloudFunction: AI_CONFIG.cloudFunctionName,
+				cloudSpace: uniCloud.config && uniCloud.config.spaceId ? uniCloud.config.spaceId : '',
+			});
+			throw error;
+		});
 }
 
 /** 压缩并读取图片为 base64 */
@@ -106,7 +85,7 @@ function readImageBase64(imagePath) {
 
 /** 从模型返回文本中提取 JSON 结果 */
 function parseResult(content) {
-	const text = String(content || '').trim();
+	const text = typeof content === 'string' ? content.trim() : JSON.stringify(content || '');
 	if (!text) return null;
 	const start = text.indexOf('{');
 	const end = text.lastIndexOf('}');

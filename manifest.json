@@ -42,9 +42,16 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wx6a34a77131b1e02d",
+        "appid" : "wx1a06c3f725213cad",
         "setting" : {
-            "urlCheck" : false
+            "urlCheck" : false,
+            "lazyCodeLoading" : "requiredComponents",
+            "preloadRule" : {
+                "pages/home/index" : {
+                    "network" : "all",
+                    "packages" : ["pages/search/index"]
+                }
+            }
         },
         "usingComponents" : true,
         "permission" : {

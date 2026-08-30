@@ -13,6 +13,7 @@
 2. 在云服务空间控制台给 `ai-recognize` 配置环境变量：
    - `DASHSCOPE_API_KEY`：你的阿里云百炼 Key
    - `VISION_MODEL`：`qwen3.7-plus`（或其他支持图片的模型）
+   - `DASHSCOPE_BASE_URL`：百炼控制台“OpenAI compatible”显示的业务空间地址；如果 Key 以 `sk-ws-` 开头，此项必填
 3. 右键 `ai-recognize` 云函数 → 上传部署；
 4. 前端调用方式：
 
@@ -37,5 +38,5 @@ const res = await uniCloud.callFunction({
 ## 说明
 
 - 云函数本身无第三方依赖，Node 内置 https 模块即可；
-- 超时、限流可在云函数配置中调整（建议超时 30s、内存 256MB）；
-- 上线后把 `utils/ai-vision.js` 里的 `AI_CONFIG.enabled` 置为 `false`，或改为调用云函数。
+- 云函数已配置超时 60s、内存 256MB，避免等待多模态模型响应时被平台提前终止；
+- 前端已经通过 `utils/ai-vision.js` 调用该云函数；开发者工具联调可关闭“校验合法域名”，正式发布前需在微信公众平台配置云空间请求域名 `https://api.next.bspapp.com`；部署前请重新运行 HBuilderX，避免使用旧的 `unpackage` 构建产物。

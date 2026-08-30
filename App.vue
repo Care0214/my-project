@@ -32,11 +32,12 @@ export default {
 <style>
 /* ========== 全局基础样式 ========== */
 page {
-	background: #F2F3F8;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-		'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB',
+	background: #F7F9FC;
+	font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'HarmonyOS Sans SC',
+		'MiSans', 'Segoe UI', Roboto, 'Helvetica Neue', 'Hiragino Sans GB',
 		'Microsoft YaHei', sans-serif;
 	font-size: 28rpx;
+	line-height: 1.5;
 	color: #1A1D28;
 	-webkit-font-smoothing: antialiased;
 }

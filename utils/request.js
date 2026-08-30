@@ -131,5 +131,38 @@ function put(url, data = {}, options = {}) {
 	return request({ url, method: 'PUT', data, ...options });
 }
 
-export { request, get, post, del, put, USE_MOCK, BASE_URL };
+function uploadFile(filePath, options = {}) {
+	if (USE_MOCK) return Promise.resolve(filePath);
+
+	return new Promise((resolve, reject) => {
+		const token = uni.getStorageSync('token') || '';
+		uni.uploadFile({
+			url: BASE_URL + (options.url || '/api/uploads/images'),
+			filePath,
+			name: options.name || 'file',
+			formData: options.formData || {},
+			header: token ? { Authorization: `Bearer ${token}` } : {},
+			success(res) {
+				try {
+					const body = typeof res.data === 'string' ? JSON.parse(res.data) : res.data;
+					if (res.statusCode >= 200 && res.statusCode < 300 && body && body.code === 0) {
+						const data = body.data || {};
+						const url = typeof data === 'string' ? data : (data.url || data.fileUrl || data.path);
+						if (url) { resolve(url); return; }
+					}
+					reject(body || { code: -1, msg: '图片上传失败' });
+				} catch (e) {
+					reject(e);
+				}
+			},
+			fail: reject,
+		});
+	});
+}
+
+function uploadFiles(filePaths, options = {}) {
+	return Promise.all((filePaths || []).map((filePath) => uploadFile(filePath, options)));
+}
+
+export { request, get, post, del, put, uploadFile, uploadFiles, USE_MOCK, BASE_URL };
 export default request;
